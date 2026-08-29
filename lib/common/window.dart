@@ -23,6 +23,8 @@ class Window {
     }
     if (system.isWindows) {
       protocol.register('clash');
+      // 天机自有 scheme。**clash 保留** —— 存量链接还在用它。
+      protocol.register('tianji');
       protocol.register('clashmeta');
       protocol.register('flclash');
     }
