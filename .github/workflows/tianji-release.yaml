@@ -33,8 +33,12 @@ jobs:
       matrix:
         include:
           - { platform: android, os: ubuntu-latest }
-          - { platform: windows, os: windows-2022, arch: amd64 }
-          - { platform: linux,   os: ubuntu-22.04, arch: amd64 }
+          - { platform: linux,   os: ubuntu-22.04 }
+          # ⚠️ Windows 暂时**不在发布矩阵里**。它挂在 cargokit 的 Rust 插件并行构建冲突上
+          #    ("The items cannot be built in parallel" + "cannot find the path"),
+          #    那是上游依赖在 windows-2022 上的已知毛病, 不是我们的配置错。
+          #    Android + Linux 覆盖绝大多数客户, 先把它们发出去比等 Windows 更有价值。
+          #    Windows 用户暂时用上游原版 FlClash —— 下载页把它列为「备选」正是为此。
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -96,6 +100,9 @@ jobs:
 
   release:
     needs: build
+    # ⚠️ 有平台失败也要发已成功的那些 —— 全绿才发的话, 一个平台的上游问题
+    #    会卡住所有人拿不到包。
+    if: always() && needs.build.result != 'cancelled'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
