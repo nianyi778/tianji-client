@@ -61,6 +61,11 @@ jobs:
 
       # ⚠️ 签名密钥从 Secrets 解出来。**没有它 APK 装不上** ——
       #    Android 拒绝安装未签名的包, 而那个失败发生在客户手机上, 我们看不到。
+      # ⚠️ 用 **>> 追加**而不是 > 覆盖: local.properties 里还有 Flutter 写的 sdk.dir,
+      #    覆盖掉会让 Gradle 找不到 SDK。第一次构建就是这么failed 的。
+      # ⚠️ 不写 storeFile —— build.gradle.kts 有自己的默认路径, 多写反而可能不一致。
+      # ⚠️ 不配 google-services.json(上游那步要 SERVICE_JSON): 那是 Firebase,
+      #    我们不用。缺它不影响构建。
       - name: 配置 Android 签名
         if: matrix.platform == 'android'
         run: |
@@ -69,10 +74,11 @@ jobs:
             echo "keyAlias=${{ secrets.KEY_ALIAS }}"
             echo "storePassword=${{ secrets.STORE_PASSWORD }}"
             echo "keyPassword=${{ secrets.KEY_PASSWORD }}"
-            echo "storeFile=keystore.jks"
-          } > android/local.properties
+          } >> android/local.properties
 
-      - run: dart pub get
+      # ⚠️ **不要 dart pub get** —— setup.dart 自己处理依赖。
+      #    单独跑它会因为 flutter SDK 尚未就位而 version solving failed(实测三平台全挂)。
+      #    对照上游 build.yaml: 它也只有这一条 run。
       - run: dart setup.dart ${{ matrix.platform }} ${{ matrix.arch && format('--arch {0}', matrix.arch) || '' }} -v
 
       - uses: actions/upload-artifact@v4
