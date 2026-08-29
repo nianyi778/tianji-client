@@ -76,9 +76,13 @@ jobs:
             echo "keyPassword=${{ secrets.KEY_PASSWORD }}"
           } >> android/local.properties
 
-      # ⚠️ **不要 dart pub get** —— setup.dart 自己处理依赖。
-      #    单独跑它会因为 flutter SDK 尚未就位而 version solving failed(实测三平台全挂)。
-      #    对照上游 build.yaml: 它也只有这一条 run。
+      # ⚠️ **必须先 flutter pub get** —— setup.dart 自己 import 了 args / path,
+      #    没有依赖它连自己都跑不起来(实测: Couldn't resolve the package 'args')。
+      #    ⚠️ 是 `flutter pub get` **不是** `dart pub get`:
+      #       后者在 flutter SDK 就位前会 version solving failed。
+      #       上游那一步叫 "Get Flutter Dependency"。
+      - run: flutter pub get
+
       - run: dart setup.dart ${{ matrix.platform }} ${{ matrix.arch && format('--arch {0}', matrix.arch) || '' }} -v
 
       - uses: actions/upload-artifact@v4
