@@ -1,0 +1,28 @@
+# 一次性: 生成 Android 签名密钥, 以 **artifact** 交付(不进日志)。
+#
+# ⚠️ 第一版把 base64 打进日志再由我提取 —— 混进了日志前缀, 解出来魔数是 efad7bef
+#    而不是 JKS 的 feedfeed, Android 构建报 `base64: invalid input`。
+#    **从日志里刮数据本来就是脆的。** artifact 是二进制原样传输, 没有这个问题。
+#
+# ⚠️ 用完立刻删掉本文件, 并删掉 artifact。
+name: tianji-keygen (一次性)
+on:
+  workflow_dispatch:
+jobs:
+  keygen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - name: 生成
+        run: |
+          PW="$(openssl rand -hex 16)"
+          keytool -genkeypair -v -keystore ks.jks -keyalg RSA -keysize 4096 \
+            -validity 10000 -alias tianji -storepass "$PW" -keypass "$PW" \
+            -dname "CN=Tianji, OU=Tianji, O=Tianji, L=Tokyo, S=Tokyo, C=JP" >/dev/null 2>&1
+          mkdir -p out
+          cp ks.jks out/
+          printf '%s' "$PW" > out/password.txt
+          echo "keystore $(stat -c%s ks.jks) 字节, 魔数 $(head -c4 ks.jks | xxd -p)"
+      - uses: actions/upload-artifact@v4
+        with: { name: tianji-keystore, path: out/, retention-days: 1 }
