@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#FAFAFA</color>
+    <!-- 天机品牌图的主色(2026-08-29)。原来是 #FAFAFA 近白, 配天机的绿色图标发灰。 -->
+    <color name="ic_launcher_background">#ABDCCA</color>
 </resources>
