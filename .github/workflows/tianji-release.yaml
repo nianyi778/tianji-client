@@ -83,7 +83,10 @@ jobs:
       #       上游那一步叫 "Get Flutter Dependency"。
       - run: flutter pub get
 
-      - run: dart setup.dart ${{ matrix.platform }} ${{ matrix.arch && format('--arch {0}', matrix.arch) || '' }} -v
+      # ⚠️ **不传 --arch** —— 上游也不传, 它靠 runner 自身架构决定。
+      #    我多传了那个参数, 结果 Linux 那个 job 去编 android-x64 并报
+      #    `"android-x64" is not an allowed value`。照抄上游的调用形状就对了。
+      - run: dart setup.dart ${{ matrix.platform }} -v
 
       - uses: actions/upload-artifact@v4
         with:
