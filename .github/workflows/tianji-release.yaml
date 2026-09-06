@@ -158,7 +158,7 @@ jobs:
           Write-Host "== 生成的 .iss 第 1-20 行 =="
           Get-ChildItem dist/*.iss -ErrorAction SilentlyContinue | ForEach-Object {
             Write-Host "---- $($_.FullName) ----"
-            Get-Content $_.FullName -TotalCount 20
+            (Get-Content $_.FullName -TotalCount 20 | Out-String) | Write-Host
           }
           Write-Host "== 图标文件是否存在 =="
           $p1 = "windows/runner/resources/app_icon.ico"
