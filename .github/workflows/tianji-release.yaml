@@ -4,12 +4,12 @@
 #    上游那个的 upload job 依赖它自己的分发渠道(Telegram / Homebrew / AUR)的密钥,
 #    我们没有也不需要; 直接跑它会失败。
 #
-# ⚠️ 只出 **Android + Windows + Linux**。macOS 要 Apple 证书才能免告警分发,
-#    iOS 要开发者账号 —— 都留到以后。
-#
-# ⚠️ 产物发到 **GitHub Releases** 而不是自建 CDN:
-#    代理工具的第三方安装包是投毒重灾区, 客户没法验证的安装包我们自己也不该发。
-#    Releases + 公开源码 = 与推荐上游同一个信任模型(见 tianjiv1 的 clients.ts)。
+# 产物同时发到 **GitHub Releases** 与 **自建 R2**:
+#   · Releases —— 可校验、可溯源, 与推荐上游同一个信任模型。代理工具的
+#     第三方安装包是投毒重灾区, 只发自建 CDN 等于要客户盲信我们。
+#   · R2(dl.tianjiyun.org)—— 相当一部分客户**上不去 GitHub**,
+#     而「下载不到客户端」等于生意断在第一步。
+#   两者互补, 不是替代关系。
 name: 天机客户端发布
 on:
   push:
@@ -17,32 +17,78 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: '版本号，如 v0.8.96-tianji.1'
+        description: '版本号，如 v0.8.96-tianji.3'
         required: true
+      force:
+        description: '同版本已发布时也强制重建'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 env:
   FLUTTER_VERSION: '3.44.4'
+  # 公开只读地址 —— 用它探测版本是否已发布, 不需要任何凭证
+  DL_BASE: https://dl.tianjiyun.org
 
 jobs:
+  # ── 同版本自动跳过 ────────────────────────────────────
+  # 判据是 R2 上有没有该版本的 MANIFEST.json。用公开 URL 探测,
+  # 不需要凭证 —— 这一步跑在任何构建之前, 越轻越好。
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.v.outputs.tag }}
+      skip: ${{ steps.v.outputs.skip }}
+    steps:
+      - id: v
+        run: |
+          TAG="${{ github.event.inputs.tag || github.ref_name }}"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then
+            echo "强制重建，跳过版本检查"
+            echo "skip=false" >> "$GITHUB_OUTPUT"; exit 0
+          fi
+          CODE=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 \
+                 "$DL_BASE/$TAG/MANIFEST.json" || echo 000)
+          if [ "$CODE" = "200" ]; then
+            echo "::notice::$TAG 已发布过（R2 上有 MANIFEST.json），跳过整个流程。要重建请用 workflow_dispatch 勾选 force。"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "$TAG 未发布过（探测返回 $CODE），继续构建"
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
   build:
+    needs: preflight
+    if: needs.preflight.outputs.skip != 'true'
     strategy:
       fail-fast: false
       matrix:
         include:
           - { platform: android, os: ubuntu-latest }
           - { platform: linux,   os: ubuntu-22.04 }
-          # ⚠️ Windows 暂时**不在发布矩阵里**。它挂在 cargokit 的 Rust 插件并行构建冲突上
-          #    ("The items cannot be built in parallel" + "cannot find the path"),
-          #    那是上游依赖在 windows-2022 上的已知毛病, 不是我们的配置错。
-          #    Android + Linux 覆盖绝大多数客户, 先把它们发出去比等 Windows 更有价值。
-          #    Windows 用户暂时用上游原版 FlClash —— 下载页把它列为「备选」正是为此。
+          # Windows 之前不在矩阵里, 卡在 "cannot find the path" +
+          # "The items cannot be built in parallel"。
+          # 🔴 成因是 **Windows 的 260 字符路径上限**, 不是并行构建本身:
+          #    cargokit 的中间产物路径很深, 超限后报「找不到路径」,
+          #    随后并行的那一半也跟着失败。上游 build.yaml 一直有
+          #    `core.longpaths true` 这一步, 我们照抄时漏了它。
+          - { platform: windows, os: windows-2022 }
+          # macOS 未签名 —— 首次打开会被 Gatekeeper 拦, 下载页已如实说明
+          # 绕过方法。要免告警需要 Apple 开发者证书, 那是另一笔账。
+          - { platform: macos,   os: macos-latest }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
+
+      # 🔴 必须在 checkout 之后、构建之前。Windows 路径上限 260 字符,
+      #    cargokit 的中间产物很容易超 —— 这就是之前那个「找不到路径」。
+      - name: 允许长路径（Windows）
+        if: startsWith(matrix.os, 'windows')
+        run: git config --global core.longpaths true
 
       - uses: actions/setup-go@v5
         with: { go-version: '1.26.4' }
@@ -51,6 +97,16 @@ jobs:
         with:
           channel: master
           flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      # 上游 build.yaml 有这一步。缺它 macOS 会用默认 Xcode,
+      # 与 Flutter master 的要求可能对不上。
+      - name: 选择 Xcode（macOS）
+        if: matrix.platform == 'macos'
+        run: |
+          sudo xcode-select -s /Applications/Xcode_26.3.app || \
+          sudo xcode-select -s /Applications/Xcode_26.2.app || true
+          xcodebuild -version
 
       - name: Android NDK
         if: matrix.platform == 'android'
@@ -66,10 +122,7 @@ jobs:
       # ⚠️ 签名密钥从 Secrets 解出来。**没有它 APK 装不上** ——
       #    Android 拒绝安装未签名的包, 而那个失败发生在客户手机上, 我们看不到。
       # ⚠️ 用 **>> 追加**而不是 > 覆盖: local.properties 里还有 Flutter 写的 sdk.dir,
-      #    覆盖掉会让 Gradle 找不到 SDK。第一次构建就是这么failed 的。
-      # ⚠️ 不写 storeFile —— build.gradle.kts 有自己的默认路径, 多写反而可能不一致。
-      # ⚠️ 不配 google-services.json(上游那步要 SERVICE_JSON): 那是 Firebase,
-      #    我们不用。缺它不影响构建。
+      #    覆盖掉会让 Gradle 找不到 SDK。第一次构建就是这么 failed 的。
       - name: 配置 Android 签名
         if: matrix.platform == 'android'
         run: |
@@ -82,27 +135,26 @@ jobs:
 
       # ⚠️ **必须先 flutter pub get** —— setup.dart 自己 import 了 args / path,
       #    没有依赖它连自己都跑不起来(实测: Couldn't resolve the package 'args')。
-      #    ⚠️ 是 `flutter pub get` **不是** `dart pub get`:
-      #       后者在 flutter SDK 就位前会 version solving failed。
-      #       上游那一步叫 "Get Flutter Dependency"。
+      #    ⚠️ 是 `flutter pub get` **不是** `dart pub get`。
       - run: flutter pub get
 
-      # ⚠️ **不传 --arch** —— 上游也不传, 它靠 runner 自身架构决定。
-      #    我多传了那个参数, 结果 Linux 那个 job 去编 android-x64 并报
-      #    `"android-x64" is not an allowed value`。照抄上游的调用形状就对了。
+      # ⚠️ **不传 --arch, 也不传 --targets** —— 照抄上游的调用形状。
+      #    上游一次构建 windows 的 exe+zip 是能过的; 之前以为要拆开串行,
+      #    真正的毛病其实是长路径。多传参数在这个仓库已经吃过一次亏:
+      #    传了 --arch 导致 Linux 那个 job 去编 android-x64。
       - run: dart setup.dart ${{ matrix.platform }} -v
 
       - uses: actions/upload-artifact@v4
         with:
-          name: tianji-${{ matrix.platform }}-${{ matrix.arch || 'all' }}
+          name: tianji-${{ matrix.platform }}
           path: dist/*
           if-no-files-found: error
 
   release:
-    needs: build
+    needs: [preflight, build]
     # ⚠️ 有平台失败也要发已成功的那些 —— 全绿才发的话, 一个平台的上游问题
     #    会卡住所有人拿不到包。
-    if: always() && needs.build.result != 'cancelled'
+    if: always() && needs.preflight.outputs.skip != 'true' && needs.build.result != 'cancelled'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
@@ -110,7 +162,7 @@ jobs:
       - run: ls -la dist/
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          tag_name: ${{ needs.preflight.outputs.tag }}
           files: dist/*
           generate_release_notes: true
           body: |
@@ -118,4 +170,87 @@ jobs:
 
             只改了名字、图标和一键导入，**内核一行未动**。[源码](https://github.com/nianyi778/tianji-client)
 
-            装好后在[个人中心](https://www.divinations.top/me)点「导入」直接装订阅。
+            上不去 GitHub 的话，从 https://tianjiyun.org/guide 下载（走我们自己的分发节点）。
+
+            装好后在[用户中心](https://tianjiyun.org/app/subscription)复制订阅链接导入。
+
+            > macOS 版未做 Apple 签名，首次打开会被 Gatekeeper 拦。
+            > 右键点图标选「打开」，或执行 `xattr -dr com.apple.quarantine /Applications/天机.app`。
+
+  # ── 上传到 R2 ─────────────────────────────────────────
+  # 与 GitHub Releases 并行提供, 面向上不去 GitHub 的客户。
+  publish-r2:
+    needs: [preflight, build]
+    if: always() && needs.preflight.outputs.skip != 'true' && needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      TAG: ${{ needs.preflight.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: { path: dist, merge-multiple: true }
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+
+      - name: 缺凭证就明确失败，不要静默跳过
+        run: |
+          # 🔴 缺配置不等于放行。静默跳过的话，发布看起来成功了，
+          #    而上不去 GitHub 的客户拿到的仍是旧版本，且无人知晓。
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "::error::缺 CLOUDFLARE_API_TOKEN"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "::error::缺 CLOUDFLARE_ACCOUNT_ID"; exit 1; }
+
+      - name: 上传到 R2（版本路径 + latest 别名）
+        run: |
+          set -euo pipefail
+          VER=$(grep -m1 '^version:' pubspec.yaml | sed 's/version: *//' | cut -d'+' -f1)
+          echo "pubspec 版本 = $VER   标签 = $TAG"
+
+          ct() {
+            case "$1" in
+              *.apk)      echo "application/vnd.android.package-archive" ;;
+              *.deb)      echo "application/vnd.debian.binary-package" ;;
+              *.rpm)      echo "application/x-rpm" ;;
+              *.AppImage) echo "application/x-executable" ;;
+              *.dmg)      echo "application/x-apple-diskimage" ;;
+              *.exe)      echo "application/vnd.microsoft.portable-executable" ;;
+              *.zip)      echo "application/zip" ;;
+              *)          echo "application/octet-stream" ;;
+            esac
+          }
+
+          FILES=""
+          for f in dist/*; do
+            [ -f "$f" ] || continue
+            b=$(basename "$f"); c=$(ct "$b")
+            # 🔴 Content-Type 必须逐类设。不设的话浏览器把 apk 当八进制流，
+            #    安卓上点了装不了 —— 而这个只有真机上才看得出来。
+            npx --yes wrangler@4 r2 object put "tianji-dl/$TAG/$b" \
+              --file "$f" --content-type "$c" --remote
+            # latest 别名去掉版本号：发新版只需覆盖这里，站点不用重新部署
+            stable=$(echo "$b" | sed "s/-$VER//")
+            npx --yes wrangler@4 r2 object put "tianji-dl/latest/$stable" \
+              --file "$f" --content-type "$c" --remote
+            FILES="$FILES\"$b\","
+            echo "  ✓ $b"
+          done
+
+          # 🔴 MANIFEST 最后写 —— preflight 用它判断版本是否已发布。
+          #    先写会导致构建中途失败时，下次误判成「已发布」而跳过。
+          printf '{"tag":"%s","version":"%s","built_at":"%s","files":[%s]}\n' \
+            "$TAG" "$VER" "$(date -u +%FT%TZ)" "${FILES%,}" > MANIFEST.json
+          cat MANIFEST.json
+          npx --yes wrangler@4 r2 object put "tianji-dl/$TAG/MANIFEST.json" \
+            --file MANIFEST.json --content-type application/json --remote
+          npx --yes wrangler@4 r2 object put "tianji-dl/latest/MANIFEST.json" \
+            --file MANIFEST.json --content-type application/json --remote
+
+      - name: 验证公开可下载
+        run: |
+          set -e
+          for u in "$DL_BASE/$TAG/MANIFEST.json" "$DL_BASE/latest/MANIFEST.json"; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 30 "$u")
+            echo "  $u → $code"
+            [ "$code" = "200" ] || { echo "::error::$u 不可下载"; exit 1; }
+          done
