@@ -69,12 +69,14 @@ jobs:
         include:
           - { platform: android, os: ubuntu-latest }
           - { platform: linux,   os: ubuntu-22.04 }
-          # Windows 之前不在矩阵里, 卡在 "cannot find the path" +
-          # "The items cannot be built in parallel"。
-          # 🔴 成因是 **Windows 的 260 字符路径上限**, 不是并行构建本身:
-          #    cargokit 的中间产物路径很深, 超限后报「找不到路径」,
-          #    随后并行的那一半也跟着失败。上游 build.yaml 一直有
-          #    `core.longpaths true` 这一步, 我们照抄时漏了它。
+          # Windows 曾长期不在矩阵里。当时记的成因是「cargokit 并行构建冲突」,
+          # 实测下来那个判断不准, 真实情况是**两个独立的毛病叠在一起**:
+          #   ① 长路径 —— 上游 build.yaml 一直有 `core.longpaths true`,
+          #      我们照抄时漏了。补上之后 Rust/cargokit 能完整编过。
+          #   ② 安装包图标 —— 换 logo 时生成的 ICO 六个尺寸全是 PNG 编码,
+          #      Inno Setup 读不了, 却报一句误导性的「找不到路径」。
+          # 两个都修掉才通。第二个此前不可能暴露: Windows 不在矩阵里,
+          # 没有任何构建会用到那个图标。
           - { platform: windows, os: windows-2022 }
           # macOS 未签名 —— 首次打开会被 Gatekeeper 拦, 下载页已如实说明
           # 绕过方法。要免告警需要 Apple 开发者证书, 那是另一笔账。
@@ -181,7 +183,11 @@ jobs:
   # 与 GitHub Releases 并行提供, 面向上不去 GitHub 的客户。
   publish-r2:
     needs: [preflight, build]
-    if: always() && needs.preflight.outputs.skip != 'true' && needs.build.result == 'success'
+    # ⚠️ 与 release 同一条件：**有平台失败也要传已成功的那些**。
+    #    原本写的是 build.result == 'success'，结果 Windows 一挂，R2 整个跳过 ——
+    #    GitHub 上有部分产物，而上不去 GitHub 的客户一个都拿不到，
+    #    优先级正好搞反了。
+    if: always() && needs.preflight.outputs.skip != 'true' && needs.build.result != 'cancelled'
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -236,8 +242,14 @@ jobs:
             echo "  ✓ $b"
           done
 
-          # 🔴 MANIFEST 最后写 —— preflight 用它判断版本是否已发布。
-          #    先写会导致构建中途失败时，下次误判成「已发布」而跳过。
+          # 🔴 MANIFEST 只在**全部平台都成功**时才写。
+          #    它是 preflight 的跳过判据 —— 半套产物就写的话，下次会被误判成
+          #    「已发布」而跳过，那半套永远补不齐。
+          #    先写也不行：构建中途失败同样会留下一个骗人的 MANIFEST。
+          if [ "${{ needs.build.result }}" != "success" ]; then
+            echo "::warning::有平台构建失败，已上传成功的产物，但**不写 MANIFEST** —— 下次重跑不会被跳过。"
+            exit 0
+          fi
           printf '{"tag":"%s","version":"%s","built_at":"%s","files":[%s]}\n' \
             "$TAG" "$VER" "$(date -u +%FT%TZ)" "${FILES%,}" > MANIFEST.json
           cat MANIFEST.json
@@ -247,6 +259,7 @@ jobs:
             --file MANIFEST.json --content-type application/json --remote
 
       - name: 验证公开可下载
+        if: needs.build.result == 'success'
         run: |
           set -e
           for u in "$DL_BASE/$TAG/MANIFEST.json" "$DL_BASE/latest/MANIFEST.json"; do
