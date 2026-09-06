@@ -146,6 +146,28 @@ jobs:
       #    传了 --arch 导致 Linux 那个 job 去编 android-x64。
       - run: dart setup.dart ${{ matrix.platform }} -v
 
+      # 临时诊断（Windows）：Inno Setup 报 line 15 找不到路径，而图标文件
+      # 确实存在、配置也与上游逐字相同。把生成的 iss 与真实路径打出来，
+      # 不要再靠推断。查清后删掉这一步。
+      - name: 诊断 · Windows 打包路径
+        if: always() && startsWith(matrix.os, 'windows')
+        shell: pwsh
+        run: |
+          Write-Host "== 当前目录 =="; Get-Location
+          Write-Host "== dist 内容 =="; Get-ChildItem dist -ErrorAction SilentlyContinue | Select-Object Name,Length
+          Write-Host "== 生成的 .iss 第 1-20 行 =="
+          Get-ChildItem dist/*.iss -ErrorAction SilentlyContinue | ForEach-Object {
+            Write-Host "---- $($_.FullName) ----"
+            Get-Content $_.FullName -TotalCount 20
+          }
+          Write-Host "== 图标文件是否存在 =="
+          $p1 = "windows/runner/resources/app_icon.ico"
+          $p2 = "../windows/runner/resources/app_icon.ico"
+          Write-Host "  $p1 -> $(Test-Path $p1)"
+          Write-Host "  $p2 -> $(Test-Path $p2)"
+          Write-Host "== ChineseSimplified.isl =="
+          Write-Host "  windows/packaging/exe/ChineseSimplified.isl -> $(Test-Path 'windows/packaging/exe/ChineseSimplified.isl')"
+
       - uses: actions/upload-artifact@v4
         with:
           name: tianji-${{ matrix.platform }}
