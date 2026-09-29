@@ -69,9 +69,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m23(count) => "已选择 ${count} 项";
 
-  static String m24(label) => "${label}必须为URL";
+  static String m24(name, delay) => "网络已变化，已切到 ${name} · ${delay} ms";
 
-  static String m25(count) => "${count} 年前";
+  static String m25(label) => "${label}必须为URL";
+
+  static String m26(count) => "${count} 年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -707,6 +709,39 @@ class MessageLookup extends MessageLookupByLibrary {
     "themeColor": MessageLookupByLibrary.simpleMessage("主题色彩"),
     "themeDesc": MessageLookupByLibrary.simpleMessage("设置深色模式，调整色彩"),
     "themeMode": MessageLookupByLibrary.simpleMessage("主题模式"),
+    "tianjiAccount": MessageLookupByLibrary.simpleMessage("天机账号"),
+    "tianjiApiBase": MessageLookupByLibrary.simpleMessage("接入地址"),
+    "tianjiAutoOptimize": MessageLookupByLibrary.simpleMessage("网络变化时自动优化"),
+    "tianjiAutoOptimizeDesc": MessageLookupByLibrary.simpleMessage(
+      "换 WiFi 后自动重测，线路断了才切换",
+    ),
+    "tianjiChangeApiBase": MessageLookupByLibrary.simpleMessage("连不上？换接入地址"),
+    "tianjiEmail": MessageLookupByLibrary.simpleMessage("邮箱"),
+    "tianjiLoginAndConnect": MessageLookupByLibrary.simpleMessage("登录并连接"),
+    "tianjiLoginFailed": MessageLookupByLibrary.simpleMessage("登录失败"),
+    "tianjiLoginFoot": MessageLookupByLibrary.simpleMessage(
+      "主域名打不开时，到状态页 status.tianjiyun.org 拿备用地址。\niOS 请用 Shadowrocket 导入订阅。",
+    ),
+    "tianjiLoginSub": MessageLookupByLibrary.simpleMessage(
+      "登录后自动配好线路，不用导入任何东西。",
+    ),
+    "tianjiLoginTitle": MessageLookupByLibrary.simpleMessage("登录天机"),
+    "tianjiLogout": MessageLookupByLibrary.simpleMessage("退出登录"),
+    "tianjiManualImport": MessageLookupByLibrary.simpleMessage("手动导入订阅"),
+    "tianjiNetChangedAllDown": MessageLookupByLibrary.simpleMessage(
+      "网络已变化，所有线路暂时不可用",
+    ),
+    "tianjiNetChangedOk": MessageLookupByLibrary.simpleMessage("网络已变化，当前线路正常"),
+    "tianjiNetChangedSwitched": m24,
+    "tianjiNetworkError": MessageLookupByLibrary.simpleMessage(
+      "连不上服务器。主域名可能被屏蔽：到状态页拿备用地址，然后点「换接入地址」。",
+    ),
+    "tianjiNoSubscription": MessageLookupByLibrary.simpleMessage(
+      "这个账号还没有可用套餐，请先在网页领取或购买。",
+    ),
+    "tianjiPassword": MessageLookupByLibrary.simpleMessage("密码"),
+    "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("天机 TIANJI"),
+    "tianjiRegister": MessageLookupByLibrary.simpleMessage("还没有账号？注册"),
     "tight": MessageLookupByLibrary.simpleMessage("紧凑"),
     "time": MessageLookupByLibrary.simpleMessage("时间"),
     "timeout": MessageLookupByLibrary.simpleMessage("超时"),
@@ -730,7 +765,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("上传"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("通过URL获取配置文件"),
-    "urlTip": m24,
+    "urlTip": m25,
     "useHosts": MessageLookupByLibrary.simpleMessage("使用Hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("使用系统Hosts"),
     "userAgent": MessageLookupByLibrary.simpleMessage("用户代理"),
@@ -746,7 +781,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnTip": MessageLookupByLibrary.simpleMessage("重启VPN后改变生效"),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage("WebDAV配置"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("白名单模式"),
-    "yearsAgo": m25,
+    "yearsAgo": m26,
     "zh_CN": MessageLookupByLibrary.simpleMessage("中文简体"),
   };
 }

@@ -306,6 +306,25 @@ const _$DynamicSchemeVariantEnumMap = {
   DynamicSchemeVariant.fruitSalad: 'fruitSalad',
 };
 
+_TianjiProps _$TianjiPropsFromJson(Map<String, dynamic> json) => _TianjiProps(
+  email: json['email'] as String? ?? '',
+  authData: json['authData'] as String? ?? '',
+  profileId: (json['profileId'] as num?)?.toInt(),
+  skipLogin: json['skipLogin'] as bool? ?? false,
+  autoOptimize: json['autoOptimize'] as bool? ?? true,
+  apiBase: json['apiBase'] as String? ?? defaultTianjiApiBase,
+);
+
+Map<String, dynamic> _$TianjiPropsToJson(_TianjiProps instance) =>
+    <String, dynamic>{
+      'email': instance.email,
+      'authData': instance.authData,
+      'profileId': instance.profileId,
+      'skipLogin': instance.skipLogin,
+      'autoOptimize': instance.autoOptimize,
+      'apiBase': instance.apiBase,
+    };
+
 _Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
   currentProfileId: (json['currentProfileId'] as num?)?.toInt(),
   overrideDns: json['overrideDns'] as bool? ?? false,
@@ -349,6 +368,9 @@ _Config _$ConfigFromJson(Map<String, dynamic> json) => _Config(
           ?.map((e) => e as String)
           .toList() ??
       const [],
+  tianjiProps: json['tianjiProps'] == null
+      ? defaultTianjiProps
+      : TianjiProps.safeFromJson(json['tianjiProps'] as Map<String, Object?>?),
 );
 
 Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
@@ -364,4 +386,5 @@ Map<String, dynamic> _$ConfigToJson(_Config instance) => <String, dynamic>{
   'windowProps': instance.windowProps,
   'patchClashConfig': instance.patchClashConfig,
   'excludeSSIDs': instance.excludeSSIDs,
+  'tianjiProps': instance.tianjiProps,
 };

@@ -75,9 +75,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m23(count) => "Выбрано ${count} элементов";
 
-  static String m24(label) => "${label} должен быть URL";
+  static String m24(name, delay) =>
+      "Network changed, switched to ${name} · ${delay} ms";
 
-  static String m25(count) =>
+  static String m25(label) => "${label} должен быть URL";
+
+  static String m26(count) =>
       "${Intl.plural(count, one: '${count} год назад', few: '${count} года назад', many: '${count} лет назад', other: '${count} года назад')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -1064,6 +1067,53 @@ class MessageLookup extends MessageLookupByLibrary {
       "Установить темный режим, настроить цвет",
     ),
     "themeMode": MessageLookupByLibrary.simpleMessage("Режим темы"),
+    "tianjiAccount": MessageLookupByLibrary.simpleMessage("TIANJI account"),
+    "tianjiApiBase": MessageLookupByLibrary.simpleMessage("Endpoint"),
+    "tianjiAutoOptimize": MessageLookupByLibrary.simpleMessage(
+      "Auto-optimize on network change",
+    ),
+    "tianjiAutoOptimizeDesc": MessageLookupByLibrary.simpleMessage(
+      "Re-test after switching Wi-Fi; switch only if the line is down",
+    ),
+    "tianjiChangeApiBase": MessageLookupByLibrary.simpleMessage(
+      "Can\'t connect? Change endpoint",
+    ),
+    "tianjiEmail": MessageLookupByLibrary.simpleMessage("Email"),
+    "tianjiLoginAndConnect": MessageLookupByLibrary.simpleMessage(
+      "Sign in and connect",
+    ),
+    "tianjiLoginFailed": MessageLookupByLibrary.simpleMessage("Sign-in failed"),
+    "tianjiLoginFoot": MessageLookupByLibrary.simpleMessage(
+      "If the main domain is blocked, get a backup address at status.tianjiyun.org.\nOn iOS, import the subscription into Shadowrocket.",
+    ),
+    "tianjiLoginSub": MessageLookupByLibrary.simpleMessage(
+      "Lines are set up automatically after sign-in. Nothing to import.",
+    ),
+    "tianjiLoginTitle": MessageLookupByLibrary.simpleMessage(
+      "Sign in to TIANJI",
+    ),
+    "tianjiLogout": MessageLookupByLibrary.simpleMessage("Sign out"),
+    "tianjiManualImport": MessageLookupByLibrary.simpleMessage(
+      "Import a subscription manually",
+    ),
+    "tianjiNetChangedAllDown": MessageLookupByLibrary.simpleMessage(
+      "Network changed, no line is reachable right now",
+    ),
+    "tianjiNetChangedOk": MessageLookupByLibrary.simpleMessage(
+      "Network changed, current line is fine",
+    ),
+    "tianjiNetChangedSwitched": m24,
+    "tianjiNetworkError": MessageLookupByLibrary.simpleMessage(
+      "Cannot reach the server. The main domain may be blocked: get a backup address from the status page, then tap \"Change endpoint\".",
+    ),
+    "tianjiNoSubscription": MessageLookupByLibrary.simpleMessage(
+      "This account has no active plan yet. Claim or buy one on the website first.",
+    ),
+    "tianjiPassword": MessageLookupByLibrary.simpleMessage("Password"),
+    "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("TIANJI"),
+    "tianjiRegister": MessageLookupByLibrary.simpleMessage(
+      "No account yet? Register",
+    ),
     "tight": MessageLookupByLibrary.simpleMessage("Плотный"),
     "time": MessageLookupByLibrary.simpleMessage("Время"),
     "timeout": MessageLookupByLibrary.simpleMessage("Таймаут"),
@@ -1099,7 +1149,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "urlDesc": MessageLookupByLibrary.simpleMessage(
       "Получить профиль через URL",
     ),
-    "urlTip": m24,
+    "urlTip": m25,
     "useHosts": MessageLookupByLibrary.simpleMessage("Использовать hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage(
       "Использовать системные hosts",
@@ -1123,7 +1173,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "whitelistMode": MessageLookupByLibrary.simpleMessage(
       "Режим белого списка",
     ),
-    "yearsAgo": m25,
+    "yearsAgo": m26,
     "zh_CN": MessageLookupByLibrary.simpleMessage("Упрощенный китайский"),
   };
 }

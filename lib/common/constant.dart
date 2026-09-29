@@ -77,6 +77,12 @@ const defaultExternalController = '127.0.0.1:9090';
 const maxMobileWidth = 600;
 const maxLaptopWidth = 840;
 const defaultTestUrl = 'https://www.gstatic.com/generate_204';
+
+/// 天机：账号接口的默认接入地址（Xboard 用户面板）。用户可在登录页改，主域名被墙时换备用域名。
+const defaultTianjiApiBase = 'https://app.tianjiyun.org';
+/// 天机：官网，登录页「注册」「状态页」链接的根。
+const tianjiSiteUrl = 'https://tianjiyun.org';
+const tianjiStatusUrl = 'https://status.tianjiyun.org';
 final commonFilter = ImageFilter.blur(
   sigmaX: 5,
   sigmaY: 5,

@@ -69,9 +69,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m23(count) => "${count} 項目が選択されています";
 
-  static String m24(label) => "${label}はURLである必要があります";
+  static String m24(name, delay) =>
+      "Network changed, switched to ${name} · ${delay} ms";
 
-  static String m25(count) => "${count}年前";
+  static String m25(label) => "${label}はURLである必要があります";
+
+  static String m26(count) => "${count}年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -817,6 +820,53 @@ class MessageLookup extends MessageLookupByLibrary {
     "themeColor": MessageLookupByLibrary.simpleMessage("テーマカラー"),
     "themeDesc": MessageLookupByLibrary.simpleMessage("ダークモードの設定、色の調整"),
     "themeMode": MessageLookupByLibrary.simpleMessage("テーマモード"),
+    "tianjiAccount": MessageLookupByLibrary.simpleMessage("TIANJI account"),
+    "tianjiApiBase": MessageLookupByLibrary.simpleMessage("Endpoint"),
+    "tianjiAutoOptimize": MessageLookupByLibrary.simpleMessage(
+      "Auto-optimize on network change",
+    ),
+    "tianjiAutoOptimizeDesc": MessageLookupByLibrary.simpleMessage(
+      "Re-test after switching Wi-Fi; switch only if the line is down",
+    ),
+    "tianjiChangeApiBase": MessageLookupByLibrary.simpleMessage(
+      "Can\'t connect? Change endpoint",
+    ),
+    "tianjiEmail": MessageLookupByLibrary.simpleMessage("Email"),
+    "tianjiLoginAndConnect": MessageLookupByLibrary.simpleMessage(
+      "Sign in and connect",
+    ),
+    "tianjiLoginFailed": MessageLookupByLibrary.simpleMessage("Sign-in failed"),
+    "tianjiLoginFoot": MessageLookupByLibrary.simpleMessage(
+      "If the main domain is blocked, get a backup address at status.tianjiyun.org.\nOn iOS, import the subscription into Shadowrocket.",
+    ),
+    "tianjiLoginSub": MessageLookupByLibrary.simpleMessage(
+      "Lines are set up automatically after sign-in. Nothing to import.",
+    ),
+    "tianjiLoginTitle": MessageLookupByLibrary.simpleMessage(
+      "Sign in to TIANJI",
+    ),
+    "tianjiLogout": MessageLookupByLibrary.simpleMessage("Sign out"),
+    "tianjiManualImport": MessageLookupByLibrary.simpleMessage(
+      "Import a subscription manually",
+    ),
+    "tianjiNetChangedAllDown": MessageLookupByLibrary.simpleMessage(
+      "Network changed, no line is reachable right now",
+    ),
+    "tianjiNetChangedOk": MessageLookupByLibrary.simpleMessage(
+      "Network changed, current line is fine",
+    ),
+    "tianjiNetChangedSwitched": m24,
+    "tianjiNetworkError": MessageLookupByLibrary.simpleMessage(
+      "Cannot reach the server. The main domain may be blocked: get a backup address from the status page, then tap \"Change endpoint\".",
+    ),
+    "tianjiNoSubscription": MessageLookupByLibrary.simpleMessage(
+      "This account has no active plan yet. Claim or buy one on the website first.",
+    ),
+    "tianjiPassword": MessageLookupByLibrary.simpleMessage("Password"),
+    "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("TIANJI"),
+    "tianjiRegister": MessageLookupByLibrary.simpleMessage(
+      "No account yet? Register",
+    ),
     "tight": MessageLookupByLibrary.simpleMessage("密"),
     "time": MessageLookupByLibrary.simpleMessage("時間"),
     "timeout": MessageLookupByLibrary.simpleMessage("タイムアウト"),
@@ -842,7 +892,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("アップロード"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("URL経由でプロファイルを取得"),
-    "urlTip": m24,
+    "urlTip": m25,
     "useHosts": MessageLookupByLibrary.simpleMessage("ホストを使用"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("システムホストを使用"),
     "userAgent": MessageLookupByLibrary.simpleMessage("ユーザーエージェント"),
@@ -858,7 +908,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnTip": MessageLookupByLibrary.simpleMessage("変更はVPN再起動後に有効"),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage("WebDAV設定"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("ホワイトリストモード"),
-    "yearsAgo": m25,
+    "yearsAgo": m26,
     "zh_CN": MessageLookupByLibrary.simpleMessage("簡体字中国語"),
   };
 }

@@ -13,6 +13,14 @@ class AppSetting extends _$AppSetting with AutoDisposeNotifierMixin {
 }
 
 @Riverpod(keepAlive: true)
+class TianjiSetting extends _$TianjiSetting with AutoDisposeNotifierMixin {
+  @override
+  TianjiProps build() {
+    return const TianjiProps();
+  }
+}
+
+@Riverpod(keepAlive: true)
 class WindowSetting extends _$WindowSetting with AutoDisposeNotifierMixin {
   @override
   WindowProps build() {
@@ -119,6 +127,7 @@ Config _config(Ref ref) {
   final proxiesStyleProps = ref.watch(proxiesStyleSettingProvider);
   final patchClashConfig = ref.watch(patchClashConfigProvider);
   final excludeSSIDs = ref.watch(excludeSSIDsProvider);
+  final tianjiProps = ref.watch(tianjiSettingProvider);
   return Config(
     appSettingProps: appSettingProps,
     windowProps: windowProps,
@@ -132,6 +141,7 @@ Config _config(Ref ref) {
     proxiesStyleProps: proxiesStyleProps,
     patchClashConfig: patchClashConfig,
     excludeSSIDs: excludeSSIDs,
+    tianjiProps: tianjiProps,
   );
 }
 
@@ -155,5 +165,6 @@ List<Override> buildConfigOverrides(Config config) {
       (_, _) => config.patchClashConfig,
     ),
     excludeSSIDsProvider.overrideWithBuild((_, _) => config.excludeSSIDs),
+    tianjiSettingProvider.overrideWithBuild((_, _) => config.tianjiProps),
   ];
 }

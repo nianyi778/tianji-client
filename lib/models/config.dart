@@ -29,6 +29,7 @@ const defaultBypassDomain = [
 ];
 
 const defaultAppSettingProps = AppSettingProps();
+const defaultTianjiProps = TianjiProps();
 const defaultVpnProps = VpnProps();
 const defaultNetworkProps = NetworkProps();
 const defaultProxiesStyleProps = ProxiesStyleProps();
@@ -229,6 +230,40 @@ abstract class ThemeProps with _$ThemeProps {
   }
 }
 
+/// 天机账号状态。
+///
+/// 🔴 authData 是 Xboard 的登录令牌（有效期一年），和订阅链接一样敏感。它和 profiles 里的
+/// 订阅 url 一起落在本机 preferences，也一起进 WebDAV 备份 —— 这一点上游本来就是这样，
+/// 不新增泄露面。密码永远不存。
+@freezed
+abstract class TianjiProps with _$TianjiProps {
+  const factory TianjiProps({
+    @Default('') String email,
+    @Default('') String authData,
+
+    /// 登录时创建的那个配置的 id；重新登录会替换它而不是再加一个
+    int? profileId,
+
+    /// 用户主动选了「手动导入订阅」，不再拦登录页
+    @Default(false) bool skipLogin,
+
+    /// 网络变化（换 WiFi）后自动重测、线路断了才切换
+    @Default(true) bool autoOptimize,
+    @Default(defaultTianjiApiBase) String apiBase,
+  }) = _TianjiProps;
+
+  factory TianjiProps.fromJson(Map<String, Object?> json) =>
+      _$TianjiPropsFromJson(json);
+
+  factory TianjiProps.safeFromJson(Map<String, Object?>? json) {
+    try {
+      return json == null ? defaultTianjiProps : TianjiProps.fromJson(json);
+    } catch (_) {
+      return defaultTianjiProps;
+    }
+  }
+}
+
 @freezed
 abstract class Config with _$Config {
   const factory Config({
@@ -246,6 +281,9 @@ abstract class Config with _$Config {
     @Default(defaultWindowProps) WindowProps windowProps,
     @Default(defaultClashConfig) PatchClashConfig patchClashConfig,
     @Default([]) List<String> excludeSSIDs,
+    @JsonKey(fromJson: TianjiProps.safeFromJson)
+    @Default(defaultTianjiProps)
+    TianjiProps tianjiProps,
   }) = _Config;
 
   factory Config.fromJson(Map<String, Object?> json) => _$ConfigFromJson(json);

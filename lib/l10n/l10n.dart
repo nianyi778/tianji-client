@@ -4523,6 +4523,196 @@ class AppLocalizations {
       args: [count],
     );
   }
+
+  /// `Sign in to TIANJI`
+  String get tianjiLoginTitle {
+    return Intl.message(
+      'Sign in to TIANJI',
+      name: 'tianjiLoginTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lines are set up automatically after sign-in. Nothing to import.`
+  String get tianjiLoginSub {
+    return Intl.message(
+      'Lines are set up automatically after sign-in. Nothing to import.',
+      name: 'tianjiLoginSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Email`
+  String get tianjiEmail {
+    return Intl.message('Email', name: 'tianjiEmail', desc: '', args: []);
+  }
+
+  /// `Password`
+  String get tianjiPassword {
+    return Intl.message('Password', name: 'tianjiPassword', desc: '', args: []);
+  }
+
+  /// `Sign in and connect`
+  String get tianjiLoginAndConnect {
+    return Intl.message(
+      'Sign in and connect',
+      name: 'tianjiLoginAndConnect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No account yet? Register`
+  String get tianjiRegister {
+    return Intl.message(
+      'No account yet? Register',
+      name: 'tianjiRegister',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import a subscription manually`
+  String get tianjiManualImport {
+    return Intl.message(
+      'Import a subscription manually',
+      name: 'tianjiManualImport',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can't connect? Change endpoint`
+  String get tianjiChangeApiBase {
+    return Intl.message(
+      'Can\'t connect? Change endpoint',
+      name: 'tianjiChangeApiBase',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Endpoint`
+  String get tianjiApiBase {
+    return Intl.message('Endpoint', name: 'tianjiApiBase', desc: '', args: []);
+  }
+
+  /// `If the main domain is blocked, get a backup address at status.tianjiyun.org.\nOn iOS, import the subscription into Shadowrocket.`
+  String get tianjiLoginFoot {
+    return Intl.message(
+      'If the main domain is blocked, get a backup address at status.tianjiyun.org.\nOn iOS, import the subscription into Shadowrocket.',
+      name: 'tianjiLoginFoot',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign-in failed`
+  String get tianjiLoginFailed {
+    return Intl.message(
+      'Sign-in failed',
+      name: 'tianjiLoginFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cannot reach the server. The main domain may be blocked: get a backup address from the status page, then tap "Change endpoint".`
+  String get tianjiNetworkError {
+    return Intl.message(
+      'Cannot reach the server. The main domain may be blocked: get a backup address from the status page, then tap "Change endpoint".',
+      name: 'tianjiNetworkError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This account has no active plan yet. Claim or buy one on the website first.`
+  String get tianjiNoSubscription {
+    return Intl.message(
+      'This account has no active plan yet. Claim or buy one on the website first.',
+      name: 'tianjiNoSubscription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TIANJI`
+  String get tianjiProfileLabel {
+    return Intl.message(
+      'TIANJI',
+      name: 'tianjiProfileLabel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network changed, current line is fine`
+  String get tianjiNetChangedOk {
+    return Intl.message(
+      'Network changed, current line is fine',
+      name: 'tianjiNetChangedOk',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Network changed, switched to {name} · {delay} ms`
+  String tianjiNetChangedSwitched(Object name, Object delay) {
+    return Intl.message(
+      'Network changed, switched to $name · $delay ms',
+      name: 'tianjiNetChangedSwitched',
+      desc: '',
+      args: [name, delay],
+    );
+  }
+
+  /// `Network changed, no line is reachable right now`
+  String get tianjiNetChangedAllDown {
+    return Intl.message(
+      'Network changed, no line is reachable right now',
+      name: 'tianjiNetChangedAllDown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto-optimize on network change`
+  String get tianjiAutoOptimize {
+    return Intl.message(
+      'Auto-optimize on network change',
+      name: 'tianjiAutoOptimize',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Re-test after switching Wi-Fi; switch only if the line is down`
+  String get tianjiAutoOptimizeDesc {
+    return Intl.message(
+      'Re-test after switching Wi-Fi; switch only if the line is down',
+      name: 'tianjiAutoOptimizeDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `TIANJI account`
+  String get tianjiAccount {
+    return Intl.message(
+      'TIANJI account',
+      name: 'tianjiAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign out`
+  String get tianjiLogout {
+    return Intl.message('Sign out', name: 'tianjiLogout', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

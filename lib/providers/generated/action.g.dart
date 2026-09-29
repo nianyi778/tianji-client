@@ -40,7 +40,7 @@ final class CommonActionProvider extends $NotifierProvider<CommonAction, void> {
   }
 }
 
-String _$commonActionHash() => r'81d01cab066e94793cdaa4ff89806ebff6030f50';
+String _$commonActionHash() => r'52a2cd8f01ea3fbbb76b7a7958332bf0b6f04211';
 
 abstract class _$CommonAction extends $Notifier<void> {
   void build();
@@ -91,7 +91,7 @@ final class SetupActionProvider extends $NotifierProvider<SetupAction, void> {
   }
 }
 
-String _$setupActionHash() => r'27018fa3a8606b501472f50aa4b46eeb0c964ff3';
+String _$setupActionHash() => r'5a79357c5d361292f9131c347890356b138fe077';
 
 abstract class _$SetupAction extends $Notifier<void> {
   void build();
@@ -193,7 +193,7 @@ final class CoreActionProvider extends $NotifierProvider<CoreAction, void> {
   }
 }
 
-String _$coreActionHash() => r'f314ae5f40da30a71ece0b5f84cdd2e9d7335ee9';
+String _$coreActionHash() => r'972ad46fcf005c6c6e91f8f11965e142920941aa';
 
 abstract class _$CoreAction extends $Notifier<void> {
   void build();
@@ -398,7 +398,7 @@ final class ProxiesActionProvider
   }
 }
 
-String _$proxiesActionHash() => r'1a734ab542f5e3734f9887768567e1eb14e0decf';
+String _$proxiesActionHash() => r'c3125fbd8c342d859ebb3a82a83e0ea69457c2f3';
 
 abstract class _$ProxiesAction extends $Notifier<void> {
   void build();
@@ -505,6 +505,75 @@ final class GeoResourceActionProvider
 String _$geoResourceActionHash() => r'980385b1cc4e685e0e2732471083c63d29b59c10';
 
 abstract class _$GeoResourceAction extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
+/// 天机账号：登录即用 + 网络变化后自动优化。
+///
+/// 登录走 Xboard 公开的用户接口（它自带的面板就是这么调的），用的是用户自己的账号密码，
+/// 不涉及任何管理密钥。拿到订阅链接后当成一个普通配置导入，其余全部复用上游逻辑。
+
+@ProviderFor(TianjiAction)
+final tianjiActionProvider = TianjiActionProvider._();
+
+/// 天机账号：登录即用 + 网络变化后自动优化。
+///
+/// 登录走 Xboard 公开的用户接口（它自带的面板就是这么调的），用的是用户自己的账号密码，
+/// 不涉及任何管理密钥。拿到订阅链接后当成一个普通配置导入，其余全部复用上游逻辑。
+final class TianjiActionProvider extends $NotifierProvider<TianjiAction, void> {
+  /// 天机账号：登录即用 + 网络变化后自动优化。
+  ///
+  /// 登录走 Xboard 公开的用户接口（它自带的面板就是这么调的），用的是用户自己的账号密码，
+  /// 不涉及任何管理密钥。拿到订阅链接后当成一个普通配置导入，其余全部复用上游逻辑。
+  TianjiActionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tianjiActionProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tianjiActionHash();
+
+  @$internal
+  @override
+  TianjiAction create() => TianjiAction();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$tianjiActionHash() => r'7777c7d46b4d05cf34f5c7d776ecac075263d1c7';
+
+/// 天机账号：登录即用 + 网络变化后自动优化。
+///
+/// 登录走 Xboard 公开的用户接口（它自带的面板就是这么调的），用的是用户自己的账号密码，
+/// 不涉及任何管理密钥。拿到订阅链接后当成一个普通配置导入，其余全部复用上游逻辑。
+
+abstract class _$TianjiAction extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override

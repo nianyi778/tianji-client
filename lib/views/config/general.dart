@@ -601,7 +601,61 @@ class ExternalControllerItem extends ConsumerWidget {
   }
 }
 
+class TianjiAutoOptimizeItem extends ConsumerWidget {
+  const TianjiAutoOptimizeItem({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appLocalizations = context.appLocalizations;
+    final value = ref.watch(
+      tianjiSettingProvider.select((state) => state.autoOptimize),
+    );
+    return ListItem.toggle(
+      leading: const Icon(Icons.wifi_find_outlined),
+      title: Text(appLocalizations.tianjiAutoOptimize),
+      subtitle: Text(appLocalizations.tianjiAutoOptimizeDesc),
+      value: value,
+      onChanged: (bool value) {
+        ref
+            .read(tianjiSettingProvider.notifier)
+            .update((state) => state.copyWith(autoOptimize: value));
+      },
+    );
+  }
+}
+
+class TianjiAccountItem extends ConsumerWidget {
+  const TianjiAccountItem({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appLocalizations = context.appLocalizations;
+    final email = ref.watch(
+      tianjiSettingProvider.select((state) => state.email),
+    );
+    if (email.isEmpty) return const SizedBox.shrink();
+    return ListItem(
+      leading: const Icon(Icons.person_outline),
+      title: Text(appLocalizations.tianjiAccount),
+      subtitle: Text(email),
+      trailing: TextButton(
+        onPressed: () async {
+          final res = await globalState.showMessage(
+            title: appLocalizations.tianjiLogout,
+            message: TextSpan(text: email),
+          );
+          if (res != true) return;
+          await ref.read(tianjiActionProvider.notifier).logout();
+        },
+        child: Text(appLocalizations.tianjiLogout),
+      ),
+    );
+  }
+}
+
 final generalItems = <Widget>[
+  const TianjiAccountItem(),
+  const TianjiAutoOptimizeItem(),
   const LogLevelItem(),
   const UaItem(),
   if (system.isDesktop) const KeepAliveIntervalItem(),

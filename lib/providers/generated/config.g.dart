@@ -61,6 +61,58 @@ abstract class _$AppSetting extends $Notifier<AppSettingProps> {
   }
 }
 
+@ProviderFor(TianjiSetting)
+final tianjiSettingProvider = TianjiSettingProvider._();
+
+final class TianjiSettingProvider
+    extends $NotifierProvider<TianjiSetting, TianjiProps> {
+  TianjiSettingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tianjiSettingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tianjiSettingHash();
+
+  @$internal
+  @override
+  TianjiSetting create() => TianjiSetting();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TianjiProps value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TianjiProps>(value),
+    );
+  }
+}
+
+String _$tianjiSettingHash() => r'2331a0ab7fd776cc0e13766c3cbf7258610855b6';
+
+abstract class _$TianjiSetting extends $Notifier<TianjiProps> {
+  TianjiProps build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<TianjiProps, TianjiProps>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<TianjiProps, TianjiProps>,
+              TianjiProps,
+              Object?,
+              Object?
+            >;
+    return element.handleCreate(ref, build);
+  }
+}
+
 @ProviderFor(WindowSetting)
 final windowSettingProvider = WindowSettingProvider._();
 
@@ -670,4 +722,4 @@ final class _ConfigProvider extends $FunctionalProvider<Config, Config, Config>
   }
 }
 
-String _$_configHash() => r'7f29da1e31a3393fb36ab43c21f0d1b38223afec';
+String _$_configHash() => r'2836aa94d5f0d0d4039785256be3de883f744c09';

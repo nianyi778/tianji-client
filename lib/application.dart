@@ -9,12 +9,12 @@ import 'package:fl_clash/manager/manager.dart';
 import 'package:fl_clash/plugins/app.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
+import 'package:fl_clash/views/tianji/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'pages/pages.dart';
 
 class Application extends ConsumerStatefulWidget {
   const Application({super.key});
@@ -113,6 +113,9 @@ class ApplicationState extends ConsumerState<Application> {
               ref.read(checkIpNumProvider.notifier).add();
             }
             _preHasVpn = hasVpn;
+            ref
+                .read(tianjiActionProvider.notifier)
+                .onConnectivityChanged(results);
           },
           child: child,
         ),
@@ -182,7 +185,7 @@ class ApplicationState extends ConsumerState<Application> {
           home: child!,
         );
       },
-      child: const HomePage(),
+      child: const TianjiGate(),
     );
   }
 
