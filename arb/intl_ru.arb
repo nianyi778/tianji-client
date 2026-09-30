@@ -594,5 +594,8 @@
   "tianjiJustNow": "just now",
   "tianjiAgoMinutes": "{n} min ago",
   "tianjiAgoHours": "{n} h ago",
-  "tianjiAgoDays": "{n} d ago"
+  "tianjiAgoDays": "{n} d ago",
+  "tianjiLines": "Lines",
+  "tianjiRetest": "Re-test",
+  "tianjiLocked": "Requires a higher plan"
 }

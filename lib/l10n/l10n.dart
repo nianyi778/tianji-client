@@ -4883,6 +4883,26 @@ class AppLocalizations {
   String tianjiAgoDays(Object n) {
     return Intl.message('$n d ago', name: 'tianjiAgoDays', desc: '', args: [n]);
   }
+
+  /// `Lines`
+  String get tianjiLines {
+    return Intl.message('Lines', name: 'tianjiLines', desc: '', args: []);
+  }
+
+  /// `Re-test`
+  String get tianjiRetest {
+    return Intl.message('Re-test', name: 'tianjiRetest', desc: '', args: []);
+  }
+
+  /// `Requires a higher plan`
+  String get tianjiLocked {
+    return Intl.message(
+      'Requires a higher plan',
+      name: 'tianjiLocked',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

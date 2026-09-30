@@ -857,6 +857,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("Email"),
     "tianjiJustNow": MessageLookupByLibrary.simpleMessage("just now"),
     "tianjiLine": MessageLookupByLibrary.simpleMessage("Line"),
+    "tianjiLines": MessageLookupByLibrary.simpleMessage("Lines"),
+    "tianjiLocked": MessageLookupByLibrary.simpleMessage(
+      "Requires a higher plan",
+    ),
     "tianjiLoginAndConnect": MessageLookupByLibrary.simpleMessage(
       "Sign in and connect",
     ),
@@ -894,6 +898,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiRegister": MessageLookupByLibrary.simpleMessage(
       "No account yet? Register",
     ),
+    "tianjiRetest": MessageLookupByLibrary.simpleMessage("Re-test"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
       "Tap to connect",
     ),

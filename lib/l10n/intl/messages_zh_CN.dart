@@ -738,6 +738,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("邮箱"),
     "tianjiJustNow": MessageLookupByLibrary.simpleMessage("刚刚"),
     "tianjiLine": MessageLookupByLibrary.simpleMessage("线路"),
+    "tianjiLines": MessageLookupByLibrary.simpleMessage("线路"),
+    "tianjiLocked": MessageLookupByLibrary.simpleMessage("需升级套餐"),
     "tianjiLoginAndConnect": MessageLookupByLibrary.simpleMessage("登录并连接"),
     "tianjiLoginFailed": MessageLookupByLibrary.simpleMessage("登录失败"),
     "tianjiLoginFoot": MessageLookupByLibrary.simpleMessage(
@@ -765,6 +767,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiPassword": MessageLookupByLibrary.simpleMessage("密码"),
     "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("天机 TIANJI"),
     "tianjiRegister": MessageLookupByLibrary.simpleMessage("还没有账号？注册"),
+    "tianjiRetest": MessageLookupByLibrary.simpleMessage("重新测速"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage("点击连接"),
     "tianjiTapToDisconnect": MessageLookupByLibrary.simpleMessage(
       "点击断开 · 长按重新测速",

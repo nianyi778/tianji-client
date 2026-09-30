@@ -19,6 +19,13 @@ class Navigation {
         modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
       ),
       NavigationItem(
+        icon: const Icon(Icons.alt_route),
+        label: PageLabel.lines,
+        builder: (_) =>
+            const TianjiLinesView(key: GlobalObjectKey(PageLabel.lines)),
+        modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
+      ),
+      NavigationItem(
         keep: false,
         icon: const Icon(Icons.space_dashboard),
         label: PageLabel.dashboard,
@@ -30,6 +37,7 @@ class Navigation {
         label: PageLabel.proxies,
         builder: (_) =>
             const ProxiesView(key: GlobalObjectKey(PageLabel.proxies)),
+        // 天机的「线路」页取代了它在底部栏的位置；完整的分组/节点视图退到桌面与「更多」
         modes: hasProxies
             ? [NavigationItemMode.mobile, NavigationItemMode.desktop]
             : [],

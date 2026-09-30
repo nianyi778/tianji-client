@@ -196,9 +196,8 @@ class _LinePill extends ConsumerWidget {
       borderRadius: BorderRadius.circular(999),
       child: InkWell(
         borderRadius: BorderRadius.circular(999),
-        onTap: () => ref
-            .read(currentPageLabelProvider.notifier)
-            .toPage(PageLabel.proxies),
+        onTap: () =>
+            ref.read(currentPageLabelProvider.notifier).toPage(PageLabel.lines),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           child: Row(

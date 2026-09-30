@@ -594,5 +594,8 @@
   "tianjiJustNow": "刚刚",
   "tianjiAgoMinutes": "{n} 分钟前",
   "tianjiAgoHours": "{n} 小时前",
-  "tianjiAgoDays": "{n} 天前"
+  "tianjiAgoDays": "{n} 天前",
+  "tianjiLines": "线路",
+  "tianjiRetest": "重新测速",
+  "tianjiLocked": "需升级套餐"
 }
