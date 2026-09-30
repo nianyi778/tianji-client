@@ -172,7 +172,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: tianji-${{ matrix.platform }}
+          # 🔴 两个 macOS job 若共用一个 artifact 名会互相覆盖，MANIFEST 就只剩一个芯片的 dmg
+          name: tianji-${{ matrix.platform }}-${{ matrix.os }}
           path: dist/*
           if-no-files-found: error
 
