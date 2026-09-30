@@ -136,7 +136,10 @@ const proxiesListStoreKey = PageStorageKey<String>('proxies_list');
 const toolsStoreKey = PageStorageKey<String>('tools');
 const profilesStoreKey = PageStorageKey<String>('profiles');
 
-const defaultPrimaryColor = 0XFFD8C0C3;
+// 🔴 原来是 0xFFD8C0C3（藕粉），上游的默认种子。整个 app 的配色都从它派生，
+// 所以怎么调都不像天机。换成官网同一个品牌蓝 #0071E3。
+// 用户仍可在「设置 → 主题」里换成别的，这里只是默认值。
+const defaultPrimaryColor = 0XFF0071E3;
 
 double getWidgetHeight(num lines) {
   final space = 14.mAp;

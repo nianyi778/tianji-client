@@ -15,7 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 class Application extends ConsumerStatefulWidget {
   const Application({super.key});
 
@@ -166,21 +165,26 @@ class ApplicationState extends ConsumerState<Application> {
           locale: utils.getLocaleForString(locale),
           supportedLocales: AppLocalizations.delegate.supportedLocales,
           themeMode: themeProps.themeMode,
-          theme: ThemeData(
-            useMaterial3: true,
-            pageTransitionsTheme: _pageTransitionsTheme,
-            colorScheme: _getAppColorScheme(
-              brightness: Brightness.light,
-              primaryColor: themeProps.primaryColor,
+          // 天机的形状 / 字距 / 组件默认值叠在上游主题之上，见 common/tianji_theme.dart
+          theme: tianjiTheme(
+            ThemeData(
+              useMaterial3: true,
+              pageTransitionsTheme: _pageTransitionsTheme,
+              colorScheme: _getAppColorScheme(
+                brightness: Brightness.light,
+                primaryColor: themeProps.primaryColor,
+              ),
             ),
           ),
-          darkTheme: ThemeData(
-            useMaterial3: true,
-            pageTransitionsTheme: _pageTransitionsTheme,
-            colorScheme: _getAppColorScheme(
-              brightness: Brightness.dark,
-              primaryColor: themeProps.primaryColor,
-            ).toPureBlack(themeProps.pureBlack),
+          darkTheme: tianjiTheme(
+            ThemeData(
+              useMaterial3: true,
+              pageTransitionsTheme: _pageTransitionsTheme,
+              colorScheme: _getAppColorScheme(
+                brightness: Brightness.dark,
+                primaryColor: themeProps.primaryColor,
+              ).toPureBlack(themeProps.pureBlack),
+            ),
           ),
           home: child!,
         );
