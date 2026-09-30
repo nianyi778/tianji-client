@@ -81,6 +81,8 @@ jobs:
           # macOS 未签名 —— 首次打开会被 Gatekeeper 拦, 下载页已如实说明
           # 绕过方法。要免告警需要 Apple 开发者证书, 那是另一笔账。
           - { platform: macos,   os: macos-latest }
+          # Intel Mac 单独一行：架构由 runner 决定, 不是参数。产物名带 amd64。
+          - { platform: macos,   os: macos-15-intel }
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
