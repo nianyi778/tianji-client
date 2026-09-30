@@ -84,16 +84,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m27(n) => "${n} AI services available";
 
-  static String m28(name, delay) =>
+  static String m28(n) => "${n}";
+
+  static String m29(name, delay) =>
       "Network changed, switched to ${name} · ${delay} ms";
 
-  static String m29(name) => "Switch to ${name}";
+  static String m30(n) => "Resets in ${n} d";
 
-  static String m30(names) => "${names} unavailable";
+  static String m31(name) => "Switch to ${name}";
 
-  static String m31(label) => "${label} must be a url";
+  static String m32(names) => "${names} unavailable";
 
-  static String m32(count) =>
+  static String m33(label) => "${label} must be a url";
+
+  static String m34(count) =>
       "${Intl.plural(count, one: '1 year ago', other: '${count} years ago')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -146,6 +150,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Provide diverse configuration options",
     ),
     "agree": MessageLookupByLibrary.simpleMessage("Agree"),
+    "ai": MessageLookupByLibrary.simpleMessage("AI Boost"),
     "allowBypass": MessageLookupByLibrary.simpleMessage(
       "Allow applications to bypass VPN",
     ),
@@ -579,6 +584,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "This is a message.",
     ),
     "min": MessageLookupByLibrary.simpleMessage("Min"),
+    "mine": MessageLookupByLibrary.simpleMessage("Me"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage("Minimize on exit"),
     "minimizeOnExitDesc": MessageLookupByLibrary.simpleMessage(
       "Modify the default system exit event",
@@ -1027,13 +1033,29 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "themeMode": MessageLookupByLibrary.simpleMessage("Theme mode"),
     "tianjiAccount": MessageLookupByLibrary.simpleMessage("TIANJI account"),
+    "tianjiAccountFailed": MessageLookupByLibrary.simpleMessage(
+      "Account info unavailable",
+    ),
     "tianjiAgoDays": m24,
     "tianjiAgoHours": m25,
     "tianjiAgoMinutes": m26,
     "tianjiAiAll": MessageLookupByLibrary.simpleMessage("All results"),
     "tianjiAiAvailable": MessageLookupByLibrary.simpleMessage("Available"),
+    "tianjiAiBoost": MessageLookupByLibrary.simpleMessage("AI Boost"),
+    "tianjiAiBoostDesc": MessageLookupByLibrary.simpleMessage(
+      "Give each AI service its own line.",
+    ),
+    "tianjiAiFollowMain": MessageLookupByLibrary.simpleMessage(
+      "Follow main line",
+    ),
     "tianjiAiNoData": MessageLookupByLibrary.simpleMessage(
       "Unavailable right now",
+    ),
+    "tianjiAiNoGroups": MessageLookupByLibrary.simpleMessage(
+      "No AI groups in this subscription yet",
+    ),
+    "tianjiAiNoGroupsDesc": MessageLookupByLibrary.simpleMessage(
+      "Update the subscription once to pick a line per service.",
     ),
     "tianjiAiNotProbed": MessageLookupByLibrary.simpleMessage(
       "This line is not in the public probe set",
@@ -1063,6 +1085,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Acceleration is on",
     ),
     "tianjiConnectionInfo": MessageLookupByLibrary.simpleMessage("Connection"),
+    "tianjiDeviceUnit": m28,
+    "tianjiDevices": MessageLookupByLibrary.simpleMessage("Devices"),
     "tianjiDiagnosis": MessageLookupByLibrary.simpleMessage("Diagnose"),
     "tianjiDiagnosisFoot": MessageLookupByLibrary.simpleMessage(
       "Measured from this device just now, using the same rules as the status page.",
@@ -1080,6 +1104,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("Email"),
     "tianjiExitIp": MessageLookupByLibrary.simpleMessage("Exit IP"),
     "tianjiExitRegion": MessageLookupByLibrary.simpleMessage("Exit region"),
+    "tianjiExpireAt": MessageLookupByLibrary.simpleMessage("Expires"),
+    "tianjiExpired": MessageLookupByLibrary.simpleMessage("Expired"),
     "tianjiIpVersion": MessageLookupByLibrary.simpleMessage("IPv4 / IPv6"),
     "tianjiIpv4Exit": MessageLookupByLibrary.simpleMessage("IPv4 exit"),
     "tianjiIpv6Exit": MessageLookupByLibrary.simpleMessage("Exiting over IPv6"),
@@ -1105,25 +1131,33 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sign in to TIANJI",
     ),
     "tianjiLogout": MessageLookupByLibrary.simpleMessage("Sign out"),
+    "tianjiLogoutConfirm": MessageLookupByLibrary.simpleMessage(
+      "Signing out removes the subscription profile on this device.",
+    ),
     "tianjiManualImport": MessageLookupByLibrary.simpleMessage(
       "Import a subscription manually",
     ),
+    "tianjiMine": MessageLookupByLibrary.simpleMessage("Me"),
     "tianjiNetChangedAllDown": MessageLookupByLibrary.simpleMessage(
       "Network changed, no line is reachable right now",
     ),
     "tianjiNetChangedOk": MessageLookupByLibrary.simpleMessage(
       "Network changed, current line is fine",
     ),
-    "tianjiNetChangedSwitched": m28,
+    "tianjiNetChangedSwitched": m29,
     "tianjiNetworkError": MessageLookupByLibrary.simpleMessage(
       "Cannot reach the server. The main domain may be blocked: get a backup address from the status page, then tap \"Change endpoint\".",
     ),
+    "tianjiNeverExpire": MessageLookupByLibrary.simpleMessage("Never expires"),
     "tianjiNoLine": MessageLookupByLibrary.simpleMessage("No line yet"),
+    "tianjiNoPlan": MessageLookupByLibrary.simpleMessage("No plan yet"),
     "tianjiNoProfile": MessageLookupByLibrary.simpleMessage("Sign in first"),
     "tianjiNoSubscription": MessageLookupByLibrary.simpleMessage(
       "This account has no active plan yet. Claim or buy one on the website first.",
     ),
     "tianjiPassword": MessageLookupByLibrary.simpleMessage("Password"),
+    "tianjiPickLine": MessageLookupByLibrary.simpleMessage("Pick a line"),
+    "tianjiPlan": MessageLookupByLibrary.simpleMessage("Plan"),
     "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("TIANJI"),
     "tianjiQuickActions": MessageLookupByLibrary.simpleMessage("Quick actions"),
     "tianjiRealtimeTraffic": MessageLookupByLibrary.simpleMessage(
@@ -1133,8 +1167,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiRegister": MessageLookupByLibrary.simpleMessage(
       "No account yet? Register",
     ),
+    "tianjiRenew": MessageLookupByLibrary.simpleMessage("Renew / Upgrade"),
+    "tianjiResetIn": m30,
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("Re-test"),
-    "tianjiSwitchTo": m29,
+    "tianjiSwitchTo": m31,
     "tianjiTagline": MessageLookupByLibrary.simpleMessage("Connect the world"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
       "Tap to connect",
@@ -1144,10 +1180,13 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tianjiTimeout": MessageLookupByLibrary.simpleMessage("Timeout"),
     "tianjiUnmeasured": MessageLookupByLibrary.simpleMessage("No result"),
+    "tianjiUpdateSub": MessageLookupByLibrary.simpleMessage(
+      "Update subscription",
+    ),
     "tianjiUpload": MessageLookupByLibrary.simpleMessage("Up"),
     "tianjiUptime": MessageLookupByLibrary.simpleMessage("Uptime"),
     "tianjiUsed": MessageLookupByLibrary.simpleMessage("Used"),
-    "tianjiVerdictAiDown": m30,
+    "tianjiVerdictAiDown": m32,
     "tianjiVerdictAiDownDesc": MessageLookupByLibrary.simpleMessage(
       "This line\'s exit fails that service\'s check. Switching lines usually fixes it.",
     ),
@@ -1213,7 +1252,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "urlDesc": MessageLookupByLibrary.simpleMessage(
       "Obtain profile through URL",
     ),
-    "urlTip": m31,
+    "urlTip": m33,
     "useHosts": MessageLookupByLibrary.simpleMessage("Use hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("Use system hosts"),
     "userAgent": MessageLookupByLibrary.simpleMessage("User-Agent"),
@@ -1233,7 +1272,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "WebDAV configuration",
     ),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("Whitelist mode"),
-    "yearsAgo": m32,
+    "yearsAgo": m34,
     "zh_CN": MessageLookupByLibrary.simpleMessage("Simplified Chinese"),
   };
 }

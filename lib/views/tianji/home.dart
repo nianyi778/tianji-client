@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/views/proxies/common.dart';
+import 'package:fl_clash/views/tianji/connect_ring.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,16 +35,21 @@ class TianjiHomeView extends ConsumerWidget {
       body: LayoutBuilder(
         builder: (context, c) {
           final wide = c.maxWidth >= 900;
-          const left = Column(
+          // 🔴 手机与桌面用**两张不同的设计稿**，不是同一张缩放：
+          //    手机稿的主角是正中一个大圆环（开 app 十次有九次只做这一件事），
+          //    桌面稿是一张横向的连接卡（旁边还要并排放线路与仪表）。
+          //    硬套同一个布局会让两端都别扭 —— 圆环在 1400px 宽里孤零零，
+          //    横卡在 360px 宽里挤成一团。
+          final left = Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _ConnectionCard(),
-              SizedBox(height: tjGap3),
-              _MeterRow(),
-              SizedBox(height: tjGap3),
-              _TrafficChartCard(),
-              SizedBox(height: tjGap3),
-              _AiServicesCard(),
+              if (wide) const _ConnectionCard() else const _ConnectHero(),
+              const SizedBox(height: tjGap3),
+              const _MeterRow(),
+              const SizedBox(height: tjGap3),
+              const _TrafficChartCard(),
+              const SizedBox(height: tjGap3),
+              const _AiServicesCard(),
             ],
           );
           // 快捷操作只在宽屏出现：手机上这几件事底部 5 个 Tab 已经一步可达，
@@ -65,7 +73,7 @@ class TianjiHomeView extends ConsumerWidget {
                 ? Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Expanded(flex: 3, child: left),
+                      Expanded(flex: 3, child: left),
                       const SizedBox(width: tjGap3),
                       SizedBox(width: 340, child: right),
                     ],
@@ -320,6 +328,39 @@ class _ConnectionCard extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// 手机版的连接区：圆环 + 当前线路胶囊。对应设计稿首屏正中那一块。
+class _ConnectHero extends ConsumerWidget {
+  const _ConnectHero();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final running = ref.watch(isStartProvider) && !ref.watch(suspendProvider);
+    final main = ref.watch(tianjiMainGroupProvider);
+    final delay = main == null
+        ? null
+        : ref.watch(delayProvider(proxyName: main.name, testUrl: main.testUrl));
+    final real = main == null
+        ? ''
+        : ref.watch(realSelectedProxyStateProvider(main.name)).proxyName;
+
+    return LayoutBuilder(
+      builder: (context, c) {
+        // 环的大小跟着可用宽度走，但不超过 232 —— 再大在大屏手机上会显得空洞
+        final d = math.min(232.0, math.max(168.0, c.maxWidth * 0.58));
+        return Column(
+          children: [
+            const SizedBox(height: tjGap4),
+            TianjiConnectRing(size: d),
+            const SizedBox(height: tjGap5),
+            _LinePill(name: real, delay: delay, running: running),
+            const SizedBox(height: tjGap2),
+          ],
+        );
+      },
     );
   }
 }

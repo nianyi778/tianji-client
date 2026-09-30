@@ -50,3 +50,4 @@ export 'tianji_lines.dart';
 export 'tianji_probe.dart';
 export 'tianji_version.dart';
 export 'tianji_theme.dart';
+export 'tianji_account.dart';

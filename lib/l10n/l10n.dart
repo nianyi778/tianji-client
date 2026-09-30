@@ -5184,6 +5184,16 @@ class AppLocalizations {
     return Intl.message('Diagnose', name: 'diagnosis', desc: '', args: []);
   }
 
+  /// `AI Boost`
+  String get ai {
+    return Intl.message('AI Boost', name: 'ai', desc: '', args: []);
+  }
+
+  /// `Me`
+  String get mine {
+    return Intl.message('Me', name: 'mine', desc: '', args: []);
+  }
+
   /// `Acceleration is on`
   String get tianjiConnectedDesc {
     return Intl.message(
@@ -5309,6 +5319,161 @@ class AppLocalizations {
     return Intl.message(
       'Connect the world',
       name: 'tianjiTagline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Me`
+  String get tianjiMine {
+    return Intl.message('Me', name: 'tianjiMine', desc: '', args: []);
+  }
+
+  /// `AI Boost`
+  String get tianjiAiBoost {
+    return Intl.message('AI Boost', name: 'tianjiAiBoost', desc: '', args: []);
+  }
+
+  /// `Give each AI service its own line.`
+  String get tianjiAiBoostDesc {
+    return Intl.message(
+      'Give each AI service its own line.',
+      name: 'tianjiAiBoostDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Follow main line`
+  String get tianjiAiFollowMain {
+    return Intl.message(
+      'Follow main line',
+      name: 'tianjiAiFollowMain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No AI groups in this subscription yet`
+  String get tianjiAiNoGroups {
+    return Intl.message(
+      'No AI groups in this subscription yet',
+      name: 'tianjiAiNoGroups',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update the subscription once to pick a line per service.`
+  String get tianjiAiNoGroupsDesc {
+    return Intl.message(
+      'Update the subscription once to pick a line per service.',
+      name: 'tianjiAiNoGroupsDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update subscription`
+  String get tianjiUpdateSub {
+    return Intl.message(
+      'Update subscription',
+      name: 'tianjiUpdateSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pick a line`
+  String get tianjiPickLine {
+    return Intl.message(
+      'Pick a line',
+      name: 'tianjiPickLine',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Plan`
+  String get tianjiPlan {
+    return Intl.message('Plan', name: 'tianjiPlan', desc: '', args: []);
+  }
+
+  /// `No plan yet`
+  String get tianjiNoPlan {
+    return Intl.message(
+      'No plan yet',
+      name: 'tianjiNoPlan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expires`
+  String get tianjiExpireAt {
+    return Intl.message('Expires', name: 'tianjiExpireAt', desc: '', args: []);
+  }
+
+  /// `Never expires`
+  String get tianjiNeverExpire {
+    return Intl.message(
+      'Never expires',
+      name: 'tianjiNeverExpire',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Expired`
+  String get tianjiExpired {
+    return Intl.message('Expired', name: 'tianjiExpired', desc: '', args: []);
+  }
+
+  /// `Renew / Upgrade`
+  String get tianjiRenew {
+    return Intl.message(
+      'Renew / Upgrade',
+      name: 'tianjiRenew',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resets in {n} d`
+  String tianjiResetIn(Object n) {
+    return Intl.message(
+      'Resets in $n d',
+      name: 'tianjiResetIn',
+      desc: '',
+      args: [n],
+    );
+  }
+
+  /// `Devices`
+  String get tianjiDevices {
+    return Intl.message('Devices', name: 'tianjiDevices', desc: '', args: []);
+  }
+
+  /// `{n}`
+  String tianjiDeviceUnit(Object n) {
+    return Intl.message('$n', name: 'tianjiDeviceUnit', desc: '', args: [n]);
+  }
+
+  /// `Account info unavailable`
+  String get tianjiAccountFailed {
+    return Intl.message(
+      'Account info unavailable',
+      name: 'tianjiAccountFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Signing out removes the subscription profile on this device.`
+  String get tianjiLogoutConfirm {
+    return Intl.message(
+      'Signing out removes the subscription profile on this device.',
+      name: 'tianjiLogoutConfirm',
       desc: '',
       args: [],
     );

@@ -13,6 +13,8 @@ export 'proxies/proxies.dart';
 export 'resources.dart';
 export 'tools.dart';
 export 'tianji/home.dart';
+export 'tianji/ai.dart';
+export 'tianji/account.dart';
 export 'tianji/lines.dart';
 export 'tianji/diagnosis.dart';
 export 'tianji/sidebar.dart';

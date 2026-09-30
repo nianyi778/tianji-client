@@ -31,12 +31,27 @@ class Navigation {
             const TianjiLinesView(key: GlobalObjectKey(PageLabel.lines)),
         modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
       ),
+      // 设计稿里底部是五格：首页｜线路｜AI 加速｜诊断｜我的，AI 夹在正中间 ——
+      // 它是第一卖点，放中间那格是刻意的。
+      NavigationItem(
+        icon: const Icon(Icons.auto_awesome_outlined),
+        label: PageLabel.ai,
+        builder: (_) => const TianjiAiView(key: GlobalObjectKey(PageLabel.ai)),
+        modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
+      ),
       NavigationItem(
         icon: const Icon(Icons.health_and_safety_outlined),
         label: PageLabel.diagnosis,
         builder: (_) => const TianjiDiagnosisView(
           key: GlobalObjectKey(PageLabel.diagnosis),
         ),
+        modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
+      ),
+      NavigationItem(
+        icon: const Icon(Icons.person_outline),
+        label: PageLabel.mine,
+        builder: (_) =>
+            const TianjiAccountView(key: GlobalObjectKey(PageLabel.mine)),
         modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
       ),
       // 首页已经给出连接状态、当前线路与速率；FlClash 的仪表盘九宫格退到「更多」

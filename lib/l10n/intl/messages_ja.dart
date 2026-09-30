@@ -77,16 +77,20 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m27(n) => "${n} AI services available";
 
-  static String m28(name, delay) =>
+  static String m28(n) => "${n} 台";
+
+  static String m29(name, delay) =>
       "Network changed, switched to ${name} · ${delay} ms";
 
-  static String m29(name) => "Switch to ${name}";
+  static String m30(n) => "${n} 日後にリセット";
 
-  static String m30(names) => "${names} unavailable";
+  static String m31(name) => "Switch to ${name}";
 
-  static String m31(label) => "${label}はURLである必要があります";
+  static String m32(names) => "${names} unavailable";
 
-  static String m32(count) => "${count}年前";
+  static String m33(label) => "${label}はURLである必要があります";
+
+  static String m34(count) => "${count}年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -124,6 +128,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "advancedConfig": MessageLookupByLibrary.simpleMessage("高度な設定"),
     "advancedConfigDesc": MessageLookupByLibrary.simpleMessage("多様な設定を提供"),
     "agree": MessageLookupByLibrary.simpleMessage("同意"),
+    "ai": MessageLookupByLibrary.simpleMessage("AI Boost"),
     "allowBypass": MessageLookupByLibrary.simpleMessage("アプリがVPNをバイパスすることを許可"),
     "allowBypassDesc": MessageLookupByLibrary.simpleMessage(
       "有効化すると一部アプリがVPNをバイパス",
@@ -461,6 +466,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageTest": MessageLookupByLibrary.simpleMessage("メッセージテスト"),
     "messageTestTip": MessageLookupByLibrary.simpleMessage("これはメッセージです。"),
     "min": MessageLookupByLibrary.simpleMessage("最小化"),
+    "mine": MessageLookupByLibrary.simpleMessage("Me"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage("終了時に最小化"),
     "minimizeOnExitDesc": MessageLookupByLibrary.simpleMessage(
       "システムの終了イベントを変更",
@@ -837,13 +843,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "themeDesc": MessageLookupByLibrary.simpleMessage("ダークモードの設定、色の調整"),
     "themeMode": MessageLookupByLibrary.simpleMessage("テーマモード"),
     "tianjiAccount": MessageLookupByLibrary.simpleMessage("TIANJI account"),
+    "tianjiAccountFailed": MessageLookupByLibrary.simpleMessage(
+      "アカウント情報を取得できません",
+    ),
     "tianjiAgoDays": m24,
     "tianjiAgoHours": m25,
     "tianjiAgoMinutes": m26,
     "tianjiAiAll": MessageLookupByLibrary.simpleMessage("All results"),
     "tianjiAiAvailable": MessageLookupByLibrary.simpleMessage("Available"),
+    "tianjiAiBoost": MessageLookupByLibrary.simpleMessage("AI 高速化"),
+    "tianjiAiBoostDesc": MessageLookupByLibrary.simpleMessage(
+      "AI サービスごとに回線を個別指定できます。",
+    ),
+    "tianjiAiFollowMain": MessageLookupByLibrary.simpleMessage("メイン回線に従う"),
     "tianjiAiNoData": MessageLookupByLibrary.simpleMessage(
       "Unavailable right now",
+    ),
+    "tianjiAiNoGroups": MessageLookupByLibrary.simpleMessage(
+      "サブスクリプションに AI グループがありません",
+    ),
+    "tianjiAiNoGroupsDesc": MessageLookupByLibrary.simpleMessage(
+      "サブスクリプションを更新すると個別に選べます。",
     ),
     "tianjiAiNotProbed": MessageLookupByLibrary.simpleMessage(
       "This line is not in the public probe set",
@@ -873,6 +893,8 @@ class MessageLookup extends MessageLookupByLibrary {
       "Acceleration is on",
     ),
     "tianjiConnectionInfo": MessageLookupByLibrary.simpleMessage("Connection"),
+    "tianjiDeviceUnit": m28,
+    "tianjiDevices": MessageLookupByLibrary.simpleMessage("デバイス数"),
     "tianjiDiagnosis": MessageLookupByLibrary.simpleMessage("Diagnose"),
     "tianjiDiagnosisFoot": MessageLookupByLibrary.simpleMessage(
       "Measured from this device just now, using the same rules as the status page.",
@@ -890,6 +912,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("Email"),
     "tianjiExitIp": MessageLookupByLibrary.simpleMessage("Exit IP"),
     "tianjiExitRegion": MessageLookupByLibrary.simpleMessage("Exit region"),
+    "tianjiExpireAt": MessageLookupByLibrary.simpleMessage("有効期限"),
+    "tianjiExpired": MessageLookupByLibrary.simpleMessage("期限切れ"),
     "tianjiIpVersion": MessageLookupByLibrary.simpleMessage("IPv4 / IPv6"),
     "tianjiIpv4Exit": MessageLookupByLibrary.simpleMessage("IPv4 exit"),
     "tianjiIpv6Exit": MessageLookupByLibrary.simpleMessage("Exiting over IPv6"),
@@ -915,25 +939,33 @@ class MessageLookup extends MessageLookupByLibrary {
       "Sign in to TIANJI",
     ),
     "tianjiLogout": MessageLookupByLibrary.simpleMessage("Sign out"),
+    "tianjiLogoutConfirm": MessageLookupByLibrary.simpleMessage(
+      "ログアウトすると、この端末のサブスクリプション設定が削除されます。",
+    ),
     "tianjiManualImport": MessageLookupByLibrary.simpleMessage(
       "Import a subscription manually",
     ),
+    "tianjiMine": MessageLookupByLibrary.simpleMessage("マイページ"),
     "tianjiNetChangedAllDown": MessageLookupByLibrary.simpleMessage(
       "Network changed, no line is reachable right now",
     ),
     "tianjiNetChangedOk": MessageLookupByLibrary.simpleMessage(
       "Network changed, current line is fine",
     ),
-    "tianjiNetChangedSwitched": m28,
+    "tianjiNetChangedSwitched": m29,
     "tianjiNetworkError": MessageLookupByLibrary.simpleMessage(
       "Cannot reach the server. The main domain may be blocked: get a backup address from the status page, then tap \"Change endpoint\".",
     ),
+    "tianjiNeverExpire": MessageLookupByLibrary.simpleMessage("無期限"),
     "tianjiNoLine": MessageLookupByLibrary.simpleMessage("No line yet"),
+    "tianjiNoPlan": MessageLookupByLibrary.simpleMessage("プランなし"),
     "tianjiNoProfile": MessageLookupByLibrary.simpleMessage("Sign in first"),
     "tianjiNoSubscription": MessageLookupByLibrary.simpleMessage(
       "This account has no active plan yet. Claim or buy one on the website first.",
     ),
     "tianjiPassword": MessageLookupByLibrary.simpleMessage("Password"),
+    "tianjiPickLine": MessageLookupByLibrary.simpleMessage("回線を選ぶ"),
+    "tianjiPlan": MessageLookupByLibrary.simpleMessage("プラン"),
     "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("TIANJI"),
     "tianjiQuickActions": MessageLookupByLibrary.simpleMessage("クイック操作"),
     "tianjiRealtimeTraffic": MessageLookupByLibrary.simpleMessage(
@@ -943,8 +975,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiRegister": MessageLookupByLibrary.simpleMessage(
       "No account yet? Register",
     ),
+    "tianjiRenew": MessageLookupByLibrary.simpleMessage("更新 / アップグレード"),
+    "tianjiResetIn": m30,
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("Re-test"),
-    "tianjiSwitchTo": m29,
+    "tianjiSwitchTo": m31,
     "tianjiTagline": MessageLookupByLibrary.simpleMessage("Connect the world"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
       "Tap to connect",
@@ -954,10 +988,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tianjiTimeout": MessageLookupByLibrary.simpleMessage("Timeout"),
     "tianjiUnmeasured": MessageLookupByLibrary.simpleMessage("No result"),
+    "tianjiUpdateSub": MessageLookupByLibrary.simpleMessage("サブスクリプションを更新"),
     "tianjiUpload": MessageLookupByLibrary.simpleMessage("Up"),
     "tianjiUptime": MessageLookupByLibrary.simpleMessage("Uptime"),
     "tianjiUsed": MessageLookupByLibrary.simpleMessage("Used"),
-    "tianjiVerdictAiDown": m30,
+    "tianjiVerdictAiDown": m32,
     "tianjiVerdictAiDownDesc": MessageLookupByLibrary.simpleMessage(
       "This line\'s exit fails that service\'s check. Switching lines usually fixes it.",
     ),
@@ -1017,7 +1052,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("アップロード"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("URL経由でプロファイルを取得"),
-    "urlTip": m31,
+    "urlTip": m33,
     "useHosts": MessageLookupByLibrary.simpleMessage("ホストを使用"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("システムホストを使用"),
     "userAgent": MessageLookupByLibrary.simpleMessage("ユーザーエージェント"),
@@ -1033,7 +1068,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnTip": MessageLookupByLibrary.simpleMessage("変更はVPN再起動後に有効"),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage("WebDAV設定"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("ホワイトリストモード"),
-    "yearsAgo": m32,
+    "yearsAgo": m34,
     "zh_CN": MessageLookupByLibrary.simpleMessage("簡体字中国語"),
   };
 }

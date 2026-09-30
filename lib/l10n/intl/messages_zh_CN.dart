@@ -77,15 +77,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m27(n) => "${n} 项 AI 服务可用";
 
-  static String m28(name, delay) => "网络已变化，已切到 ${name} · ${delay} ms";
+  static String m28(n) => "${n} 台";
 
-  static String m29(name) => "切到 ${name}";
+  static String m29(name, delay) => "网络已变化，已切到 ${name} · ${delay} ms";
 
-  static String m30(names) => "${names} 当前不可用";
+  static String m30(n) => "${n} 天后重置";
 
-  static String m31(label) => "${label}必须为URL";
+  static String m31(name) => "切到 ${name}";
 
-  static String m32(count) => "${count} 年前";
+  static String m32(names) => "${names} 当前不可用";
+
+  static String m33(label) => "${label}必须为URL";
+
+  static String m34(count) => "${count} 年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -121,6 +125,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "advancedConfig": MessageLookupByLibrary.simpleMessage("进阶配置"),
     "advancedConfigDesc": MessageLookupByLibrary.simpleMessage("提供多样化配置"),
     "agree": MessageLookupByLibrary.simpleMessage("同意"),
+    "ai": MessageLookupByLibrary.simpleMessage("AI 加速"),
     "allowBypass": MessageLookupByLibrary.simpleMessage("允许应用绕过VPN"),
     "allowBypassDesc": MessageLookupByLibrary.simpleMessage("开启后部分应用可绕过VPN"),
     "allowLan": MessageLookupByLibrary.simpleMessage("局域网代理"),
@@ -412,6 +417,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "messageTest": MessageLookupByLibrary.simpleMessage("消息测试"),
     "messageTestTip": MessageLookupByLibrary.simpleMessage("这是一条消息。"),
     "min": MessageLookupByLibrary.simpleMessage("最小"),
+    "mine": MessageLookupByLibrary.simpleMessage("我的"),
     "minimizeOnExit": MessageLookupByLibrary.simpleMessage("退出时最小化"),
     "minimizeOnExitDesc": MessageLookupByLibrary.simpleMessage("修改系统默认退出事件"),
     "minutesAgo": m17,
@@ -726,12 +732,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "themeDesc": MessageLookupByLibrary.simpleMessage("设置深色模式，调整色彩"),
     "themeMode": MessageLookupByLibrary.simpleMessage("主题模式"),
     "tianjiAccount": MessageLookupByLibrary.simpleMessage("天机账号"),
+    "tianjiAccountFailed": MessageLookupByLibrary.simpleMessage("账号信息暂时无法获取"),
     "tianjiAgoDays": m24,
     "tianjiAgoHours": m25,
     "tianjiAgoMinutes": m26,
     "tianjiAiAll": MessageLookupByLibrary.simpleMessage("全部实测"),
     "tianjiAiAvailable": MessageLookupByLibrary.simpleMessage("可用"),
+    "tianjiAiBoost": MessageLookupByLibrary.simpleMessage("AI 加速"),
+    "tianjiAiBoostDesc": MessageLookupByLibrary.simpleMessage(
+      "给每个 AI 服务单独指一条线路，互不影响。",
+    ),
+    "tianjiAiFollowMain": MessageLookupByLibrary.simpleMessage("跟随主线路"),
     "tianjiAiNoData": MessageLookupByLibrary.simpleMessage("暂时无法获取"),
+    "tianjiAiNoGroups": MessageLookupByLibrary.simpleMessage("订阅里还没有 AI 分组"),
+    "tianjiAiNoGroupsDesc": MessageLookupByLibrary.simpleMessage(
+      "更新一次订阅就能为每个服务单独选线。",
+    ),
     "tianjiAiNotProbed": MessageLookupByLibrary.simpleMessage("这条线路不在公开实测范围内"),
     "tianjiAiOffline": MessageLookupByLibrary.simpleMessage("不可用"),
     "tianjiAiOkCount": m27,
@@ -750,6 +766,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiConnected": MessageLookupByLibrary.simpleMessage("已连接"),
     "tianjiConnectedDesc": MessageLookupByLibrary.simpleMessage("网络加速已开启"),
     "tianjiConnectionInfo": MessageLookupByLibrary.simpleMessage("连接信息"),
+    "tianjiDeviceUnit": m28,
+    "tianjiDevices": MessageLookupByLibrary.simpleMessage("设备数"),
     "tianjiDiagnosis": MessageLookupByLibrary.simpleMessage("诊断"),
     "tianjiDiagnosisFoot": MessageLookupByLibrary.simpleMessage(
       "以上是这台设备此刻实测的结果，判定规则与状态页一致。",
@@ -763,6 +781,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("邮箱"),
     "tianjiExitIp": MessageLookupByLibrary.simpleMessage("出口 IP"),
     "tianjiExitRegion": MessageLookupByLibrary.simpleMessage("出口地区"),
+    "tianjiExpireAt": MessageLookupByLibrary.simpleMessage("到期"),
+    "tianjiExpired": MessageLookupByLibrary.simpleMessage("已过期"),
     "tianjiIpVersion": MessageLookupByLibrary.simpleMessage("IPv4 / IPv6"),
     "tianjiIpv4Exit": MessageLookupByLibrary.simpleMessage("IPv4 出口"),
     "tianjiIpv6Exit": MessageLookupByLibrary.simpleMessage("走了 IPv6 出口"),
@@ -782,28 +802,38 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tianjiLoginTitle": MessageLookupByLibrary.simpleMessage("登录天机"),
     "tianjiLogout": MessageLookupByLibrary.simpleMessage("退出登录"),
+    "tianjiLogoutConfirm": MessageLookupByLibrary.simpleMessage(
+      "退出会删掉这台设备上的订阅配置，下次要重新登录。",
+    ),
     "tianjiManualImport": MessageLookupByLibrary.simpleMessage("手动导入订阅"),
+    "tianjiMine": MessageLookupByLibrary.simpleMessage("我的"),
     "tianjiNetChangedAllDown": MessageLookupByLibrary.simpleMessage(
       "网络已变化，所有线路暂时不可用",
     ),
     "tianjiNetChangedOk": MessageLookupByLibrary.simpleMessage("网络已变化，当前线路正常"),
-    "tianjiNetChangedSwitched": m28,
+    "tianjiNetChangedSwitched": m29,
     "tianjiNetworkError": MessageLookupByLibrary.simpleMessage(
       "连不上服务器。主域名可能被屏蔽：到状态页拿备用地址，然后点「换接入地址」。",
     ),
+    "tianjiNeverExpire": MessageLookupByLibrary.simpleMessage("永久有效"),
     "tianjiNoLine": MessageLookupByLibrary.simpleMessage("还没有线路"),
+    "tianjiNoPlan": MessageLookupByLibrary.simpleMessage("还没有套餐"),
     "tianjiNoProfile": MessageLookupByLibrary.simpleMessage("先登录"),
     "tianjiNoSubscription": MessageLookupByLibrary.simpleMessage(
       "这个账号还没有可用套餐，请先在网页领取或购买。",
     ),
     "tianjiPassword": MessageLookupByLibrary.simpleMessage("密码"),
+    "tianjiPickLine": MessageLookupByLibrary.simpleMessage("选择线路"),
+    "tianjiPlan": MessageLookupByLibrary.simpleMessage("套餐"),
     "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("天机 TIANJI"),
     "tianjiQuickActions": MessageLookupByLibrary.simpleMessage("快捷操作"),
     "tianjiRealtimeTraffic": MessageLookupByLibrary.simpleMessage("实时流量"),
     "tianjiRecheck": MessageLookupByLibrary.simpleMessage("重新检测"),
     "tianjiRegister": MessageLookupByLibrary.simpleMessage("还没有账号？注册"),
+    "tianjiRenew": MessageLookupByLibrary.simpleMessage("续费 / 升级"),
+    "tianjiResetIn": m30,
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("重新测速"),
-    "tianjiSwitchTo": m29,
+    "tianjiSwitchTo": m31,
     "tianjiTagline": MessageLookupByLibrary.simpleMessage("连接全球 · 加速未来"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage("点击连接"),
     "tianjiTapToDisconnect": MessageLookupByLibrary.simpleMessage(
@@ -811,10 +841,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tianjiTimeout": MessageLookupByLibrary.simpleMessage("超时"),
     "tianjiUnmeasured": MessageLookupByLibrary.simpleMessage("测不出"),
+    "tianjiUpdateSub": MessageLookupByLibrary.simpleMessage("更新订阅"),
     "tianjiUpload": MessageLookupByLibrary.simpleMessage("上传"),
     "tianjiUptime": MessageLookupByLibrary.simpleMessage("已运行"),
     "tianjiUsed": MessageLookupByLibrary.simpleMessage("已用流量"),
-    "tianjiVerdictAiDown": m30,
+    "tianjiVerdictAiDown": m32,
     "tianjiVerdictAiDownDesc": MessageLookupByLibrary.simpleMessage(
       "这条线路的出口通不过该服务的检测，换一条通常就好了。",
     ),
@@ -864,7 +895,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("上传"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("通过URL获取配置文件"),
-    "urlTip": m31,
+    "urlTip": m33,
     "useHosts": MessageLookupByLibrary.simpleMessage("使用Hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("使用系统Hosts"),
     "userAgent": MessageLookupByLibrary.simpleMessage("用户代理"),
@@ -880,7 +911,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnTip": MessageLookupByLibrary.simpleMessage("重启VPN后改变生效"),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage("WebDAV配置"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("白名单模式"),
-    "yearsAgo": m32,
+    "yearsAgo": m34,
     "zh_CN": MessageLookupByLibrary.simpleMessage("中文简体"),
   };
 }

@@ -11,6 +11,8 @@ import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/views/tianji/diagnosis.dart';
+import 'package:fl_clash/views/tianji/account.dart';
+import 'package:fl_clash/views/tianji/ai.dart';
 import 'package:fl_clash/views/tianji/home.dart';
 import 'package:fl_clash/views/tianji/lines.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const _testUrl = 'https://example.invalid/generate_204';
+
+/// 订阅模板里的四个 AI 组。每个的第一项是主组 —— 默认「跟随主线路」。
+List<Group> _aiGroups() => const [
+  Group(
+    type: GroupType.Selector,
+    name: '🤖 ChatGPT',
+    now: r'$app_name',
+    all: [
+      Proxy(name: r'$app_name', type: 'Selector'),
+      Proxy(name: '🇺🇸 洛杉矶 · 03', type: 'Hysteria2'),
+    ],
+  ),
+  Group(
+    type: GroupType.Selector,
+    name: '🤖 Claude',
+    now: '🇭🇰 香港 · 01',
+    all: [
+      Proxy(name: r'$app_name', type: 'Selector'),
+      Proxy(name: '🇭🇰 香港 · 01', type: 'Shadowsocks'),
+    ],
+  ),
+];
 
 /// 一个像真订阅那样的主分组：选中项、测通的、超时的、没测过的、买不起的各一条。
 List<Group> _groups() => const [
@@ -87,9 +111,11 @@ class _TestProfiles extends Profiles {
   ];
 }
 
-ProviderContainer _container() => ProviderContainer(
+ProviderContainer _container({bool ai = false}) => ProviderContainer(
   overrides: [
-    groupsProvider.overrideWithBuild((_, _) => _groups()),
+    groupsProvider.overrideWithBuild(
+      (_, _) => [..._groups(), if (ai) ..._aiGroups()],
+    ),
     delayDataSourceProvider.overrideWithBuild((_, _) => _delays()),
     profilesProvider.overrideWith(_TestProfiles.new),
     currentProfileIdProvider.overrideWithBuild((_, _) => 1),
@@ -183,6 +209,56 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     });
 
+    testWidgets('AI page lays out on ${size.key}', (tester) async {
+      tester.view.physicalSize = size.value;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final container = _container(ai: true);
+      addTearDown(container.dispose);
+      globalState.container = container;
+      container.read(viewSizeProvider.notifier).value = size.value;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const _App(child: TianjiAiView()),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('ChatGPT'), findsOneWidget);
+      expect(find.text('Claude'), findsOneWidget);
+      expect(tester.takeException(), null);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets('account page lays out on ${size.key}', (tester) async {
+      tester.view.physicalSize = size.value;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final container = _container();
+      addTearDown(container.dispose);
+      globalState.container = container;
+      container.read(viewSizeProvider.notifier).value = size.value;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const _App(child: TianjiAccountView()),
+        ),
+      );
+      await tester.pump();
+
+      expect(tester.takeException(), null);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
     testWidgets('diagnosis page lays out on ${size.key}', (tester) async {
       tester.view.physicalSize = size.value;
       tester.view.devicePixelRatio = 1;
@@ -208,6 +284,56 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     });
   }
+
+  testWidgets('🔴 订阅里没有 AI 分组时，给出原因和动作，而不是一个空列表', (tester) async {
+    // 空列表看起来像功能坏了，而它只是订阅还没更新过。
+    tester.view.physicalSize = const Size(360, 740);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final container = _container(); // 不带 AI 组
+    addTearDown(container.dispose);
+    globalState.container = container;
+    container.read(viewSizeProvider.notifier).value = const Size(360, 740);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const _App(locale: Locale('zh', 'CN'), child: TianjiAiView()),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('订阅里还没有 AI 分组'), findsOneWidget);
+    expect(find.text('更新订阅'), findsOneWidget);
+    expect(tester.takeException(), null);
+  });
+
+  testWidgets('🔴 AI 组选中主组时显示「跟随主线路」，不显示 \$app_name', (tester) async {
+    // 「\$app_name」对客户没有任何意义 —— 它是模板里的占位符。
+    tester.view.physicalSize = const Size(360, 740);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final container = _container(ai: true);
+    addTearDown(container.dispose);
+    globalState.container = container;
+    container.read(viewSizeProvider.notifier).value = const Size(360, 740);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const _App(locale: Locale('zh', 'CN'), child: TianjiAiView()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('跟随主线路'), findsWidgets);
+    expect(find.textContaining(r'$app_name'), findsNothing);
+    expect(tester.takeException(), null);
+  });
 
   testWidgets('🔴 买不起的那条线标成需升级，而不是标成故障', (tester) async {
     tester.view.physicalSize = const Size(360, 740);

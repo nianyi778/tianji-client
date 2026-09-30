@@ -186,4 +186,66 @@ final class TianjiPublicConfigProvider
 }
 
 String _$tianjiPublicConfigHash() =>
-    r'cfcb762d6f1a7d5ccb5adf23c8b5c4125d7edc3b';
+    r'0980f07e4c4ce685316801d7f85a3a4c4f7bd46c';
+
+/// 账号与套餐的真实状态。来自 Xboard 的 `/api/v1/user/getSubscribe`。
+///
+/// 🔴 这个响应里含 `token` 与 `subscribe_url`（订阅凭证）——
+///    只解析需要的字段，**整包绝不进日志**（红线 3：订阅链接不进日志）。
+///    下面 catch 里打印的只有异常类型，不含响应体。
+///
+/// 🔴 拿不到就是 null，页面显示「暂时无法获取」，不回落到编的数字（红线 6）。
+
+@ProviderFor(tianjiAccount)
+final tianjiAccountProvider = TianjiAccountProvider._();
+
+/// 账号与套餐的真实状态。来自 Xboard 的 `/api/v1/user/getSubscribe`。
+///
+/// 🔴 这个响应里含 `token` 与 `subscribe_url`（订阅凭证）——
+///    只解析需要的字段，**整包绝不进日志**（红线 3：订阅链接不进日志）。
+///    下面 catch 里打印的只有异常类型，不含响应体。
+///
+/// 🔴 拿不到就是 null，页面显示「暂时无法获取」，不回落到编的数字（红线 6）。
+
+final class TianjiAccountProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<TianjiAccount?>,
+          TianjiAccount?,
+          FutureOr<TianjiAccount?>
+        >
+    with $FutureModifier<TianjiAccount?>, $FutureProvider<TianjiAccount?> {
+  /// 账号与套餐的真实状态。来自 Xboard 的 `/api/v1/user/getSubscribe`。
+  ///
+  /// 🔴 这个响应里含 `token` 与 `subscribe_url`（订阅凭证）——
+  ///    只解析需要的字段，**整包绝不进日志**（红线 3：订阅链接不进日志）。
+  ///    下面 catch 里打印的只有异常类型，不含响应体。
+  ///
+  /// 🔴 拿不到就是 null，页面显示「暂时无法获取」，不回落到编的数字（红线 6）。
+  TianjiAccountProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tianjiAccountProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tianjiAccountHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<TianjiAccount?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<TianjiAccount?> create(Ref ref) {
+    return tianjiAccount(ref);
+  }
+}
+
+String _$tianjiAccountHash() => r'0c644eea18aaac598c13f4fc40a4990f8dba0714';

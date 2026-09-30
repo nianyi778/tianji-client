@@ -224,3 +224,34 @@ Future<TianjiPublicConfig?> tianjiPublicConfig(Ref ref) async {
     return null;
   }
 }
+
+/// 账号与套餐的真实状态。来自 Xboard 的 `/api/v1/user/getSubscribe`。
+///
+/// 🔴 这个响应里含 `token` 与 `subscribe_url`（订阅凭证）——
+///    只解析需要的字段，**整包绝不进日志**（红线 3：订阅链接不进日志）。
+///    下面 catch 里打印的只有异常类型，不含响应体。
+///
+/// 🔴 拿不到就是 null，页面显示「暂时无法获取」，不回落到编的数字（红线 6）。
+@riverpod
+Future<TianjiAccount?> tianjiAccount(Ref ref) async {
+  final setting = ref.watch(tianjiSettingProvider);
+  if (setting.authData.isEmpty) return null;
+  final base = setting.apiBase.trim().replaceAll(RegExp(r'/+$'), '');
+  try {
+    final res = await tianjiDio().get(
+      '$base/api/v1/user/getSubscribe',
+      options: Options(headers: {'Authorization': setting.authData}),
+    );
+    if (res.statusCode != 200) return null;
+    final body = res.data;
+    return parseTianjiAccount(body is Map ? body['data'] : null);
+  } catch (e) {
+    // 🔴 只打异常类型，不打 e 的完整内容 —— DioException 的 toString 会带上
+    //    请求 URL 与响应体，而这个接口的响应体里就是订阅凭证。
+    commonPrint.log(
+      'tianji account failed: ${e.runtimeType}',
+      logLevel: LogLevel.info,
+    );
+    return null;
+  }
+}

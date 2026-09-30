@@ -319,7 +319,9 @@ extension GeoResourceExt on GeoResource {
 enum PageLabel {
   home,
   lines,
+  ai,
   diagnosis,
+  mine,
   dashboard,
   proxies,
   profiles,
