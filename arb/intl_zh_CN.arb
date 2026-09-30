@@ -625,5 +625,19 @@
   "tianjiDiagnosisFoot": "以上是这台设备此刻实测的结果，判定规则与状态页一致。",
   "termsOfService": "服务条款",
   "lines": "线路",
-  "diagnosis": "诊断"
+  "diagnosis": "诊断",
+  "tianjiConnectedDesc": "网络加速已开启",
+  "tianjiDisconnectedDesc": "点击连接开始使用",
+  "tianjiConnect": "连接",
+  "tianjiDisconnect": "断开连接",
+  "tianjiUpload": "上传",
+  "tianjiDownload": "下载",
+  "tianjiUsed": "已用流量",
+  "tianjiRealtimeTraffic": "实时流量",
+  "tianjiChartWaiting": "连接后开始记录",
+  "tianjiAllLines": "全部线路",
+  "tianjiConnectionInfo": "连接信息",
+  "tianjiExitIp": "出口 IP",
+  "tianjiUptime": "已运行",
+  "tianjiAiOkCount": "{n} 项 AI 服务可用"
 }

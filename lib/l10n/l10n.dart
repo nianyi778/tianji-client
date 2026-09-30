@@ -5173,6 +5173,116 @@ class AppLocalizations {
   String get diagnosis {
     return Intl.message('Diagnose', name: 'diagnosis', desc: '', args: []);
   }
+
+  /// `Acceleration is on`
+  String get tianjiConnectedDesc {
+    return Intl.message(
+      'Acceleration is on',
+      name: 'tianjiConnectedDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap connect to start`
+  String get tianjiDisconnectedDesc {
+    return Intl.message(
+      'Tap connect to start',
+      name: 'tianjiDisconnectedDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connect`
+  String get tianjiConnect {
+    return Intl.message('Connect', name: 'tianjiConnect', desc: '', args: []);
+  }
+
+  /// `Disconnect`
+  String get tianjiDisconnect {
+    return Intl.message(
+      'Disconnect',
+      name: 'tianjiDisconnect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Up`
+  String get tianjiUpload {
+    return Intl.message('Up', name: 'tianjiUpload', desc: '', args: []);
+  }
+
+  /// `Down`
+  String get tianjiDownload {
+    return Intl.message('Down', name: 'tianjiDownload', desc: '', args: []);
+  }
+
+  /// `Used`
+  String get tianjiUsed {
+    return Intl.message('Used', name: 'tianjiUsed', desc: '', args: []);
+  }
+
+  /// `Live traffic`
+  String get tianjiRealtimeTraffic {
+    return Intl.message(
+      'Live traffic',
+      name: 'tianjiRealtimeTraffic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recording starts once connected`
+  String get tianjiChartWaiting {
+    return Intl.message(
+      'Recording starts once connected',
+      name: 'tianjiChartWaiting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All lines`
+  String get tianjiAllLines {
+    return Intl.message(
+      'All lines',
+      name: 'tianjiAllLines',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connection`
+  String get tianjiConnectionInfo {
+    return Intl.message(
+      'Connection',
+      name: 'tianjiConnectionInfo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exit IP`
+  String get tianjiExitIp {
+    return Intl.message('Exit IP', name: 'tianjiExitIp', desc: '', args: []);
+  }
+
+  /// `Uptime`
+  String get tianjiUptime {
+    return Intl.message('Uptime', name: 'tianjiUptime', desc: '', args: []);
+  }
+
+  /// `{n} AI services available`
+  String tianjiAiOkCount(Object n) {
+    return Intl.message(
+      '$n AI services available',
+      name: 'tianjiAiOkCount',
+      desc: '',
+      args: [n],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

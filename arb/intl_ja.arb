@@ -625,5 +625,19 @@
   "tianjiDiagnosisFoot": "Measured from this device just now, using the same rules as the status page.",
   "termsOfService": "Terms of Service",
   "lines": "Lines",
-  "diagnosis": "Diagnose"
+  "diagnosis": "Diagnose",
+  "tianjiConnectedDesc": "Acceleration is on",
+  "tianjiDisconnectedDesc": "Tap connect to start",
+  "tianjiConnect": "Connect",
+  "tianjiDisconnect": "Disconnect",
+  "tianjiUpload": "Up",
+  "tianjiDownload": "Down",
+  "tianjiUsed": "Used",
+  "tianjiRealtimeTraffic": "Live traffic",
+  "tianjiChartWaiting": "Recording starts once connected",
+  "tianjiAllLines": "All lines",
+  "tianjiConnectionInfo": "Connection",
+  "tianjiExitIp": "Exit IP",
+  "tianjiUptime": "Uptime",
+  "tianjiAiOkCount": "{n} AI services available"
 }
