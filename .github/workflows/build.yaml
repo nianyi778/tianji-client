@@ -103,7 +103,14 @@ jobs:
         run: cargo test --manifest-path services/helper/Cargo.toml --features windows-service
 
   build:
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    # 天机的 `-tianji.N` tag 不走这里打包 —— 打包与发布由 tianji-release.yaml 负责
+    # （它还额外传 R2、带 Intel Mac、按 MANIFEST 去重）。上游这套用的是它自己的签名与
+    # 上传配置，我们没配，跑起来必然在 Setup 步骤红，而且是**重复**做同一批包。
+    # 🔴 但 test / windows-helper-test 两个 job 要留着：analyze + flutter test 只有这里跑，
+    #    tianji-release.yaml 一行测试都没有。2026-09-30 正是它逮到我打 tag 早于测试修正。
+    if: >-
+      github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+      && !contains(github.ref_name, '-tianji.')
     needs: [ test, windows-helper-test ]
     runs-on: ${{ matrix.os }}
     strategy:
