@@ -9,7 +9,15 @@ import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:flutter/material.dart';
 
+/// 🔴 **不要改这个常量。** 它同时是订阅请求的 UA 前缀
+/// （lib/common/package.dart：`FlClash/v0.8.96 clash-verge Platform/...`），
+/// Xboard 按客户端 UA 决定订阅格式与协议白名单。改成中文名会让 UA 变成
+/// `天机/v…`，Xboard 认不出 → 所有用户的订阅静默退化成 base64，一个节点都用不了。
+/// 界面上要显示的名字用 [appDisplayName]。
 const appName = 'FlClash';
+
+/// 界面上显示的名字：窗口标题、托盘提示、关于页。
+const appDisplayName = '天机';
 const appHelperService = 'FlClashHelperService';
 const coreManifestName = 'manifest.json';
 const coreName = 'clash.meta';
@@ -72,7 +80,10 @@ const localhost = '127.0.0.1';
 const clashConfigKey = 'clash_config';
 const configKey = 'config';
 const double dialogCommonWidth = 300;
-const repository = 'chen08209/FlClash';
+
+/// 🔴 必须指向我们自己的仓库。指着上游时，上游发了 v0.8.98 而我们是 0.8.96，
+/// app 会直接弹窗劝用户去装 FlClash —— 2026-09-30 线上就是这个状态。
+const repository = 'nianyi778/tianji-client';
 const defaultExternalController = '127.0.0.1:9090';
 const maxMobileWidth = 600;
 const maxLaptopWidth = 840;
@@ -80,6 +91,7 @@ const defaultTestUrl = 'https://www.gstatic.com/generate_204';
 
 /// 天机：账号接口的默认接入地址（Xboard 用户面板）。用户可在登录页改，主域名被墙时换备用域名。
 const defaultTianjiApiBase = 'https://app.tianjiyun.org';
+
 /// 天机：官网，登录页「注册」「状态页」链接的根。
 const tianjiSiteUrl = 'https://tianjiyun.org';
 const tianjiStatusUrl = 'https://status.tianjiyun.org';

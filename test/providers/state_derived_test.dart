@@ -62,26 +62,44 @@ void main() {
     final mobile = container.read(currentNavigationItemsStateProvider).value;
     expect(
       mobile.map((item) => item.label),
-      containsAll([PageLabel.dashboard, PageLabel.profiles, PageLabel.tools]),
+      containsAll([
+        PageLabel.home,
+        PageLabel.lines,
+        PageLabel.diagnosis,
+        PageLabel.tools,
+      ]),
     );
+    // 🔴 订阅跟账号绑定、仪表盘被首页取代、完整代理页被线路页取代 —— 三个都只在「更多」里
     expect(
       mobile.map((item) => item.label),
-      isNot(contains(PageLabel.connections)),
+      isNot(
+        anyOf(
+          contains(PageLabel.profiles),
+          contains(PageLabel.dashboard),
+          contains(PageLabel.proxies),
+          contains(PageLabel.connections),
+        ),
+      ),
     );
 
     container
         .read(viewSizeProvider.notifier)
         .update((_) => const Size(1200, 800));
-    container
-        .read(currentPageLabelProvider.notifier)
-        .toPage(PageLabel.connections);
+    // 用一个确实在桌面侧栏里的页；connections 现在只在「更多」里
+    container.read(currentPageLabelProvider.notifier).toPage(PageLabel.tools);
     final desktop = container.read(navigationStateProvider);
     expect(desktop.viewMode, ViewMode.desktop);
     expect(desktop.currentIndex, greaterThan(0));
     expect(
       desktop.navigationItems[desktop.currentIndex].label,
-      PageLabel.connections,
+      PageLabel.tools,
     );
+
+    // 只在「更多」里的页不进侧栏，索引回落到 0
+    container
+        .read(currentPageLabelProvider.notifier)
+        .toPage(PageLabel.connections);
+    expect(container.read(navigationStateProvider).currentIndex, 0);
 
     container
         .read(currentPageLabelProvider.notifier)

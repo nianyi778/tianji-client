@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
@@ -17,6 +16,14 @@ part 'generated/tianji.g.dart';
 /// - 走上游同一套 findProxy（内核在跑就经本地代理，没跑就直连）；
 /// - 🔴 不接受坏证书。上游的 HttpOverrides 对所有请求都 `badCertificateCallback = true`，
 ///   账号密码和公开数据这两条路都必须验证书。
+String _ua() {
+  try {
+    return globalState.ua;
+  } catch (_) {
+    return browserUa;
+  }
+}
+
 Dio tianjiDio() {
   final dio = Dio(
     BaseOptions(
@@ -24,7 +31,8 @@ Dio tianjiDio() {
       receiveTimeout: const Duration(seconds: 20),
       responseType: ResponseType.json,
       validateStatus: (_) => true,
-      headers: {'User-Agent': globalState.ua},
+      // globalState.ua 在 app 初始化完成前会抛 LateInitializationError
+      headers: {'User-Agent': _ua()},
     ),
   );
   dio.httpClientAdapter = IOHttpClientAdapter(
@@ -109,28 +117,38 @@ class TianjiAiStatus {
   }
 }
 
-/// 状态页的公开实测数据，每分钟拉一次。拉不到就保持上一份，从来没拉到过就是 null。
-/// 🔴 拉不到 ≠ 全部不可用：首页对 null 显示「暂时无法获取」，不画红点（红线 4 / 6）。
+/// 状态页的公开实测数据。按需拉取：首页每次显示时看一眼，超过 [_staleAfter] 就重拉。
+///
+/// 🔴 不用后台定时器。定时器在 App 空闲或退到后台时照样打请求（每人每天上千次，
+///    换不来任何用户能察觉的新鲜度），而且在 widget 测试里会以
+///    「A Timer is still pending even after the widget tree was disposed」
+///    把整棵树的测试弄红 —— 2026-09-30 就是这么发现的。
+/// 🔴 拉不到就保持上一份；从来没拉到过就是 null。首页对 null 显示「暂时无法获取」，
+///    不画红点 —— 把自己的取数失败报成线路故障会引发退款潮（红线 4 / 6）。
 @Riverpod(keepAlive: true)
 class TianjiAiStatusState extends _$TianjiAiStatusState {
-  Timer? _timer;
+  static const _staleAfter = Duration(minutes: 5);
+
   bool _busy = false;
-  int? _failedAt;
+  DateTime? _lastTry;
 
   @override
-  TianjiAiStatus? build() {
-    _timer = Timer.periodic(const Duration(seconds: 60), (_) => refresh());
-    ref.onDispose(() => _timer?.cancel());
-    Future.microtask(refresh);
-    return null;
-  }
+  TianjiAiStatus? build() => null;
 
-  /// 最近一次拉取失败的时间（秒），首页用来在数据过旧时说明「上次更新于」。
-  int? get failedAt => _failedAt;
+  /// 上次尝试是否失败了（首页据此说明数据是旧的）
+  bool get lastTryFailed => _lastTryFailed;
+  bool _lastTryFailed = false;
+
+  Future<void> refreshIfStale() async {
+    final last = _lastTry;
+    if (last != null && DateTime.now().difference(last) < _staleAfter) return;
+    await refresh();
+  }
 
   Future<void> refresh() async {
     if (_busy) return;
     _busy = true;
+    _lastTry = DateTime.now();
     try {
       final res = await tianjiDio().get('$tianjiStatusUrl/api/ai-status');
       final parsed = res.statusCode == 200
@@ -138,12 +156,12 @@ class TianjiAiStatusState extends _$TianjiAiStatusState {
           : null;
       if (parsed != null) {
         state = parsed;
-        _failedAt = null;
+        _lastTryFailed = false;
       } else {
-        _failedAt = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+        _lastTryFailed = true;
       }
     } catch (e) {
-      _failedAt = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+      _lastTryFailed = true;
       commonPrint.log(
         'tianji ai-status failed: $e',
         logLevel: LogLevel.warning,

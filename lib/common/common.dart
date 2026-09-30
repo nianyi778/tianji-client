@@ -48,3 +48,4 @@ export 'yaml.dart';
 export 'tianji_net.dart';
 export 'tianji_lines.dart';
 export 'tianji_probe.dart';
+export 'tianji_version.dart';

@@ -8,18 +8,36 @@ part of '../tianji.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// 状态页的公开实测数据，每分钟拉一次。拉不到就保持上一份，从来没拉到过就是 null。
-/// 🔴 拉不到 ≠ 全部不可用：首页对 null 显示「暂时无法获取」，不画红点（红线 4 / 6）。
+/// 状态页的公开实测数据。按需拉取：首页每次显示时看一眼，超过 [_staleAfter] 就重拉。
+///
+/// 🔴 不用后台定时器。定时器在 App 空闲或退到后台时照样打请求（每人每天上千次，
+///    换不来任何用户能察觉的新鲜度），而且在 widget 测试里会以
+///    「A Timer is still pending even after the widget tree was disposed」
+///    把整棵树的测试弄红 —— 2026-09-30 就是这么发现的。
+/// 🔴 拉不到就保持上一份；从来没拉到过就是 null。首页对 null 显示「暂时无法获取」，
+///    不画红点 —— 把自己的取数失败报成线路故障会引发退款潮（红线 4 / 6）。
 
 @ProviderFor(TianjiAiStatusState)
 final tianjiAiStatusStateProvider = TianjiAiStatusStateProvider._();
 
-/// 状态页的公开实测数据，每分钟拉一次。拉不到就保持上一份，从来没拉到过就是 null。
-/// 🔴 拉不到 ≠ 全部不可用：首页对 null 显示「暂时无法获取」，不画红点（红线 4 / 6）。
+/// 状态页的公开实测数据。按需拉取：首页每次显示时看一眼，超过 [_staleAfter] 就重拉。
+///
+/// 🔴 不用后台定时器。定时器在 App 空闲或退到后台时照样打请求（每人每天上千次，
+///    换不来任何用户能察觉的新鲜度），而且在 widget 测试里会以
+///    「A Timer is still pending even after the widget tree was disposed」
+///    把整棵树的测试弄红 —— 2026-09-30 就是这么发现的。
+/// 🔴 拉不到就保持上一份；从来没拉到过就是 null。首页对 null 显示「暂时无法获取」，
+///    不画红点 —— 把自己的取数失败报成线路故障会引发退款潮（红线 4 / 6）。
 final class TianjiAiStatusStateProvider
     extends $NotifierProvider<TianjiAiStatusState, TianjiAiStatus?> {
-  /// 状态页的公开实测数据，每分钟拉一次。拉不到就保持上一份，从来没拉到过就是 null。
-  /// 🔴 拉不到 ≠ 全部不可用：首页对 null 显示「暂时无法获取」，不画红点（红线 4 / 6）。
+  /// 状态页的公开实测数据。按需拉取：首页每次显示时看一眼，超过 [_staleAfter] 就重拉。
+  ///
+  /// 🔴 不用后台定时器。定时器在 App 空闲或退到后台时照样打请求（每人每天上千次，
+  ///    换不来任何用户能察觉的新鲜度），而且在 widget 测试里会以
+  ///    「A Timer is still pending even after the widget tree was disposed」
+  ///    把整棵树的测试弄红 —— 2026-09-30 就是这么发现的。
+  /// 🔴 拉不到就保持上一份；从来没拉到过就是 null。首页对 null 显示「暂时无法获取」，
+  ///    不画红点 —— 把自己的取数失败报成线路故障会引发退款潮（红线 4 / 6）。
   TianjiAiStatusStateProvider._()
     : super(
         from: null,
@@ -48,10 +66,16 @@ final class TianjiAiStatusStateProvider
 }
 
 String _$tianjiAiStatusStateHash() =>
-    r'36de113baabdc8937337b500237af40c14870f3b';
+    r'92aff52cdf680675df21a8edfe8d329b62d82c7f';
 
-/// 状态页的公开实测数据，每分钟拉一次。拉不到就保持上一份，从来没拉到过就是 null。
-/// 🔴 拉不到 ≠ 全部不可用：首页对 null 显示「暂时无法获取」，不画红点（红线 4 / 6）。
+/// 状态页的公开实测数据。按需拉取：首页每次显示时看一眼，超过 [_staleAfter] 就重拉。
+///
+/// 🔴 不用后台定时器。定时器在 App 空闲或退到后台时照样打请求（每人每天上千次，
+///    换不来任何用户能察觉的新鲜度），而且在 widget 测试里会以
+///    「A Timer is still pending even after the widget tree was disposed」
+///    把整棵树的测试弄红 —— 2026-09-30 就是这么发现的。
+/// 🔴 拉不到就保持上一份；从来没拉到过就是 null。首页对 null 显示「暂时无法获取」，
+///    不画红点 —— 把自己的取数失败报成线路故障会引发退款潮（红线 4 / 6）。
 
 abstract class _$TianjiAiStatusState extends $Notifier<TianjiAiStatus?> {
   TianjiAiStatus? build();

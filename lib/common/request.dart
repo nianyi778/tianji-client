@@ -79,8 +79,10 @@ class Request {
       final data = response.data as Map<String, dynamic>;
       final remoteVersion = data['tag_name'];
       final version = globalState.packageInfo.version;
-      final hasUpdate =
-          utils.compareVersions(remoteVersion.replaceAll('v', ''), version) > 0;
+      final hasUpdate = tianjiHasNewerRelease(
+        remoteTag: '$remoteVersion',
+        localVersion: version,
+      );
       if (!hasUpdate) return null;
       return data;
     } catch (e) {

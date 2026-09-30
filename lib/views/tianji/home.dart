@@ -120,9 +120,10 @@ class _PowerButton extends ConsumerWidget {
               onTap: hasProfile
                   ? () =>
                         ref.read(commonActionProvider.notifier).toggleRunning()
+                  // 没有订阅就是没登录 —— 把门卫的「跳过」清掉，它会把登录页放回来
                   : () => ref
-                        .read(currentPageLabelProvider.notifier)
-                        .toPage(PageLabel.profiles),
+                        .read(tianjiSettingProvider.notifier)
+                        .update((s) => s.copyWith(skipLogin: false)),
               onLongPress: running
                   ? () => ref
                         .read(tianjiActionProvider.notifier)
@@ -253,6 +254,11 @@ class _AiServicesCard extends ConsumerWidget {
     final appLocalizations = context.appLocalizations;
     final colorScheme = context.colorScheme;
     final status = ref.watch(tianjiAiStatusStateProvider);
+    // 这一块显示出来时才去看数据新不新；不新才拉。没有后台定时器。
+    final notifier = ref.read(tianjiAiStatusStateProvider.notifier);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifier.refreshIfStale();
+    });
     final main = ref.watch(tianjiMainGroupProvider);
     final real = main == null
         ? ''
@@ -286,11 +292,18 @@ class _AiServicesCard extends ConsumerWidget {
               decoration: BoxDecoration(color: dot, shape: BoxShape.circle),
             ),
             const SizedBox(width: 12),
-            Expanded(child: Text(service, style: context.textTheme.bodyMedium)),
-            Text(
-              ago.isEmpty ? text : '$text · $ago',
-              style: context.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+            Text(service, style: context.textTheme.bodyMedium),
+            const SizedBox(width: 12),
+            // 尾部文字要能被压缩：窄窗口下「可用 · 2 分钟前」会把这一行撑爆
+            Expanded(
+              child: Text(
+                ago.isEmpty ? text : '$text · $ago',
+                textAlign: TextAlign.right,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ],

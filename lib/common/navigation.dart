@@ -33,28 +33,31 @@ class Navigation {
         ),
         modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
       ),
+      // 首页已经给出连接状态、当前线路与速率；FlClash 的仪表盘九宫格退到「更多」
       NavigationItem(
         keep: false,
         icon: const Icon(Icons.space_dashboard),
         label: PageLabel.dashboard,
         builder: (_) =>
             const DashboardView(key: GlobalObjectKey(PageLabel.dashboard)),
+        modes: [NavigationItemMode.more],
       ),
       NavigationItem(
         icon: const Icon(Icons.article),
         label: PageLabel.proxies,
         builder: (_) =>
             const ProxiesView(key: GlobalObjectKey(PageLabel.proxies)),
-        // 天机的「线路」页取代了它在底部栏的位置；完整的分组/节点视图退到桌面与「更多」
-        modes: hasProxies
-            ? [NavigationItemMode.mobile, NavigationItemMode.desktop]
-            : [],
+        // 天机的「线路」页取代了它；完整的分组/节点视图退到「更多」
+        modes: hasProxies ? [NavigationItemMode.more] : [],
       ),
+      // 🔴 订阅跟账号绑定，登录时自动拉、自动更新 —— 普通用户不该管它。
+      //    但不能删：选了「手动导入订阅」的人要靠它。退到「更多」。
       NavigationItem(
         icon: const Icon(Icons.folder),
         label: PageLabel.profiles,
         builder: (_) =>
             const ProfilesView(key: GlobalObjectKey(PageLabel.profiles)),
+        modes: [NavigationItemMode.more],
       ),
       NavigationItem(
         icon: const Icon(Icons.view_timeline),
@@ -62,7 +65,7 @@ class Navigation {
         builder: (_) =>
             const RequestsView(key: GlobalObjectKey(PageLabel.requests)),
         description: 'requestsDesc',
-        modes: [NavigationItemMode.desktop, NavigationItemMode.more],
+        modes: [NavigationItemMode.more],
       ),
       NavigationItem(
         icon: const Icon(Icons.ballot),
@@ -70,7 +73,7 @@ class Navigation {
         builder: (_) =>
             const ConnectionsView(key: GlobalObjectKey(PageLabel.connections)),
         description: 'connectionsDesc',
-        modes: [NavigationItemMode.desktop, NavigationItemMode.more],
+        modes: [NavigationItemMode.more],
       ),
       NavigationItem(
         icon: const Icon(Icons.storage),
