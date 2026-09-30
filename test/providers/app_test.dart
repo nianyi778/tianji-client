@@ -191,8 +191,8 @@ void main() {
   });
 
   group('CurrentPageLabel provider', () {
-    test('default is dashboard', () {
-      expect(container.read(currentPageLabelProvider), PageLabel.dashboard);
+    test('default is home', () {
+      expect(container.read(currentPageLabelProvider), PageLabel.home);
     });
 
     test('toPage changes page', () {

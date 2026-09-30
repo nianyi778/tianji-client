@@ -93,9 +93,9 @@ void main() {
             value: [
               NavigationItem(
                 icon: const Icon(Icons.space_dashboard),
-                label: PageLabel.dashboard,
+                label: PageLabel.home,
                 builder: (_) => CommonScaffold(
-                  key: const GlobalObjectKey(PageLabel.dashboard),
+                  key: const GlobalObjectKey(PageLabel.home),
                   title: 'Search page',
                   searchState: AppBarSearchState(
                     onSearch: (value) {

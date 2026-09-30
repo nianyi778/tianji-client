@@ -106,7 +106,7 @@ void main() {
     expect(dashboard.dashboardWidgets, isNotEmpty);
 
     final actions = container.read(proxiesActionsStateProvider);
-    expect(actions.pageLabel, PageLabel.dashboard);
+    expect(actions.pageLabel, PageLabel.home);
     expect(actions.hasProviders, isFalse);
     expect(actions.type, ProxiesType.tab);
   });
@@ -312,7 +312,7 @@ void main() {
       container.read(realTestUrlProvider('https://custom.test')),
       'https://custom.test',
     );
-    expect(container.read(isCurrentPageProvider(PageLabel.dashboard)), isTrue);
+    expect(container.read(isCurrentPageProvider(PageLabel.home)), isTrue);
     expect(
       container.read(
         isCurrentPageProvider(

@@ -34,7 +34,7 @@ void main() {
             value: [
               NavigationItem(
                 icon: const Icon(Icons.space_dashboard),
-                label: PageLabel.dashboard,
+                label: PageLabel.home,
                 builder: (_) => const SizedBox.shrink(),
               ),
               NavigationItem(
@@ -88,9 +88,9 @@ void main() {
               value: [
                 NavigationItem(
                   icon: const Icon(Icons.space_dashboard),
-                  label: PageLabel.dashboard,
+                  label: PageLabel.home,
                   builder: (_) => const _StatefulContent(
-                    key: GlobalObjectKey(PageLabel.dashboard),
+                    key: GlobalObjectKey(PageLabel.home),
                   ),
                 ),
                 NavigationItem(
@@ -156,7 +156,7 @@ void main() {
       );
       await tester.tap(outgoingTools, warnIfMissed: false);
       await tester.pump();
-      expect(container.read(currentPageLabelProvider), PageLabel.dashboard);
+      expect(container.read(currentPageLabelProvider), PageLabel.home);
 
       await tester.pump(const Duration(milliseconds: 301));
       expect(find.byType(NavigationRail), findsNothing);
@@ -192,9 +192,9 @@ void main() {
               value: [
                 NavigationItem(
                   icon: const Icon(Icons.space_dashboard),
-                  label: PageLabel.dashboard,
+                  label: PageLabel.home,
                   builder: (_) => const ToolsView(
-                    key: GlobalObjectKey(PageLabel.dashboard),
+                    key: GlobalObjectKey(PageLabel.home),
                   ),
                 ),
                 NavigationItem(
@@ -332,7 +332,7 @@ void main() {
               value: [
                 NavigationItem(
                   icon: const Icon(Icons.space_dashboard),
-                  label: PageLabel.dashboard,
+                  label: PageLabel.home,
                   builder: (_) => Align(
                     alignment: Alignment.topLeft,
                     child: IconButton(
@@ -417,14 +417,14 @@ void main() {
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pump();
 
-      expect(container.read(currentPageLabelProvider), PageLabel.dashboard);
+      expect(container.read(currentPageLabelProvider), PageLabel.home);
       expect(focusedRailIcon(), Icons.space_dashboard);
 
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
       await tester.pump();
 
       expect(focusedRailIcon(), Icons.article);
-      expect(container.read(currentPageLabelProvider), PageLabel.dashboard);
+      expect(container.read(currentPageLabelProvider), PageLabel.home);
     },
   );
 
@@ -461,7 +461,7 @@ void main() {
             value: [
               NavigationItem(
                 icon: const Icon(Icons.space_dashboard),
-                label: PageLabel.dashboard,
+                label: PageLabel.home,
                 builder: (_) => page('dashboard'),
               ),
               NavigationItem(
@@ -564,7 +564,7 @@ void main() {
             value: [
               NavigationItem(
                 icon: const Icon(Icons.space_dashboard),
-                label: PageLabel.dashboard,
+                label: PageLabel.home,
                 builder: (_) => CommonScaffold(
                   title: 'Search page',
                   searchState: AppBarSearchState(
@@ -628,7 +628,7 @@ void main() {
             value: [
               NavigationItem(
                 icon: const Icon(Icons.space_dashboard),
-                label: PageLabel.dashboard,
+                label: PageLabel.home,
                 builder: (_) => _NestedSearchLauncher(
                   onSearch: (value) {
                     query = value;
@@ -714,7 +714,7 @@ void main() {
               value: [
                 NavigationItem(
                   icon: const Icon(Icons.space_dashboard),
-                  label: PageLabel.dashboard,
+                  label: PageLabel.home,
                   builder: (_) => pageContent('dashboard'),
                 ),
                 NavigationItem(
@@ -751,7 +751,7 @@ void main() {
       expect(container.read(currentPageLabelProvider), PageLabel.profiles);
       await tester.tap(railIcon(Icons.space_dashboard));
       await tester.pumpAndSettle();
-      expect(container.read(currentPageLabelProvider), PageLabel.dashboard);
+      expect(container.read(currentPageLabelProvider), PageLabel.home);
 
       bool focusInRail() {
         final context = FocusManager.instance.primaryFocus?.context;
@@ -763,7 +763,7 @@ void main() {
         await tester.pump();
         expect(
           container.read(currentPageLabelProvider),
-          PageLabel.dashboard,
+          PageLabel.home,
           reason: 'tab $i flipped the page',
         );
       }
