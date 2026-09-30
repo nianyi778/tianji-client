@@ -638,6 +638,7 @@
   "tianjiRealtimeTraffic": "实时流量",
   "tianjiChartWaiting": "连接后开始记录",
   "tianjiAllLines": "全部线路",
+  "tianjiQuickActions": "快捷操作",
   "tianjiConnectionInfo": "连接信息",
   "tianjiExitIp": "出口 IP",
   "tianjiUptime": "已运行",

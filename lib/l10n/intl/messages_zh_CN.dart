@@ -798,6 +798,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tianjiPassword": MessageLookupByLibrary.simpleMessage("密码"),
     "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("天机 TIANJI"),
+    "tianjiQuickActions": MessageLookupByLibrary.simpleMessage("快捷操作"),
     "tianjiRealtimeTraffic": MessageLookupByLibrary.simpleMessage("实时流量"),
     "tianjiRecheck": MessageLookupByLibrary.simpleMessage("重新检测"),
     "tianjiRegister": MessageLookupByLibrary.simpleMessage("还没有账号？注册"),

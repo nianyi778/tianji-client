@@ -638,6 +638,7 @@
   "tianjiRealtimeTraffic": "Live traffic",
   "tianjiChartWaiting": "Recording starts once connected",
   "tianjiAllLines": "All lines",
+  "tianjiQuickActions": "Quick actions",
   "tianjiConnectionInfo": "Connection",
   "tianjiExitIp": "Exit IP",
   "tianjiUptime": "Uptime",

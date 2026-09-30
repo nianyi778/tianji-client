@@ -5264,6 +5264,16 @@ class AppLocalizations {
     );
   }
 
+  /// `Quick actions`
+  String get tianjiQuickActions {
+    return Intl.message(
+      'Quick actions',
+      name: 'tianjiQuickActions',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Connection`
   String get tianjiConnectionInfo {
     return Intl.message(

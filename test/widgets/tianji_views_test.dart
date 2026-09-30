@@ -11,6 +11,7 @@ import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/views/tianji/diagnosis.dart';
+import 'package:fl_clash/views/tianji/home.dart';
 import 'package:fl_clash/views/tianji/lines.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -45,10 +46,54 @@ Map<String, Map<String, int>> _delays() => {
   },
 };
 
+/// 🔴 首页会在第一帧向状态页拉一次 AI 实测数据。测试里不该发真请求 ——
+///    发了会留下一个挂着的 Timer，把整棵树的测试弄红，而且测的也不是布局。
+class _TestAiStatus extends TianjiAiStatusState {
+  @override
+  TianjiAiStatus? build() => const TianjiAiStatus(
+    generatedAt: 0,
+    services: ['ChatGPT', 'Claude', 'Gemini', 'Perplexity'],
+    nodes: {
+      '香港 · 01': {
+        'ChatGPT': TianjiAiServiceState(state: 'available'),
+        'Claude': TianjiAiServiceState(state: 'available'),
+        'Gemini': TianjiAiServiceState(state: 'unknown'),
+        'Perplexity': TianjiAiServiceState(state: 'unavailable'),
+      },
+    },
+  );
+
+  @override
+  Future<void> refreshIfStale() async {}
+
+  @override
+  Future<void> refresh() async {}
+}
+
+/// 一份带订阅用量的配置 —— 首页的流量条只有拿到真的 total 才会画出来。
+class _TestProfiles extends Profiles {
+  @override
+  List<Profile> build() => const [
+    Profile(
+      id: 1,
+      label: '天机 TIANJI',
+      autoUpdateDuration: Duration(hours: 1),
+      subscriptionInfo: SubscriptionInfo(
+        upload: 12884901888,
+        download: 137438953472,
+        total: 1099511627776,
+      ),
+    ),
+  ];
+}
+
 ProviderContainer _container() => ProviderContainer(
   overrides: [
     groupsProvider.overrideWithBuild((_, _) => _groups()),
     delayDataSourceProvider.overrideWithBuild((_, _) => _delays()),
+    profilesProvider.overrideWith(_TestProfiles.new),
+    currentProfileIdProvider.overrideWithBuild((_, _) => 1),
+    tianjiAiStatusStateProvider.overrideWith(_TestAiStatus.new),
   ],
 );
 
@@ -102,6 +147,37 @@ void main() {
       await tester.pump();
 
       expect(find.text('🇭🇰 香港 · 01'), findsWidgets);
+      expect(tester.takeException(), null);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets('home dashboard lays out on ${size.key}', (tester) async {
+      tester.view.physicalSize = size.value;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final container = _container();
+      addTearDown(container.dispose);
+      globalState.container = container;
+      container.read(viewSizeProvider.notifier).value = size.value;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const _App(child: TianjiHomeView()),
+        ),
+      );
+      await tester.pump();
+
+      // 流量条只在拿到真的总量时出现
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
+      // 快捷操作是桌面独有的
+      expect(
+        find.text('Quick actions'),
+        size.key == 'desktop' ? findsOneWidget : findsNothing,
+      );
       expect(tester.takeException(), null);
 
       await tester.pumpWidget(const SizedBox.shrink());

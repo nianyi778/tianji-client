@@ -3,6 +3,7 @@ import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
+import 'package:fl_clash/views/proxies/common.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,30 +44,37 @@ class TianjiHomeView extends ConsumerWidget {
               _AiServicesCard(),
             ],
           );
-          const right = Column(
+          // 快捷操作只在宽屏出现：手机上这几件事底部 5 个 Tab 已经一步可达，
+          // 再摆一排按钮是重复入口。
+          final right = Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _LineListCard(),
-              SizedBox(height: tjGap3),
-              _ConnectionInfoCard(),
+              const _LineListCard(),
+              const SizedBox(height: tjGap3),
+              const _UsageBarCard(),
+              const _ConnectionInfoCard(),
+              if (wide) ...[
+                const SizedBox(height: tjGap3),
+                const _QuickActionsCard(),
+              ],
             ],
           );
           return SingleChildScrollView(
             padding: const EdgeInsets.all(tjGap4),
             child: wide
-                ? const Row(
+                ? Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(flex: 3, child: left),
-                      SizedBox(width: tjGap3),
+                      const Expanded(flex: 3, child: left),
+                      const SizedBox(width: tjGap3),
                       SizedBox(width: 340, child: right),
                     ],
                   )
-                : const Column(
+                : Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       left,
-                      SizedBox(height: tjGap3),
+                      const SizedBox(height: tjGap3),
                       right,
                     ],
                   ),
@@ -80,15 +88,11 @@ class TianjiHomeView extends ConsumerWidget {
 /// 卡片外壳：整页只有这一个卡片定义，边距圆角全站一致。
 class _Card extends StatelessWidget {
   final Widget child;
-  final EdgeInsets padding;
-  const _Card({
-    required this.child,
-    this.padding = const EdgeInsets.all(tjGap4),
-  });
+  const _Card({required this.child});
 
   @override
   Widget build(BuildContext context) => Container(
-    padding: padding,
+    padding: const EdgeInsets.all(tjGap4),
     decoration: BoxDecoration(
       color: context.tj.card,
       borderRadius: BorderRadius.circular(tjRadiusCard),
@@ -171,109 +175,150 @@ class _ConnectionCard extends ConsumerWidget {
         ? ''
         : ref.watch(realSelectedProxyStateProvider(main.name)).proxyName;
 
-    return _Card(
-      padding: const EdgeInsets.all(tjGap5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              // 状态圆点：连接态用主色，未连接用中性色，不用红 ——
-              // 「没连」不是故障。
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 260),
-                curve: Curves.easeOutCubic,
-                width: 46,
-                height: 46,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: running
-                      ? tj.good.withValues(alpha: 0.14)
-                      : tj.ink3.withValues(alpha: 0.12),
-                ),
-                child: Icon(
-                  running ? Icons.check_rounded : Icons.power_settings_new,
-                  color: running ? tj.good : tj.ink3,
-                  size: 24,
-                ),
-              ),
-              const SizedBox(width: tjGap3),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      !hasProfile
-                          ? l.tianjiNoProfile
-                          : running
-                          ? l.tianjiConnected
-                          : l.tianjiDisconnected,
-                      style: context.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.4,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      running
-                          ? l.tianjiConnectedDesc
-                          : l.tianjiDisconnectedDesc,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: tj.ink2,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+    // 设计稿里这张卡是首屏的主角：品牌蓝的浅渐变 + 底部山影，和官网、侧栏同一套图形。
+    // 🔴 底色仍从令牌算出来（primary / tj.card），换主色或切暗色都跟着走，不写死色值。
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(tjRadiusCard),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.alphaBlend(cs.primary.withValues(alpha: 0.13), tj.card),
+              tj.card,
             ],
           ),
-          const SizedBox(height: tjGap4),
-          // 🔴 窄屏（~380px）按钮与线路胶囊并排放不下，会溢出 31px ——
-          //    2026-10-01 widget 测试逮到。窄屏改成上下两行。
-          LayoutBuilder(
-            builder: (context, c) {
-              final button = FilledButton.icon(
-                onPressed: hasProfile
-                    ? () => ref
-                          .read(commonActionProvider.notifier)
-                          .toggleRunning()
-                    : () => ref
-                          .read(tianjiSettingProvider.notifier)
-                          .update((s) => s.copyWith(skipLogin: false)),
-                style: running
-                    ? FilledButton.styleFrom(
-                        backgroundColor: cs.surfaceContainerHighest,
-                        foregroundColor: cs.onSurface,
-                      )
-                    : null,
-                icon: Icon(running ? Icons.link_off : Icons.bolt, size: 18),
-                label: Text(running ? l.tianjiDisconnect : l.tianjiConnect),
-              );
-              final pill = _LinePill(
-                name: real,
-                delay: delay,
-                running: running,
-              );
-              if (c.maxWidth < 420) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    button,
-                    const SizedBox(height: tjGap3),
-                    pill,
-                  ],
-                );
-              }
-              return Row(
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              height: 96,
+              child: IgnorePointer(
+                child: CustomPaint(
+                  painter: TianjiRidgePainter(
+                    color: cs.primary.withValues(alpha: 0.10),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(tjGap5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  button,
-                  const SizedBox(width: tjGap3),
-                  Expanded(child: pill),
+                  Row(
+                    children: [
+                      // 状态圆点：连接态用主色，未连接用中性色，不用红 ——
+                      // 「没连」不是故障。
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 260),
+                        curve: Curves.easeOutCubic,
+                        width: 46,
+                        height: 46,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: running
+                              ? tj.good.withValues(alpha: 0.14)
+                              : tj.ink3.withValues(alpha: 0.12),
+                        ),
+                        child: Icon(
+                          running
+                              ? Icons.check_rounded
+                              : Icons.power_settings_new,
+                          color: running ? tj.good : tj.ink3,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: tjGap3),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              !hasProfile
+                                  ? l.tianjiNoProfile
+                                  : running
+                                  ? l.tianjiConnected
+                                  : l.tianjiDisconnected,
+                              style: context.textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: -0.4,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              running
+                                  ? l.tianjiConnectedDesc
+                                  : l.tianjiDisconnectedDesc,
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: tj.ink2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: tjGap4),
+                  // 🔴 窄屏（~380px）按钮与线路胶囊并排放不下，会溢出 31px ——
+                  //    2026-10-01 widget 测试逮到。窄屏改成上下两行。
+                  LayoutBuilder(
+                    builder: (context, c) {
+                      final button = FilledButton.icon(
+                        onPressed: hasProfile
+                            ? () => ref
+                                  .read(commonActionProvider.notifier)
+                                  .toggleRunning()
+                            : () => ref
+                                  .read(tianjiSettingProvider.notifier)
+                                  .update((s) => s.copyWith(skipLogin: false)),
+                        style: running
+                            ? FilledButton.styleFrom(
+                                backgroundColor: cs.surfaceContainerHighest,
+                                foregroundColor: cs.onSurface,
+                              )
+                            : null,
+                        icon: Icon(
+                          running ? Icons.link_off : Icons.bolt,
+                          size: 18,
+                        ),
+                        label: Text(
+                          running ? l.tianjiDisconnect : l.tianjiConnect,
+                        ),
+                      );
+                      final pill = _LinePill(
+                        name: real,
+                        delay: delay,
+                        running: running,
+                      );
+                      if (c.maxWidth < 420) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            button,
+                            const SizedBox(height: tjGap3),
+                            pill,
+                          ],
+                        );
+                      }
+                      return Row(
+                        children: [
+                          button,
+                          const SizedBox(width: tjGap3),
+                          Expanded(child: pill),
+                        ],
+                      );
+                    },
+                  ),
                 ],
-              );
-            },
-          ),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -809,6 +854,188 @@ class _ConnectionInfoCard extends ConsumerWidget {
           row('DNS', dns ? l.tianjiDnsRemote : l.tianjiDnsSystem),
           row(l.tianjiUptime, utils.getTimeText(runTime)),
         ],
+      ),
+    );
+  }
+}
+
+/// 流量进度条。🔴 只有真的拿到了订阅信息、并且套餐有额度上限时才画 ——
+/// 不知道总量就画不出进度，这时整张卡不出现，而不是画一根凭空的条。
+class _UsageBarCard extends ConsumerWidget {
+  const _UsageBarCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.appLocalizations;
+    final tj = context.tj;
+    final info = ref.watch(
+      currentProfileProvider.select((p) => p?.subscriptionInfo),
+    );
+    if (info == null || info.total <= 0) return const SizedBox.shrink();
+    const gb = 1073741824;
+    final used = info.upload + info.download;
+    final ratio = (used / info.total).clamp(0.0, 1.0);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: tjGap3),
+      child: _Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _CardTitle(
+              l.tianjiUsed,
+              trailing: Text(
+                '${(used / gb).toStringAsFixed(2)} GB / '
+                '${(info.total / gb).toStringAsFixed(0)} GB',
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: tj.ink2,
+                  fontWeight: FontWeight.w600,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                ),
+              ),
+            ),
+            const SizedBox(height: tjGap3),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(tjRadiusPill),
+              child: LinearProgressIndicator(
+                value: ratio,
+                minHeight: 7,
+                backgroundColor: tj.line,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 桌面端的快捷操作：四个一步就能做完的事。
+/// 这里不放任何需要二次确认或会改配置的动作 —— 它们该待在设置里。
+class _QuickActionsCard extends ConsumerStatefulWidget {
+  const _QuickActionsCard();
+
+  @override
+  ConsumerState<_QuickActionsCard> createState() => _QuickActionsCardState();
+}
+
+class _QuickActionsCardState extends ConsumerState<_QuickActionsCard> {
+  bool _testing = false;
+
+  Future<void> _retest() async {
+    final main = ref.read(tianjiMainGroupProvider);
+    if (main == null || _testing) return;
+    setState(() => _testing = true);
+    try {
+      await delayTest(main.all, main.testUrl);
+    } finally {
+      if (mounted) setState(() => _testing = false);
+    }
+  }
+
+  void _to(PageLabel label) =>
+      ref.read(currentPageLabelProvider.notifier).toPage(label);
+
+  @override
+  Widget build(BuildContext context) {
+    final l = context.appLocalizations;
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _CardTitle(l.tianjiQuickActions),
+          const SizedBox(height: tjGap3),
+          LayoutBuilder(
+            builder: (context, c) {
+              // 宽度定死、高度由内容撑 —— 固定纵横比在大字号下会顶破格子
+              final w = (c.maxWidth - tjGap2 * 3) / 4;
+              Widget tile(IconData icon, String label, VoidCallback? onTap) =>
+                  SizedBox(
+                    width: w,
+                    child: _QuickAction(icon: icon, label: label, onTap: onTap),
+                  );
+              return Wrap(
+                spacing: tjGap2,
+                runSpacing: tjGap2,
+                children: [
+                  tile(
+                    _testing ? Icons.hourglass_empty : Icons.speed,
+                    l.tianjiRetest,
+                    _testing ? null : _retest,
+                  ),
+                  tile(
+                    Icons.swap_horiz,
+                    l.tianjiLines,
+                    () => _to(PageLabel.lines),
+                  ),
+                  tile(
+                    Icons.monitor_heart_outlined,
+                    l.tianjiDiagnosis,
+                    () => _to(PageLabel.diagnosis),
+                  ),
+                  tile(
+                    Icons.settings_outlined,
+                    l.tools,
+                    () => _to(PageLabel.tools),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickAction extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
+  const _QuickAction({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final tj = context.tj;
+    return Material(
+      color: tj.ground,
+      borderRadius: BorderRadius.circular(tjRadiusControl),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(tjRadiusControl),
+        onTap: onTap,
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(tjRadiusControl),
+            border: Border.all(color: tj.line),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: tjGap1,
+              vertical: tjGap3,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, size: 20, color: context.colorScheme.primary),
+                const SizedBox(height: tjGap2),
+                // 🔴 四格并排时格子很窄，「网络诊断」在别的语言下更长，必须能缩
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    label,
+                    maxLines: 1,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: tj.ink2,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

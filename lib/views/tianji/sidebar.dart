@@ -52,7 +52,9 @@ class TianjiSidebar extends ConsumerWidget {
               bottom: 0,
               height: 220,
               child: IgnorePointer(
-                child: CustomPaint(painter: _RidgePainter()),
+                child: CustomPaint(
+                  painter: TianjiRidgePainter(color: Color(0x0FFFFFFF)),
+                ),
               ),
             ),
             // 🔴 侧栏在「手机↔桌面」切换的动画帧里高度会被压到极小，
@@ -283,38 +285,4 @@ class _StatusCard extends ConsumerWidget {
       ),
     );
   }
-}
-
-/// 侧栏底部的山影。两层不同透明度的折线，营造纵深，不抢内容。
-class _RidgePainter extends CustomPainter {
-  const _RidgePainter();
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    void ridge(double top, double alpha, List<double> peaks) {
-      final p = Path()..moveTo(0, size.height);
-      final step = size.width / (peaks.length - 1);
-      p.lineTo(0, size.height - top * peaks.first);
-      for (var i = 1; i < peaks.length; i++) {
-        final x = step * i;
-        final prevX = step * (i - 1);
-        final y = size.height - top * peaks[i];
-        final prevY = size.height - top * peaks[i - 1];
-        p.cubicTo(prevX + step * 0.4, prevY, x - step * 0.4, y, x, y);
-      }
-      p
-        ..lineTo(size.width, size.height)
-        ..close();
-      canvas.drawPath(
-        p,
-        Paint()..color = Colors.white.withValues(alpha: alpha),
-      );
-    }
-
-    ridge(size.height * 0.55, 0.045, [0.35, 0.75, 0.45, 0.9, 0.5, 0.7]);
-    ridge(size.height * 0.34, 0.06, [0.6, 0.3, 0.85, 0.4, 0.75, 0.35]);
-  }
-
-  @override
-  bool shouldRepaint(covariant _RidgePainter oldDelegate) => false;
 }

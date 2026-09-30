@@ -280,3 +280,41 @@ ThemeData tianjiTheme(ThemeData base) {
     ),
   );
 }
+
+/// 品牌山影。侧栏底部与首页连接卡共用同一条折线 —— 它是品牌图形的一部分，
+/// 两处各画一份会慢慢长歪。纯装饰，用 Canvas 画，不引图片资源。
+class TianjiRidgePainter extends CustomPainter {
+  /// 山影的颜色（自带透明度）。深色侧栏给白，浅色卡片给品牌蓝。
+  final Color color;
+
+  const TianjiRidgePainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    void ridge(double top, double alpha, List<double> peaks) {
+      final p = Path()..moveTo(0, size.height);
+      final step = size.width / (peaks.length - 1);
+      p.lineTo(0, size.height - top * peaks.first);
+      for (var i = 1; i < peaks.length; i++) {
+        final x = step * i;
+        final prevX = step * (i - 1);
+        final y = size.height - top * peaks[i];
+        final prevY = size.height - top * peaks[i - 1];
+        p.cubicTo(prevX + step * 0.4, prevY, x - step * 0.4, y, x, y);
+      }
+      p
+        ..lineTo(size.width, size.height)
+        ..close();
+      canvas.drawPath(
+        p,
+        Paint()..color = color.withValues(alpha: color.a * alpha),
+      );
+    }
+
+    ridge(size.height * 0.55, 0.75, [0.35, 0.75, 0.45, 0.9, 0.5, 0.7]);
+    ridge(size.height * 0.34, 1.0, [0.6, 0.3, 0.85, 0.4, 0.75, 0.35]);
+  }
+
+  @override
+  bool shouldRepaint(covariant TianjiRidgePainter old) => old.color != color;
+}

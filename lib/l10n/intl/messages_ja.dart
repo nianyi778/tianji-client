@@ -935,6 +935,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tianjiPassword": MessageLookupByLibrary.simpleMessage("Password"),
     "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("TIANJI"),
+    "tianjiQuickActions": MessageLookupByLibrary.simpleMessage("クイック操作"),
     "tianjiRealtimeTraffic": MessageLookupByLibrary.simpleMessage(
       "Live traffic",
     ),
