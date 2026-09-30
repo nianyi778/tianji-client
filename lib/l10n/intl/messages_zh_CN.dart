@@ -77,9 +77,13 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m27(name, delay) => "网络已变化，已切到 ${name} · ${delay} ms";
 
-  static String m28(label) => "${label}必须为URL";
+  static String m28(name) => "切到 ${name}";
 
-  static String m29(count) => "${count} 年前";
+  static String m29(names) => "${names} 当前不可用";
+
+  static String m30(label) => "${label}必须为URL";
+
+  static String m31(count) => "${count} 年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -733,9 +737,20 @@ class MessageLookup extends MessageLookupByLibrary {
       "换 WiFi 后自动重测，线路断了才切换",
     ),
     "tianjiChangeApiBase": MessageLookupByLibrary.simpleMessage("连不上？换接入地址"),
+    "tianjiChecking": MessageLookupByLibrary.simpleMessage("正在检测…"),
     "tianjiConnected": MessageLookupByLibrary.simpleMessage("已连接"),
+    "tianjiDiagnosis": MessageLookupByLibrary.simpleMessage("诊断"),
+    "tianjiDiagnosisFoot": MessageLookupByLibrary.simpleMessage(
+      "以上是这台设备此刻实测的结果，判定规则与状态页一致。",
+    ),
     "tianjiDisconnected": MessageLookupByLibrary.simpleMessage("未连接"),
+    "tianjiDnsRemote": MessageLookupByLibrary.simpleMessage("由天机远程解析"),
+    "tianjiDnsSystem": MessageLookupByLibrary.simpleMessage("用系统 DNS"),
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("邮箱"),
+    "tianjiExitRegion": MessageLookupByLibrary.simpleMessage("出口地区"),
+    "tianjiIpVersion": MessageLookupByLibrary.simpleMessage("IPv4 / IPv6"),
+    "tianjiIpv4Exit": MessageLookupByLibrary.simpleMessage("IPv4 出口"),
+    "tianjiIpv6Exit": MessageLookupByLibrary.simpleMessage("走了 IPv6 出口"),
     "tianjiJustNow": MessageLookupByLibrary.simpleMessage("刚刚"),
     "tianjiLine": MessageLookupByLibrary.simpleMessage("线路"),
     "tianjiLines": MessageLookupByLibrary.simpleMessage("线路"),
@@ -766,13 +781,43 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tianjiPassword": MessageLookupByLibrary.simpleMessage("密码"),
     "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("天机 TIANJI"),
+    "tianjiRecheck": MessageLookupByLibrary.simpleMessage("重新检测"),
     "tianjiRegister": MessageLookupByLibrary.simpleMessage("还没有账号？注册"),
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("重新测速"),
+    "tianjiSwitchTo": m28,
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage("点击连接"),
     "tianjiTapToDisconnect": MessageLookupByLibrary.simpleMessage(
       "点击断开 · 长按重新测速",
     ),
     "tianjiTimeout": MessageLookupByLibrary.simpleMessage("超时"),
+    "tianjiUnmeasured": MessageLookupByLibrary.simpleMessage("测不出"),
+    "tianjiVerdictAiDown": m29,
+    "tianjiVerdictAiDownDesc": MessageLookupByLibrary.simpleMessage(
+      "这条线路的出口通不过该服务的检测，换一条通常就好了。",
+    ),
+    "tianjiVerdictAiDownIpv6Desc": MessageLookupByLibrary.simpleMessage(
+      "出口走的是 IPv6，这是这类服务频繁拦截的常见原因。建议换一条 IPv4 线路。",
+    ),
+    "tianjiVerdictAllGood": MessageLookupByLibrary.simpleMessage("当前连接正常"),
+    "tianjiVerdictAllGoodDesc": MessageLookupByLibrary.simpleMessage(
+      "线路稳定，适合 AI 服务使用。",
+    ),
+    "tianjiVerdictIpv6": MessageLookupByLibrary.simpleMessage("线路有风险"),
+    "tianjiVerdictIpv6Desc": MessageLookupByLibrary.simpleMessage(
+      "出口走的是 IPv6，AI 服务容易频繁要求验证。建议换一条 IPv4 线路。",
+    ),
+    "tianjiVerdictNoExit": MessageLookupByLibrary.simpleMessage("测不出出口"),
+    "tianjiVerdictNoExitDesc": MessageLookupByLibrary.simpleMessage(
+      "这台设备现在连不上检测服务，不代表线路有问题。稍后再试。",
+    ),
+    "tianjiVerdictNotRunning": MessageLookupByLibrary.simpleMessage("还没连接"),
+    "tianjiVerdictNotRunningDesc": MessageLookupByLibrary.simpleMessage(
+      "先在首页连上，再回来检测。",
+    ),
+    "tianjiVerdictPartial": MessageLookupByLibrary.simpleMessage("部分服务测不出"),
+    "tianjiVerdictPartialDesc": MessageLookupByLibrary.simpleMessage(
+      "有服务这次没测出结论，可能是网络抖动。重新检测一次看看。",
+    ),
     "tight": MessageLookupByLibrary.simpleMessage("紧凑"),
     "time": MessageLookupByLibrary.simpleMessage("时间"),
     "timeout": MessageLookupByLibrary.simpleMessage("超时"),
@@ -796,7 +841,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("上传"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("通过URL获取配置文件"),
-    "urlTip": m28,
+    "urlTip": m30,
     "useHosts": MessageLookupByLibrary.simpleMessage("使用Hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("使用系统Hosts"),
     "userAgent": MessageLookupByLibrary.simpleMessage("用户代理"),
@@ -812,7 +857,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnTip": MessageLookupByLibrary.simpleMessage("重启VPN后改变生效"),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage("WebDAV配置"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("白名单模式"),
-    "yearsAgo": m29,
+    "yearsAgo": m31,
     "zh_CN": MessageLookupByLibrary.simpleMessage("中文简体"),
   };
 }

@@ -85,9 +85,13 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m27(name, delay) =>
       "Network changed, switched to ${name} · ${delay} ms";
 
-  static String m28(label) => "${label} must be a url";
+  static String m28(name) => "Switch to ${name}";
 
-  static String m29(count) =>
+  static String m29(names) => "${names} unavailable";
+
+  static String m30(label) => "${label} must be a url";
+
+  static String m31(count) =>
       "${Intl.plural(count, one: '1 year ago', other: '${count} years ago')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -1042,9 +1046,22 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiChangeApiBase": MessageLookupByLibrary.simpleMessage(
       "Can\'t connect? Change endpoint",
     ),
+    "tianjiChecking": MessageLookupByLibrary.simpleMessage("Checking…"),
     "tianjiConnected": MessageLookupByLibrary.simpleMessage("Connected"),
+    "tianjiDiagnosis": MessageLookupByLibrary.simpleMessage("Diagnose"),
+    "tianjiDiagnosisFoot": MessageLookupByLibrary.simpleMessage(
+      "Measured from this device just now, using the same rules as the status page.",
+    ),
     "tianjiDisconnected": MessageLookupByLibrary.simpleMessage("Not connected"),
+    "tianjiDnsRemote": MessageLookupByLibrary.simpleMessage(
+      "Resolved remotely by TIANJI",
+    ),
+    "tianjiDnsSystem": MessageLookupByLibrary.simpleMessage("Using system DNS"),
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("Email"),
+    "tianjiExitRegion": MessageLookupByLibrary.simpleMessage("Exit region"),
+    "tianjiIpVersion": MessageLookupByLibrary.simpleMessage("IPv4 / IPv6"),
+    "tianjiIpv4Exit": MessageLookupByLibrary.simpleMessage("IPv4 exit"),
+    "tianjiIpv6Exit": MessageLookupByLibrary.simpleMessage("Exiting over IPv6"),
     "tianjiJustNow": MessageLookupByLibrary.simpleMessage("just now"),
     "tianjiLine": MessageLookupByLibrary.simpleMessage("Line"),
     "tianjiLines": MessageLookupByLibrary.simpleMessage("Lines"),
@@ -1085,10 +1102,12 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tianjiPassword": MessageLookupByLibrary.simpleMessage("Password"),
     "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("TIANJI"),
+    "tianjiRecheck": MessageLookupByLibrary.simpleMessage("Check again"),
     "tianjiRegister": MessageLookupByLibrary.simpleMessage(
       "No account yet? Register",
     ),
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("Re-test"),
+    "tianjiSwitchTo": m28,
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
       "Tap to connect",
     ),
@@ -1096,6 +1115,42 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tap to disconnect · hold to re-test",
     ),
     "tianjiTimeout": MessageLookupByLibrary.simpleMessage("Timeout"),
+    "tianjiUnmeasured": MessageLookupByLibrary.simpleMessage("No result"),
+    "tianjiVerdictAiDown": m29,
+    "tianjiVerdictAiDownDesc": MessageLookupByLibrary.simpleMessage(
+      "This line\'s exit fails that service\'s check. Switching lines usually fixes it.",
+    ),
+    "tianjiVerdictAiDownIpv6Desc": MessageLookupByLibrary.simpleMessage(
+      "The exit is IPv6, a common reason these services block. Try an IPv4 line.",
+    ),
+    "tianjiVerdictAllGood": MessageLookupByLibrary.simpleMessage(
+      "Connection is healthy",
+    ),
+    "tianjiVerdictAllGoodDesc": MessageLookupByLibrary.simpleMessage(
+      "The line is stable and fine for AI services.",
+    ),
+    "tianjiVerdictIpv6": MessageLookupByLibrary.simpleMessage("Line at risk"),
+    "tianjiVerdictIpv6Desc": MessageLookupByLibrary.simpleMessage(
+      "The exit is IPv6, which often triggers repeated verification. Try an IPv4 line.",
+    ),
+    "tianjiVerdictNoExit": MessageLookupByLibrary.simpleMessage(
+      "Cannot measure the exit",
+    ),
+    "tianjiVerdictNoExitDesc": MessageLookupByLibrary.simpleMessage(
+      "This device cannot reach the check service right now. That does not mean the line is broken.",
+    ),
+    "tianjiVerdictNotRunning": MessageLookupByLibrary.simpleMessage(
+      "Not connected",
+    ),
+    "tianjiVerdictNotRunningDesc": MessageLookupByLibrary.simpleMessage(
+      "Connect on the home screen first, then come back.",
+    ),
+    "tianjiVerdictPartial": MessageLookupByLibrary.simpleMessage(
+      "Some services gave no result",
+    ),
+    "tianjiVerdictPartialDesc": MessageLookupByLibrary.simpleMessage(
+      "A check returned no verdict, possibly a network blip. Try again.",
+    ),
     "tight": MessageLookupByLibrary.simpleMessage("Tight"),
     "time": MessageLookupByLibrary.simpleMessage("Time"),
     "timeout": MessageLookupByLibrary.simpleMessage("Timeout"),
@@ -1127,7 +1182,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "urlDesc": MessageLookupByLibrary.simpleMessage(
       "Obtain profile through URL",
     ),
-    "urlTip": m28,
+    "urlTip": m30,
     "useHosts": MessageLookupByLibrary.simpleMessage("Use hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("Use system hosts"),
     "userAgent": MessageLookupByLibrary.simpleMessage("User-Agent"),
@@ -1147,7 +1202,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "WebDAV configuration",
     ),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("Whitelist mode"),
-    "yearsAgo": m29,
+    "yearsAgo": m31,
     "zh_CN": MessageLookupByLibrary.simpleMessage("Simplified Chinese"),
   };
 }

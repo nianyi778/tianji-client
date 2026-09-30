@@ -26,6 +26,14 @@ class Navigation {
         modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
       ),
       NavigationItem(
+        icon: const Icon(Icons.health_and_safety_outlined),
+        label: PageLabel.diagnosis,
+        builder: (_) => const TianjiDiagnosisView(
+          key: GlobalObjectKey(PageLabel.diagnosis),
+        ),
+        modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
+      ),
+      NavigationItem(
         keep: false,
         icon: const Icon(Icons.space_dashboard),
         label: PageLabel.dashboard,

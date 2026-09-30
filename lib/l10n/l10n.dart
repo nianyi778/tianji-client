@@ -4903,6 +4903,256 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Diagnose`
+  String get tianjiDiagnosis {
+    return Intl.message(
+      'Diagnose',
+      name: 'tianjiDiagnosis',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Checking…`
+  String get tianjiChecking {
+    return Intl.message(
+      'Checking…',
+      name: 'tianjiChecking',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Check again`
+  String get tianjiRecheck {
+    return Intl.message(
+      'Check again',
+      name: 'tianjiRecheck',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No result`
+  String get tianjiUnmeasured {
+    return Intl.message(
+      'No result',
+      name: 'tianjiUnmeasured',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exit region`
+  String get tianjiExitRegion {
+    return Intl.message(
+      'Exit region',
+      name: 'tianjiExitRegion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `IPv4 / IPv6`
+  String get tianjiIpVersion {
+    return Intl.message(
+      'IPv4 / IPv6',
+      name: 'tianjiIpVersion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `IPv4 exit`
+  String get tianjiIpv4Exit {
+    return Intl.message(
+      'IPv4 exit',
+      name: 'tianjiIpv4Exit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exiting over IPv6`
+  String get tianjiIpv6Exit {
+    return Intl.message(
+      'Exiting over IPv6',
+      name: 'tianjiIpv6Exit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resolved remotely by TIANJI`
+  String get tianjiDnsRemote {
+    return Intl.message(
+      'Resolved remotely by TIANJI',
+      name: 'tianjiDnsRemote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Using system DNS`
+  String get tianjiDnsSystem {
+    return Intl.message(
+      'Using system DNS',
+      name: 'tianjiDnsSystem',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Switch to {name}`
+  String tianjiSwitchTo(Object name) {
+    return Intl.message(
+      'Switch to $name',
+      name: 'tianjiSwitchTo',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Connection is healthy`
+  String get tianjiVerdictAllGood {
+    return Intl.message(
+      'Connection is healthy',
+      name: 'tianjiVerdictAllGood',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The line is stable and fine for AI services.`
+  String get tianjiVerdictAllGoodDesc {
+    return Intl.message(
+      'The line is stable and fine for AI services.',
+      name: 'tianjiVerdictAllGoodDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not connected`
+  String get tianjiVerdictNotRunning {
+    return Intl.message(
+      'Not connected',
+      name: 'tianjiVerdictNotRunning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Connect on the home screen first, then come back.`
+  String get tianjiVerdictNotRunningDesc {
+    return Intl.message(
+      'Connect on the home screen first, then come back.',
+      name: 'tianjiVerdictNotRunningDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cannot measure the exit`
+  String get tianjiVerdictNoExit {
+    return Intl.message(
+      'Cannot measure the exit',
+      name: 'tianjiVerdictNoExit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This device cannot reach the check service right now. That does not mean the line is broken.`
+  String get tianjiVerdictNoExitDesc {
+    return Intl.message(
+      'This device cannot reach the check service right now. That does not mean the line is broken.',
+      name: 'tianjiVerdictNoExitDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{names} unavailable`
+  String tianjiVerdictAiDown(Object names) {
+    return Intl.message(
+      '$names unavailable',
+      name: 'tianjiVerdictAiDown',
+      desc: '',
+      args: [names],
+    );
+  }
+
+  /// `This line's exit fails that service's check. Switching lines usually fixes it.`
+  String get tianjiVerdictAiDownDesc {
+    return Intl.message(
+      'This line\'s exit fails that service\'s check. Switching lines usually fixes it.',
+      name: 'tianjiVerdictAiDownDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The exit is IPv6, a common reason these services block. Try an IPv4 line.`
+  String get tianjiVerdictAiDownIpv6Desc {
+    return Intl.message(
+      'The exit is IPv6, a common reason these services block. Try an IPv4 line.',
+      name: 'tianjiVerdictAiDownIpv6Desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Line at risk`
+  String get tianjiVerdictIpv6 {
+    return Intl.message(
+      'Line at risk',
+      name: 'tianjiVerdictIpv6',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The exit is IPv6, which often triggers repeated verification. Try an IPv4 line.`
+  String get tianjiVerdictIpv6Desc {
+    return Intl.message(
+      'The exit is IPv6, which often triggers repeated verification. Try an IPv4 line.',
+      name: 'tianjiVerdictIpv6Desc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Some services gave no result`
+  String get tianjiVerdictPartial {
+    return Intl.message(
+      'Some services gave no result',
+      name: 'tianjiVerdictPartial',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A check returned no verdict, possibly a network blip. Try again.`
+  String get tianjiVerdictPartialDesc {
+    return Intl.message(
+      'A check returned no verdict, possibly a network blip. Try again.',
+      name: 'tianjiVerdictPartialDesc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Measured from this device just now, using the same rules as the status page.`
+  String get tianjiDiagnosisFoot {
+    return Intl.message(
+      'Measured from this device just now, using the same rules as the status page.',
+      name: 'tianjiDiagnosisFoot',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

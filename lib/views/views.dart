@@ -14,3 +14,4 @@ export 'resources.dart';
 export 'tools.dart';
 export 'tianji/home.dart';
 export 'tianji/lines.dart';
+export 'tianji/diagnosis.dart';
