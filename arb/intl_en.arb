@@ -664,5 +664,9 @@
   "tianjiDevices": "Devices",
   "tianjiDeviceUnit": "{n}",
   "tianjiAccountFailed": "Account info unavailable",
-  "tianjiLogoutConfirm": "Signing out removes the subscription profile on this device."
+  "tianjiLogoutConfirm": "Signing out removes the subscription profile on this device.",
+  "tianjiRetry": "Retry",
+  "tianjiSignInPrompt": "Sign in to see your plan, traffic and expiry.",
+  "tianjiSignIn": "Sign in",
+  "tianjiTrafficReset": "Traffic reset"
 }

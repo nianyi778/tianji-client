@@ -664,5 +664,9 @@
   "tianjiDevices": "设备数",
   "tianjiDeviceUnit": "{n} 台",
   "tianjiAccountFailed": "账号信息暂时无法获取",
-  "tianjiLogoutConfirm": "退出会删掉这台设备上的订阅配置，下次要重新登录。"
+  "tianjiLogoutConfirm": "退出会删掉这台设备上的订阅配置，下次要重新登录。",
+  "tianjiRetry": "重试",
+  "tianjiSignInPrompt": "登录后这里会显示套餐、流量与到期时间。",
+  "tianjiSignIn": "去登录",
+  "tianjiTrafficReset": "流量重置"
 }

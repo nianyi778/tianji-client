@@ -664,5 +664,9 @@
   "tianjiDevices": "デバイス数",
   "tianjiDeviceUnit": "{n} 台",
   "tianjiAccountFailed": "アカウント情報を取得できません",
-  "tianjiLogoutConfirm": "ログアウトすると、この端末のサブスクリプション設定が削除されます。"
+  "tianjiLogoutConfirm": "ログアウトすると、この端末のサブスクリプション設定が削除されます。",
+  "tianjiRetry": "再試行",
+  "tianjiSignInPrompt": "ログインするとプラン・通信量・有効期限が表示されます。",
+  "tianjiSignIn": "ログイン",
+  "tianjiTrafficReset": "通信量リセット"
 }

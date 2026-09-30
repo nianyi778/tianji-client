@@ -5478,6 +5478,36 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Retry`
+  String get tianjiRetry {
+    return Intl.message('Retry', name: 'tianjiRetry', desc: '', args: []);
+  }
+
+  /// `Sign in to see your plan, traffic and expiry.`
+  String get tianjiSignInPrompt {
+    return Intl.message(
+      'Sign in to see your plan, traffic and expiry.',
+      name: 'tianjiSignInPrompt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in`
+  String get tianjiSignIn {
+    return Intl.message('Sign in', name: 'tianjiSignIn', desc: '', args: []);
+  }
+
+  /// `Traffic reset`
+  String get tianjiTrafficReset {
+    return Intl.message(
+      'Traffic reset',
+      name: 'tianjiTrafficReset',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

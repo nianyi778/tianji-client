@@ -664,5 +664,9 @@
   "tianjiDevices": "Устройств",
   "tianjiDeviceUnit": "{n}",
   "tianjiAccountFailed": "Данные аккаунта недоступны",
-  "tianjiLogoutConfirm": "Выход удалит профиль подписки на этом устройстве."
+  "tianjiLogoutConfirm": "Выход удалит профиль подписки на этом устройстве.",
+  "tianjiRetry": "Повторить",
+  "tianjiSignInPrompt": "Войдите, чтобы увидеть тариф, трафик и срок.",
+  "tianjiSignIn": "Войти",
+  "tianjiTrafficReset": "Сброс трафика"
 }

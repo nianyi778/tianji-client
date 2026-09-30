@@ -85,7 +85,18 @@ class _TianjiConnectRingState extends ConsumerState<TianjiConnectRing>
         : '$delay';
     final showsUnit = running && delay != null && delay > 0;
 
-    final ringColor = running ? accent : tj.unknown;
+    // 🔴 环是一个**填充面**，上面压着白字。不能直接用 colorScheme.primary：
+    //    Material 3 的暗色 primary 是浅色调（它本来是给深底上的文字用的），
+    //    直接填进去会得到一个淡蓝色的环，白字几乎看不清，也和设计稿差很远。
+    //    做法：只取主色的**色相**，把饱和度与明度固定成中调 —— 这样用户在设置里
+    //    换主色仍然有效（换的是色相），而明暗两套都得到一个能承载白字的实色。
+    final h = HSLColor.fromColor(accent);
+    final ringColor = running
+        ? h
+              .withSaturation(h.saturation.clamp(0.55, 1.0))
+              .withLightness(0.45)
+              .toColor()
+        : tj.unknown;
     final d = widget.size;
 
     return Semantics(

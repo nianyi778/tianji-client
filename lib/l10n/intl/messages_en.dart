@@ -1170,6 +1170,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiRenew": MessageLookupByLibrary.simpleMessage("Renew / Upgrade"),
     "tianjiResetIn": m30,
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("Re-test"),
+    "tianjiRetry": MessageLookupByLibrary.simpleMessage("Retry"),
+    "tianjiSignIn": MessageLookupByLibrary.simpleMessage("Sign in"),
+    "tianjiSignInPrompt": MessageLookupByLibrary.simpleMessage(
+      "Sign in to see your plan, traffic and expiry.",
+    ),
     "tianjiSwitchTo": m31,
     "tianjiTagline": MessageLookupByLibrary.simpleMessage("Connect the world"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
@@ -1179,6 +1184,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tap to disconnect · hold to re-test",
     ),
     "tianjiTimeout": MessageLookupByLibrary.simpleMessage("Timeout"),
+    "tianjiTrafficReset": MessageLookupByLibrary.simpleMessage("Traffic reset"),
     "tianjiUnmeasured": MessageLookupByLibrary.simpleMessage("No result"),
     "tianjiUpdateSub": MessageLookupByLibrary.simpleMessage(
       "Update subscription",

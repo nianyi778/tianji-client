@@ -96,6 +96,15 @@ class _Profiles extends Profiles {
   ];
 }
 
+class _Setting extends TianjiSetting {
+  @override
+  TianjiProps build() => const TianjiProps(
+    email: 'user@tianjiyun.org',
+    authData: 'shots',
+    apiBase: defaultTianjiApiBase,
+  );
+}
+
 class _AiStatus extends TianjiAiStatusState {
   @override
   TianjiAiStatus? build() => const TianjiAiStatus(
@@ -180,6 +189,18 @@ void main() {
           profilesProvider.overrideWith(_Profiles.new),
           currentProfileIdProvider.overrideWithBuild((_, _) => 1),
           tianjiAiStatusStateProvider.overrideWith(_AiStatus.new),
+          tianjiAccountProvider.overrideWith(
+            (_) async => const TianjiAccount(
+              email: 'user@tianjiyun.org',
+              planName: 'AI 住宅',
+              expiredAt: 1798000000,
+              used: 150323855360,
+              total: 1099511627776,
+              resetDay: 12,
+              deviceLimit: 3,
+            ),
+          ),
+          tianjiSettingProvider.overrideWith(_Setting.new),
         ],
       );
       addTearDown(container.dispose);

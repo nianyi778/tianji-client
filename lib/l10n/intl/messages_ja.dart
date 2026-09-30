@@ -978,6 +978,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiRenew": MessageLookupByLibrary.simpleMessage("更新 / アップグレード"),
     "tianjiResetIn": m30,
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("Re-test"),
+    "tianjiRetry": MessageLookupByLibrary.simpleMessage("再試行"),
+    "tianjiSignIn": MessageLookupByLibrary.simpleMessage("ログイン"),
+    "tianjiSignInPrompt": MessageLookupByLibrary.simpleMessage(
+      "ログインするとプラン・通信量・有効期限が表示されます。",
+    ),
     "tianjiSwitchTo": m31,
     "tianjiTagline": MessageLookupByLibrary.simpleMessage("Connect the world"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
@@ -987,6 +992,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tap to disconnect · hold to re-test",
     ),
     "tianjiTimeout": MessageLookupByLibrary.simpleMessage("Timeout"),
+    "tianjiTrafficReset": MessageLookupByLibrary.simpleMessage("通信量リセット"),
     "tianjiUnmeasured": MessageLookupByLibrary.simpleMessage("No result"),
     "tianjiUpdateSub": MessageLookupByLibrary.simpleMessage("サブスクリプションを更新"),
     "tianjiUpload": MessageLookupByLibrary.simpleMessage("Up"),

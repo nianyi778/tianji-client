@@ -1229,6 +1229,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiRenew": MessageLookupByLibrary.simpleMessage("Продлить / Улучшить"),
     "tianjiResetIn": m30,
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("Re-test"),
+    "tianjiRetry": MessageLookupByLibrary.simpleMessage("Повторить"),
+    "tianjiSignIn": MessageLookupByLibrary.simpleMessage("Войти"),
+    "tianjiSignInPrompt": MessageLookupByLibrary.simpleMessage(
+      "Войдите, чтобы увидеть тариф, трафик и срок.",
+    ),
     "tianjiSwitchTo": m31,
     "tianjiTagline": MessageLookupByLibrary.simpleMessage("Connect the world"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
@@ -1238,6 +1243,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Tap to disconnect · hold to re-test",
     ),
     "tianjiTimeout": MessageLookupByLibrary.simpleMessage("Timeout"),
+    "tianjiTrafficReset": MessageLookupByLibrary.simpleMessage("Сброс трафика"),
     "tianjiUnmeasured": MessageLookupByLibrary.simpleMessage("No result"),
     "tianjiUpdateSub": MessageLookupByLibrary.simpleMessage(
       "Обновить подписку",

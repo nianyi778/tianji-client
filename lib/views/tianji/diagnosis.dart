@@ -423,6 +423,10 @@ class _CheckRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final tj = context.tj;
     final color = _levelColor(context, level);
+    // 🔴 副标题说「测到了什么」、右侧判语说「算不算好」，两者相同时只留一个 ——
+    //    整屏都是「测不出 / 测不出」成对出现，看上去像渲染重复了。
+    final word = busy ? '' : _levelWord(context, level);
+    final sub = detail == word ? '' : detail;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: tjGap3, vertical: tjGap3),
       child: Row(
@@ -459,10 +463,10 @@ class _CheckRow extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                if (detail.isNotEmpty) ...[
+                if (sub.isNotEmpty) ...[
                   const SizedBox(height: 1),
                   Text(
-                    detail,
+                    sub,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodySmall?.copyWith(
@@ -490,7 +494,7 @@ class _CheckRow extends StatelessWidget {
                 const SizedBox(width: tjGap2),
                 Flexible(
                   child: Text(
-                    busy ? '' : _levelWord(context, level),
+                    word,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodySmall?.copyWith(

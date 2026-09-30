@@ -24,6 +24,12 @@ class TianjiAccountView extends ConsumerWidget {
     final l = context.appLocalizations;
     final account = ref.watch(tianjiAccountProvider);
     final email = ref.watch(tianjiSettingProvider.select((s) => s.email));
+    // 🔴 「没登录」和「取不到」是两件事。没登录时说「账号信息暂时无法获取」
+    //    等于把一个正常状态报成故障 —— 客户会以为 app 坏了去开工单，
+    //    而他只是还没登录。这里分开，并给一个能点的动作。
+    final loggedIn = ref.watch(
+      tianjiSettingProvider.select((s) => s.authData.isNotEmpty),
+    );
 
     return CommonScaffold(
       title: l.tianjiMine,
@@ -34,7 +40,7 @@ class TianjiAccountView extends ConsumerWidget {
           children: [
             _Header(email: email, account: account.value),
             const SizedBox(height: tjGap3),
-            _PlanCard(account: account),
+            if (loggedIn) _PlanCard(account: account) else const _SignInCard(),
             const SizedBox(height: tjGap3),
             const _SettingsCard(),
             const SizedBox(height: tjGap5),
@@ -245,7 +251,9 @@ class _PlanCard extends ConsumerWidget {
               _Row(label: l.tianjiExpireAt, value: _expiry(context, a)),
               if (a.resetDay != null)
                 _Row(
-                  label: l.tianjiRealtimeTraffic,
+                  // 这一行说的是「还有几天重置」，不是实时速率 ——
+                  // 之前借用了 tianjiRealtimeTraffic，出来是「实时流量 12 天后重置」
+                  label: l.tianjiTrafficReset,
                   value: l.tianjiResetIn(a.resetDay!),
                 ),
               if (a.deviceLimit != null)
@@ -277,7 +285,7 @@ class _PlanCard extends ConsumerWidget {
               ),
               TextButton(
                 onPressed: () => ref.invalidate(tianjiAccountProvider),
-                child: Text(l.tianjiRecheck),
+                child: Text(l.tianjiRetry),
               ),
             ],
           ),
@@ -295,6 +303,40 @@ class _PlanCard extends ConsumerWidget {
     return DateFormat(
       'yyyy-MM-dd',
     ).format(DateTime.fromMillisecondsSinceEpoch(a.expiredAt! * 1000));
+  }
+}
+
+/// 没登录时的样子。不是错误态 —— 说清楚登录能看到什么，给一个按钮。
+class _SignInCard extends ConsumerWidget {
+  const _SignInCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l = context.appLocalizations;
+    final tj = context.tj;
+    return Container(
+      padding: const EdgeInsets.all(tjGap4),
+      decoration: BoxDecoration(
+        color: tj.card,
+        borderRadius: BorderRadius.circular(tjRadiusCard),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l.tianjiSignInPrompt,
+            style: context.textTheme.bodySmall?.copyWith(color: tj.ink2),
+          ),
+          const SizedBox(height: tjGap4),
+          FilledButton(
+            onPressed: () => ref
+                .read(tianjiSettingProvider.notifier)
+                .update((s) => s.copyWith(skipLogin: false)),
+            child: Text(l.tianjiSignIn),
+          ),
+        ],
+      ),
+    );
   }
 }
 
