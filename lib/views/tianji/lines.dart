@@ -3,6 +3,7 @@ import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/views/proxies/common.dart';
+import 'package:fl_clash/views/tianji/anim.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -92,8 +93,10 @@ class _LineList extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(tjGap4, tjGap3, tjGap4, tjGap5),
       itemCount: rows.length,
       separatorBuilder: (_, _) => const SizedBox(height: tjGap2),
-      itemBuilder: (_, i) =>
-          _LineTile(row: rows[i], groupName: groupName, testUrl: testUrl),
+      itemBuilder: (_, i) => TianjiStagger(
+        index: i,
+        child: _LineTile(row: rows[i], groupName: groupName, testUrl: testUrl),
+      ),
     );
   }
 }
@@ -108,12 +111,18 @@ class _Badge extends StatelessWidget {
   final Color bg;
   const _Badge({required this.icon, required this.fg, required this.bg});
 
+  // 切线路时徽章从中性圈变成实心勾：渐变过去，不跳变
   @override
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) => AnimatedContainer(
+    duration: tjNormal,
+    curve: tjCurve,
     width: 26,
     height: 26,
     decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
-    child: Icon(icon, size: 16, color: fg),
+    child: AnimatedSwitcher(
+      duration: tjFast,
+      child: Icon(icon, key: ValueKey(icon), size: 16, color: fg),
+    ),
   );
 }
 
@@ -190,7 +199,7 @@ class _LineTile extends ConsumerWidget {
     }
 
     return Material(
-      color: row.selected ? accent.withValues(alpha: 0.08) : tj.card,
+      color: Colors.transparent,
       borderRadius: BorderRadius.circular(tjRadiusCard),
       child: InkWell(
         borderRadius: BorderRadius.circular(tjRadiusCard),
@@ -199,8 +208,14 @@ class _LineTile extends ConsumerWidget {
                 '${ref.read(tianjiSettingProvider).apiBase}/#/plan',
               )
             : () => _select(ref),
-        child: Ink(
+        // 🔴 选中态整行渐变：点一下线路，底色与描边 280ms 淌过去。
+        //    跳变会让人怀疑「我点中了吗」——切线路是这一页唯一的操作，
+        //    它必须给出明确的答复。
+        child: AnimatedContainer(
+          duration: tjNormal,
+          curve: tjCurve,
           decoration: BoxDecoration(
+            color: row.selected ? accent.withValues(alpha: 0.08) : tj.card,
             borderRadius: BorderRadius.circular(tjRadiusCard),
             border: Border.all(
               color: row.selected ? accent.withValues(alpha: 0.55) : tj.line,

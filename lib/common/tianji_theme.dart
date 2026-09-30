@@ -209,7 +209,14 @@ ThemeData tianjiTheme(ThemeData base) {
       style: FilledButton.styleFrom(
         shape: r(tjRadiusControl),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-        textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+        // 🔴 必须从 base.textTheme 派生，不能写一个裸的 TextStyle ——
+        //    裸的没有 fontFamily / fontFamilyFallback，按钮文字就不跟随
+        //    上面那套 CJK 字体栈了。中文环境下多数平台有系统兜底看不出来，
+        //    一旦用户在设置里换字体、或在缺兜底的环境里，按钮文字直接变方框。
+        textStyle: base.textTheme.labelLarge?.copyWith(
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
+        ),
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(

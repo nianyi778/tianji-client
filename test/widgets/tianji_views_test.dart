@@ -16,6 +16,7 @@ import 'package:fl_clash/views/tianji/ai.dart';
 import 'package:fl_clash/views/tianji/home.dart';
 import 'package:fl_clash/views/tianji/lines.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -332,6 +333,35 @@ void main() {
 
     expect(find.text('跟随主线路'), findsWidgets);
     expect(find.textContaining(r'$app_name'), findsNothing);
+    expect(tester.takeException(), null);
+  });
+
+  testWidgets('🔴 AI 页最窄处服务名也不许被右侧判语挤到截断', (tester) async {
+    // 踩过：判语用了 tianjiAiNotProbed（「这条线路不在公开实测范围内」）——
+    // 那是一句话不是标签，它把整行撑满，反把服务名挤成「Chat···」，两样都读不了。
+    // 客户是按「我要给 ChatGPT 换线」来用这一页的，名字截断就白做了。
+    tester.view.physicalSize = const Size(320, 740); // 比最窄的在售机还窄
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final container = _container(ai: true);
+    addTearDown(container.dispose);
+    globalState.container = container;
+    container.read(viewSizeProvider.notifier).value = const Size(320, 740);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const _App(child: TianjiAiView()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    for (final name in ['ChatGPT', 'Claude']) {
+      final p = tester.renderObject<RenderParagraph>(find.text(name));
+      expect(p.didExceedMaxLines, isFalse, reason: '「$name」被截断了');
+    }
     expect(tester.takeException(), null);
   });
 

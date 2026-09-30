@@ -6,6 +6,7 @@ import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/views/proxies/common.dart';
+import 'package:fl_clash/views/tianji/anim.dart';
 import 'package:fl_clash/views/tianji/connect_ring.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -438,28 +439,39 @@ class _MeterRow extends ConsumerWidget {
     final l = context.appLocalizations;
     final traffics = ref.watch(trafficsProvider).list;
     final t = traffics.isEmpty ? const Traffic() : traffics.last;
-    return _Card(
-      child: Row(
-        children: [
-          Expanded(
-            child: _Meter(
-              icon: Icons.arrow_upward,
-              label: l.tianjiUpload,
-              value: '${t.up.traffic.show}/s',
-            ),
+    return LayoutBuilder(
+      builder: (context, c) {
+        // 🔴 窄屏只放上传/下载两项。三项挤在 390px 里，「已用流量」会缩成
+        //    「已…」、数值被 FittedBox 压到看不清 —— 那不是省空间，是三样都读不了。
+        //    设计稿的手机版本来也只有这两项；用量在下面有自己的一整张卡，
+        //    「我的」页里还有一份，不会因此丢信息。
+        final wide = c.maxWidth >= 420;
+        return _Card(
+          child: Row(
+            children: [
+              Expanded(
+                child: _Meter(
+                  icon: Icons.arrow_upward,
+                  label: l.tianjiUpload,
+                  value: '${t.up.traffic.show}/s',
+                ),
+              ),
+              _MeterDivider(),
+              Expanded(
+                child: _Meter(
+                  icon: Icons.arrow_downward,
+                  label: l.tianjiDownload,
+                  value: '${t.down.traffic.show}/s',
+                ),
+              ),
+              if (wide) ...[
+                _MeterDivider(),
+                const Expanded(child: _UsageMeter()),
+              ],
+            ],
           ),
-          _MeterDivider(),
-          Expanded(
-            child: _Meter(
-              icon: Icons.arrow_downward,
-              label: l.tianjiDownload,
-              value: '${t.down.traffic.show}/s',
-            ),
-          ),
-          _MeterDivider(),
-          const Expanded(child: _UsageMeter()),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -551,22 +563,30 @@ class _TrafficChartCard extends ConsumerWidget {
         children: [
           _CardTitle(l.tianjiRealtimeTraffic),
           const SizedBox(height: tjGap3),
-          SizedBox(
-            height: 132,
-            child: pts.length < 2
-                ? Center(
-                    child: Text(
-                      l.tianjiChartWaiting,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.tj.ink3,
+          // 🔴 没数据时只占 52px，不要留一个 132px 的空框 —— 手机首屏总共
+          //    就 844px，一个空图表白吃掉近四分之一，下面的 AI 服务就被推下去了。
+          //    有数据后用 AnimatedSize 长开，不是突然撑高。
+          AnimatedSize(
+            duration: tjSlow,
+            curve: tjCurve,
+            alignment: Alignment.topCenter,
+            child: SizedBox(
+              height: pts.length < 2 ? 52 : 132,
+              child: pts.length < 2
+                  ? Center(
+                      child: Text(
+                        l.tianjiChartWaiting,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.tj.ink3,
+                        ),
                       ),
+                    )
+                  : LineChart(
+                      points: pts,
+                      color: context.colorScheme.primary,
+                      gradient: true,
                     ),
-                  )
-                : LineChart(
-                    points: pts,
-                    color: context.colorScheme.primary,
-                    gradient: true,
-                  ),
+            ),
           ),
         ],
       ),

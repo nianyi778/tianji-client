@@ -1,6 +1,7 @@
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
+import 'package:fl_clash/views/tianji/anim.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -62,7 +63,7 @@ class TianjiAiView extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom: tjGap2),
                     // 逐项淡入上移：四张卡一起出现会显得生硬，错开 60ms 有节奏
-                    child: _Stagger(
+                    child: TianjiStagger(
                       index: i,
                       child: _ServiceCard(groupName: present[i]),
                     ),
@@ -71,43 +72,6 @@ class TianjiAiView extends ConsumerWidget {
             ),
     );
   }
-}
-
-/// 入场：淡入 + 上移 10px，按序号错开。只在第一次构建时跑一次。
-class _Stagger extends StatefulWidget {
-  final int index;
-  final Widget child;
-  const _Stagger({required this.index, required this.child});
-
-  @override
-  State<_Stagger> createState() => _StaggerState();
-}
-
-class _StaggerState extends State<_Stagger> {
-  double _t = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    // 🔴 用 postFrame 而不是 Timer：Timer 在 widget 测试里会留下
-    //    「A Timer is still pending」把整棵树弄红（2026-09-30 踩过）。
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) setState(() => _t = 1);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => AnimatedSlide(
-    offset: Offset(0, (1 - _t) * 0.06),
-    duration: Duration(milliseconds: 320 + widget.index * 60),
-    curve: Curves.easeOutCubic,
-    child: AnimatedOpacity(
-      opacity: _t,
-      duration: Duration(milliseconds: 280 + widget.index * 60),
-      curve: Curves.easeOut,
-      child: widget.child,
-    ),
-  );
 }
 
 /// 订阅里没有 AI 分组时的样子。说清楚原因，给一个能点的动作。
@@ -180,8 +144,12 @@ class _ServiceCard extends ConsumerWidget {
         ? l.tianjiAiFollowMain
         : tianjiBaseAlias(real.proxyName.isEmpty ? selected : real.proxyName);
 
+    // 🔴 这个位置只放**短判语**。曾经这里放的是 tianjiAiNotProbed
+    //    （「这条线路不在公开实测范围内」）—— 那是一句话，不是标签：
+    //    它把整行撑满，反把服务名挤成「Chat···」，两样都读不了。
+    //    没测过和没拉到数据的区别，用「待测」与「暂时无法获取」两个词表达就够。
     final (Color dot, String word) = state == null
-        ? (tj.unknown, status == null ? l.tianjiAiNoData : l.tianjiAiNotProbed)
+        ? (tj.unknown, status == null ? l.tianjiAiNoData : l.tianjiAiUnknown)
         : state.state == 'unknown'
         ? (tj.unknown, l.tianjiAiUnknown)
         : state.available
@@ -206,6 +174,8 @@ class _ServiceCard extends ConsumerWidget {
               children: [
                 Row(
                   children: [
+                    // 🔴 服务名是这一行的主语，优先给它宽度 —— 客户是按
+                    //    「我要给 ChatGPT 换线」来用这一页的，名字截断就白做了。
                     Expanded(
                       child: Text(
                         service,
@@ -216,26 +186,34 @@ class _ServiceCard extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(width: tjGap2),
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: dot,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: tjGap2),
-                    // 🔴 判语要能缩：别的语言下「暂时无法获取」会更长
-                    Flexible(
-                      child: Text(
-                        word,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: dot,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    const SizedBox(width: tjGap3),
+                    // 判语封在 116px 内：再长也不许侵占名字的空间
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 116),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: dot,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: tjGap2),
+                          Flexible(
+                            child: Text(
+                              word,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: dot,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

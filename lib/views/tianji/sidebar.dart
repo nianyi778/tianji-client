@@ -4,6 +4,7 @@ import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:flutter/material.dart';
+import 'package:fl_clash/views/tianji/anim.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
@@ -158,45 +159,57 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent = context.colorScheme.primary;
+    // 🔴 桌面端切页时 PageView 是 jumpToPage（瞬间换内容），所以**这一条高亮
+    //    就是唯一的"我点了什么"的反馈**。它必须淌过去而不是跳过去，
+    //    否则整个桌面端的导航都像没有动效。
     return Padding(
       padding: const EdgeInsets.only(bottom: tjGap1),
-      child: Material(
-        color: selected ? accent : Colors.transparent,
-        borderRadius: BorderRadius.circular(tjRadiusControl),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(tjRadiusControl),
-          onTap: onTap,
-          hoverColor: Colors.white.withValues(alpha: 0.06),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: tjGap3,
-              vertical: 11,
-            ),
-            child: Row(
-              children: [
-                IconTheme(
-                  data: IconThemeData(
-                    size: 19,
-                    color: selected ? Colors.white : TianjiSidebar._label,
-                  ),
-                  child: item.icon,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(end: selected ? 1 : 0),
+        duration: tjNormal,
+        curve: tjCurve,
+        builder: (context, t, child) {
+          final fg = Color.lerp(TianjiSidebar._label, Colors.white, t)!;
+          return Material(
+            color: accent.withValues(alpha: t),
+            borderRadius: BorderRadius.circular(tjRadiusControl),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(tjRadiusControl),
+              onTap: onTap,
+              hoverColor: Colors.white.withValues(alpha: 0.06),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: tjGap3,
+                  vertical: 11,
                 ),
-                const SizedBox(width: tjGap3),
-                Flexible(
-                  child: Text(
-                    Intl.message(item.label.name),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodyMedium?.copyWith(
-                      color: selected ? Colors.white : TianjiSidebar._label,
-                      fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                child: Row(
+                  children: [
+                    IconTheme(
+                      data: IconThemeData(size: 19, color: fg),
+                      child: item.icon,
                     ),
-                  ),
+                    const SizedBox(width: tjGap3),
+                    Flexible(
+                      child: Text(
+                        Intl.message(item.label.name),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: fg,
+                          // 字重不做插值 —— 半档字重在多数字体上会跳字形宽度，
+                          // 一行字会抖。过半直接切过去。
+                          fontWeight: t > 0.5
+                              ? FontWeight.w600
+                              : FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

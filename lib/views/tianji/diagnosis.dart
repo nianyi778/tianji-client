@@ -3,6 +3,7 @@ import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/enum/enum.dart';
 import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
+import 'package:fl_clash/views/tianji/anim.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -292,7 +293,11 @@ class _VerdictCard extends StatelessWidget {
       _ => (l.tianjiVerdictAllGood, l.tianjiVerdictAllGoodDesc),
     };
     final line = verdict.suggestedLine;
-    return Container(
+    // 🔴 重测一轮后结论可能从绿变黄再变红。整张卡的颜色**渐变**过去：
+    //    直接跳色会让人以为页面刷新了一下，而这里恰恰要让人看清「变了」。
+    return AnimatedContainer(
+      duration: tjSlow,
+      curve: tjCurve,
       padding: const EdgeInsets.all(tjGap4),
       decoration: BoxDecoration(
         // 整张卡染成结论的颜色 —— 设计稿里这一块就是「一眼看结论」的位置
@@ -314,15 +319,21 @@ class _VerdictCard extends StatelessWidget {
                         padding: EdgeInsets.all(9),
                         child: CircularProgressIndicator(strokeWidth: 2.2),
                       )
-                    : DecoratedBox(
+                    : AnimatedContainer(
+                        duration: tjSlow,
+                        curve: tjCurve,
                         decoration: BoxDecoration(
                           color: color,
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
-                          _levelIcon(verdict.level),
-                          size: 21,
-                          color: Colors.white,
+                        child: AnimatedSwitcher(
+                          duration: tjNormal,
+                          child: Icon(
+                            _levelIcon(verdict.level),
+                            key: ValueKey(verdict.level),
+                            size: 21,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
               ),
@@ -387,7 +398,7 @@ class _CheckCard extends StatelessWidget {
         children: [
           for (var i = 0; i < rows.length; i++) ...[
             if (i > 0) Divider(height: 1, thickness: 1, color: tj.line),
-            rows[i],
+            TianjiStagger(index: i, child: rows[i]),
           ],
         ],
       ),
@@ -424,7 +435,9 @@ class _CheckRow extends StatelessWidget {
                     padding: EdgeInsets.all(5),
                     child: CircularProgressIndicator(strokeWidth: 1.8),
                   )
-                : DecoratedBox(
+                : AnimatedContainer(
+                    duration: tjNormal,
+                    curve: tjCurve,
                     decoration: BoxDecoration(
                       color: color.withValues(alpha: 0.16),
                       shape: BoxShape.circle,
