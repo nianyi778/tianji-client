@@ -276,13 +276,10 @@ class _DisclaimerItem extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return ListItem(
       leading: const Icon(Icons.gavel),
-      title: Text(context.appLocalizations.disclaimer),
-      onTap: () async {
-        final isDisclaimerAccepted = await globalState.showDisclaimer();
-        if (!isDisclaimerAccepted) {
-          await ref.read(systemActionProvider.notifier).handleExit();
-        }
-      },
+      // 上游那条「仅供学习交流、严禁商用」的免责声明已移除 —— 与天机作为付费服务矛盾。
+      // 这里换成我们自己的服务条款，它在官网上，随时能改，不写死在 app 里。
+      title: Text(context.appLocalizations.termsOfService),
+      onTap: () => globalState.openUrl('$tianjiSiteUrl/legal/terms'),
     );
   }
 }

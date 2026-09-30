@@ -5153,6 +5153,26 @@ class AppLocalizations {
       args: [],
     );
   }
+
+  /// `Terms of Service`
+  String get termsOfService {
+    return Intl.message(
+      'Terms of Service',
+      name: 'termsOfService',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lines`
+  String get lines {
+    return Intl.message('Lines', name: 'lines', desc: '', args: []);
+  }
+
+  /// `Diagnose`
+  String get diagnosis {
+    return Intl.message('Diagnose', name: 'diagnosis', desc: '', args: []);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

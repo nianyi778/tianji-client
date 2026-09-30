@@ -24,6 +24,12 @@ import 'models/models.dart';
 import 'providers/providers.dart';
 
 class GlobalState {
+  // 🔴 上游启动时那条免责声明已移除（2026-10-01）。它写的是「仅供学习交流、
+  //    严禁用于商业目的」—— 那是 FlClash 作者的立场，与天机作为付费服务直接矛盾，
+  //    留着等于我们自己的 app 在开屏否认自己的业务。
+  //    GPL 要求保留的是 LICENSE 与署名，不是这个弹窗：LICENSE 文件、关于页的
+  //    「项目 / 内核」两个链接、release 说明里的「基于 FlClash（GPL-3.0）」都原样保留。
+
   static GlobalState? _instance;
   final navigatorKey = GlobalKey<NavigatorState>();
   late final String appEnv;
@@ -79,8 +85,6 @@ class GlobalState {
   String get ua => container
       .read(patchClashConfigProvider.select((state) => state.globalUa))
       .takeFirstValid([packageInfo.ua]);
-
-  BuildContext get _context => navigatorKey.currentContext!;
 
   Future<ProviderContainer> _initData(int version) async {
     packageInfo = await PackageInfo.fromPlatform();
@@ -322,7 +326,6 @@ class GlobalState {
       window?.hide();
     }
     await _handleFailedPreference();
-    await _handlerDisclaimer();
     await _showCrashRecoveryTip();
     await _showCrashlyticsTip();
     await container.read(coreActionProvider.notifier).startCore();
@@ -356,31 +359,6 @@ class GlobalState {
     await container.read(systemActionProvider.notifier).handleExit();
   }
 
-  Future<bool> showDisclaimer() async {
-    return await showCommonDialog<bool>(
-          dismissible: false,
-          child: CommonDialog(
-            title: currentAppLocalizations.disclaimer,
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(_context).pop<bool>(false);
-                },
-                child: Text(currentAppLocalizations.exit),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(_context).pop<bool>(true);
-                },
-                child: Text(currentAppLocalizations.agree),
-              ),
-            ],
-            child: Text(currentAppLocalizations.disclaimerDesc),
-          ),
-        ) ??
-        false;
-  }
-
   Future<void> _showCrashlyticsTip() async {
     if (!system.isAndroid) return;
     if (container.read(
@@ -396,21 +374,6 @@ class GlobalState {
     container
         .read(appSettingProvider.notifier)
         .update((state) => state.copyWith(crashlyticsTip: true));
-  }
-
-  Future<void> _handlerDisclaimer() async {
-    if (container.read(
-      appSettingProvider.select((state) => state.disclaimerAccepted),
-    )) {
-      return;
-    }
-    final isDisclaimerAccepted = await showDisclaimer();
-    if (!isDisclaimerAccepted) {
-      await container.read(systemActionProvider.notifier).handleExit();
-    }
-    container
-        .read(appSettingProvider.notifier)
-        .update((state) => state.copyWith(disclaimerAccepted: true));
   }
 }
 

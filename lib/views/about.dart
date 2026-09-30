@@ -47,13 +47,10 @@ class AboutView extends StatelessWidget {
             _checkUpdate(context);
           },
         ),
-        ListItem(
-          title: const Text('Telegram'),
-          onTap: () {
-            globalState.openUrl('https://t.me/FlClash');
-          },
-          trailing: const Icon(Icons.launch),
-        ),
+        // 🔴 原来指向上游 FlClash 的群。天机自己的群地址在 Xboard 的
+        //    telegram_discuss_link 里，走公开配置取 —— 写死会和后台静默漂移。
+        //    取不到就不显示这一项，不回落到任何写死的地址。
+        const _TelegramItem(),
         ListItem(
           title: Text(appLocalizations.project),
           onTap: () {
@@ -246,5 +243,24 @@ class _DeveloperModeDetectorState extends State<_DeveloperModeDetector> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(onTap: _handleTap, child: widget.child);
+  }
+}
+
+/// 天机的 Telegram 群。地址来自 Xboard 的公开配置，取不到就整项不显示。
+class _TelegramItem extends ConsumerWidget {
+  const _TelegramItem();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final link = ref
+        .watch(tianjiPublicConfigProvider)
+        .value
+        ?.telegramLink;
+    if (link == null || link.isEmpty) return const SizedBox.shrink();
+    return ListItem(
+      title: const Text('Telegram'),
+      onTap: () => globalState.openUrl(link),
+      trailing: const Icon(Icons.launch),
+    );
   }
 }

@@ -181,3 +181,46 @@ Group? tianjiMainGroup(Ref ref) {
         g.type == GroupType.Selector && g.name != 'GLOBAL' && g.all.length > 1,
   );
 }
+
+/// Xboard 的公开配置（`guest/comm/config`）。只取我们要用的几项。
+///
+/// 🔴 这些值后台随时能改，**不许在客户端写死**（CLAUDE.md 第一条）。
+///    取不到就返回 null，界面上对应的项整个不显示，绝不回落到写死的地址。
+class TianjiPublicConfig {
+  final String? telegramLink;
+  final String? telegramBot;
+
+  const TianjiPublicConfig({this.telegramLink, this.telegramBot});
+
+  static TianjiPublicConfig? parse(Object? body) {
+    if (body is! Map || body['data'] is! Map) return null;
+    final d = body['data'] as Map;
+    String? str(String k) {
+      final v = d[k];
+      return v is String && v.isNotEmpty ? v : null;
+    }
+
+    return TianjiPublicConfig(
+      telegramLink: str('telegram_discuss_link'),
+      telegramBot: str('telegram_bot_username'),
+    );
+  }
+}
+
+/// 拉一次公开配置，结果缓存在 provider 里。失败返回 null。
+@Riverpod(keepAlive: true)
+Future<TianjiPublicConfig?> tianjiPublicConfig(Ref ref) async {
+  final base = ref
+      .watch(tianjiSettingProvider)
+      .apiBase
+      .trim()
+      .replaceAll(RegExp(r'/+$'), '');
+  try {
+    final res = await tianjiDio().get('$base/api/v1/guest/comm/config');
+    if (res.statusCode != 200) return null;
+    return TianjiPublicConfig.parse(res.data);
+  } catch (e) {
+    commonPrint.log('tianji public config failed: $e', logLevel: LogLevel.info);
+    return null;
+  }
+}

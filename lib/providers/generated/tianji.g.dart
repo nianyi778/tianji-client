@@ -140,3 +140,50 @@ final class TianjiMainGroupProvider
 }
 
 String _$tianjiMainGroupHash() => r'1ff27a69c210be445808c7d15a6deae4f711c6ea';
+
+/// 拉一次公开配置，结果缓存在 provider 里。失败返回 null。
+
+@ProviderFor(tianjiPublicConfig)
+final tianjiPublicConfigProvider = TianjiPublicConfigProvider._();
+
+/// 拉一次公开配置，结果缓存在 provider 里。失败返回 null。
+
+final class TianjiPublicConfigProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<TianjiPublicConfig?>,
+          TianjiPublicConfig?,
+          FutureOr<TianjiPublicConfig?>
+        >
+    with
+        $FutureModifier<TianjiPublicConfig?>,
+        $FutureProvider<TianjiPublicConfig?> {
+  /// 拉一次公开配置，结果缓存在 provider 里。失败返回 null。
+  TianjiPublicConfigProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tianjiPublicConfigProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tianjiPublicConfigHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<TianjiPublicConfig?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<TianjiPublicConfig?> create(Ref ref) {
+    return tianjiPublicConfig(ref);
+  }
+}
+
+String _$tianjiPublicConfigHash() =>
+    r'cfcb762d6f1a7d5ccb5adf23c8b5c4125d7edc3b';

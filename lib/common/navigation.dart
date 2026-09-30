@@ -6,9 +6,15 @@ import 'package:flutter/material.dart';
 class Navigation {
   static Navigation? _instance;
 
+  /// [developerMode] 为假时，上游那几个面向高级用户的页整个不出现 ——
+  /// 🔴 不是「挪到更多里」而是**不显示**：普通客户打开「更多」看到仪表盘、代理、配置
+  /// 三个自己永远不会用的入口，只会怀疑自己是不是哪里没配好。
+  /// 订阅跟账号绑、线路有「线路」页、状态有首页，这三项对他们没有任何用途。
+  /// 需要时在「更多 → 专业模式」打开，它们立刻回来。
   List<NavigationItem> getItems({
     bool openLogs = false,
     bool hasProxies = false,
+    bool developerMode = false,
   }) {
     return [
       NavigationItem(
@@ -40,7 +46,7 @@ class Navigation {
         label: PageLabel.dashboard,
         builder: (_) =>
             const DashboardView(key: GlobalObjectKey(PageLabel.dashboard)),
-        modes: [NavigationItemMode.more],
+        modes: developerMode ? [NavigationItemMode.more] : [],
       ),
       NavigationItem(
         icon: const Icon(Icons.article),
@@ -48,7 +54,7 @@ class Navigation {
         builder: (_) =>
             const ProxiesView(key: GlobalObjectKey(PageLabel.proxies)),
         // 天机的「线路」页取代了它；完整的分组/节点视图退到「更多」
-        modes: hasProxies ? [NavigationItemMode.more] : [],
+        modes: (hasProxies && developerMode) ? [NavigationItemMode.more] : [],
       ),
       // 🔴 订阅跟账号绑定，登录时自动拉、自动更新 —— 普通用户不该管它。
       //    但不能删：选了「手动导入订阅」的人要靠它。退到「更多」。
@@ -57,7 +63,8 @@ class Navigation {
         label: PageLabel.profiles,
         builder: (_) =>
             const ProfilesView(key: GlobalObjectKey(PageLabel.profiles)),
-        modes: [NavigationItemMode.more],
+        // 🔴 手动导入订阅的人要靠它，所以专业模式下必须能找回来
+        modes: developerMode ? [NavigationItemMode.more] : [],
       ),
       NavigationItem(
         icon: const Icon(Icons.view_timeline),
@@ -65,7 +72,7 @@ class Navigation {
         builder: (_) =>
             const RequestsView(key: GlobalObjectKey(PageLabel.requests)),
         description: 'requestsDesc',
-        modes: [NavigationItemMode.more],
+        modes: developerMode ? [NavigationItemMode.more] : [],
       ),
       NavigationItem(
         icon: const Icon(Icons.ballot),
@@ -73,7 +80,7 @@ class Navigation {
         builder: (_) =>
             const ConnectionsView(key: GlobalObjectKey(PageLabel.connections)),
         description: 'connectionsDesc',
-        modes: [NavigationItemMode.more],
+        modes: developerMode ? [NavigationItemMode.more] : [],
       ),
       NavigationItem(
         icon: const Icon(Icons.storage),
@@ -81,7 +88,7 @@ class Navigation {
         description: 'resourcesDesc',
         builder: (_) =>
             const ResourcesView(key: GlobalObjectKey(PageLabel.resources)),
-        modes: [NavigationItemMode.more],
+        modes: developerMode ? [NavigationItemMode.more] : [],
       ),
       NavigationItem(
         icon: const Icon(Icons.adb),

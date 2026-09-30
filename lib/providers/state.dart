@@ -57,6 +57,9 @@ NavigationItemsState navigationItemsState(Ref ref) {
     value: navigation.getItems(
       openLogs: openLogs,
       hasProxies: !isInit ? hasProfiles : hasProxies,
+      developerMode: ref.watch(
+        appSettingProvider.select((state) => state.developerMode),
+      ),
     ),
   );
 }

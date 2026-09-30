@@ -622,5 +622,8 @@
   "tianjiVerdictIpv6Desc": "The exit is IPv6, which often triggers repeated verification. Try an IPv4 line.",
   "tianjiVerdictPartial": "Some services gave no result",
   "tianjiVerdictPartialDesc": "A check returned no verdict, possibly a network blip. Try again.",
-  "tianjiDiagnosisFoot": "Measured from this device just now, using the same rules as the status page."
+  "tianjiDiagnosisFoot": "Measured from this device just now, using the same rules as the status page.",
+  "termsOfService": "Terms of Service",
+  "lines": "Lines",
+  "diagnosis": "Diagnose"
 }
