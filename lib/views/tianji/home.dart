@@ -103,17 +103,23 @@ class _CardTitle extends StatelessWidget {
   const _CardTitle(this.text, {this.trailing});
 
   @override
+  // 🔴 标题与右侧动作都要能压缩：窄屏下「实时流量」+「全部实测」会溢出。
   Widget build(BuildContext context) => Row(
     children: [
       Expanded(
         child: Text(
           text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: context.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
       ),
-      ?trailing,
+      if (trailing != null)
+        Flexible(
+          child: FittedBox(fit: BoxFit.scaleDown, child: trailing),
+        ),
     ],
   );
 }
@@ -514,22 +520,26 @@ class _AiServicesCard extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: tjGap3),
+          // 🔴 这里不能用 GridView 的 childAspectRatio —— 那是**固定**行高，
+          //    用户把系统字号调大、或者状态文案换成更长的语言，格子里的两行字
+          //    就顶破格子（widget 测试逮到过，溢出 33px）。用 Wrap 只定宽不定高，
+          //    高度由内容自己撑。
           LayoutBuilder(
             builder: (context, c) {
               final cols = c.maxWidth >= 560 ? 4 : 2;
-              return GridView.count(
-                crossAxisCount: cols,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisSpacing: tjGap2,
-                mainAxisSpacing: tjGap2,
-                childAspectRatio: 1.75,
+              final w = (c.maxWidth - tjGap2 * (cols - 1)) / cols;
+              return Wrap(
+                spacing: tjGap2,
+                runSpacing: tjGap2,
                 children: [
                   for (final s in _shown)
-                    _AiTile(
-                      service: s,
-                      state: node?[s],
-                      hasData: status != null,
+                    SizedBox(
+                      width: w,
+                      child: _AiTile(
+                        service: s,
+                        state: node?[s],
+                        hasData: status != null,
+                      ),
                     ),
                 ],
               );
@@ -579,7 +589,7 @@ class _AiTile extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             service,

@@ -5283,6 +5283,16 @@ class AppLocalizations {
       args: [n],
     );
   }
+
+  /// `Connect the world`
+  String get tianjiTagline {
+    return Intl.message(
+      'Connect the world',
+      name: 'tianjiTagline',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

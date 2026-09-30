@@ -15,3 +15,4 @@ export 'tools.dart';
 export 'tianji/home.dart';
 export 'tianji/lines.dart';
 export 'tianji/diagnosis.dart';
+export 'tianji/sidebar.dart';

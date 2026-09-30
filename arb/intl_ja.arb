@@ -639,5 +639,6 @@
   "tianjiConnectionInfo": "Connection",
   "tianjiExitIp": "Exit IP",
   "tianjiUptime": "Uptime",
-  "tianjiAiOkCount": "{n} AI services available"
+  "tianjiAiOkCount": "{n} AI services available",
+  "tianjiTagline": "Connect the world"
 }

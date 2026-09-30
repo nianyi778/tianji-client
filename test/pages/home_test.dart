@@ -12,6 +12,7 @@ import 'package:fl_clash/state.dart';
 import 'package:fl_clash/views/application_setting.dart';
 import 'package:fl_clash/views/tools.dart';
 import 'package:fl_clash/widgets/widgets.dart';
+import 'package:fl_clash/views/tianji/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,7 +65,7 @@ void main() {
 
     await tester.pump();
 
-    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(TianjiSidebar), findsOneWidget);
     expect(find.byType(NavigationBar), findsNothing);
 
     await tester.pump(const Duration(milliseconds: 150));
@@ -110,7 +111,7 @@ void main() {
       await tester.pumpWidget(
         UncontrolledProviderScope(
           container: container,
-          child: const MaterialApp(home: HomePage()),
+          child: const _LocalizedTestApp(child: HomePage()),
         ),
       );
       await tester.pump();
@@ -134,7 +135,7 @@ void main() {
       await tester.tap(find.text('count: 0'));
       await tester.pump();
       expect(find.text('count: 1'), findsOneWidget);
-      expect(find.byType(NavigationRail), findsOneWidget);
+      expect(find.byType(TianjiSidebar), findsOneWidget);
       expect(find.byType(NavigationBar), findsNothing);
 
       for (var width = 1180.0; width >= 500; width -= 20) {
@@ -145,13 +146,13 @@ void main() {
       }
 
       expect(find.text('count: 1'), findsOneWidget);
-      expect(find.byType(NavigationRail), findsOneWidget);
+      expect(find.byType(TianjiSidebar), findsOneWidget);
       expect(find.byType(NavigationBar), findsOneWidget);
       await tester.pump(const Duration(milliseconds: 150));
       expect(tester.takeException(), isNull);
 
       final outgoingTools = find.descendant(
-        of: find.byType(NavigationRail),
+        of: find.byType(TianjiSidebar),
         matching: find.byIcon(Icons.construction),
       );
       await tester.tap(outgoingTools, warnIfMissed: false);
@@ -159,7 +160,7 @@ void main() {
       expect(container.read(currentPageLabelProvider), PageLabel.home);
 
       await tester.pump(const Duration(milliseconds: 301));
-      expect(find.byType(NavigationRail), findsNothing);
+      expect(find.byType(TianjiSidebar), findsNothing);
       expect(find.byType(NavigationBar), findsOneWidget);
 
       tester.view.physicalSize = const Size(1200, 800);
@@ -167,11 +168,11 @@ void main() {
       await tester.pump();
 
       expect(find.text('count: 1'), findsOneWidget);
-      expect(find.byType(NavigationRail), findsOneWidget);
+      expect(find.byType(TianjiSidebar), findsOneWidget);
       expect(find.byType(NavigationBar), findsOneWidget);
 
       await tester.pump(const Duration(milliseconds: 301));
-      expect(find.byType(NavigationRail), findsOneWidget);
+      expect(find.byType(TianjiSidebar), findsOneWidget);
       expect(find.byType(NavigationBar), findsNothing);
       expect(tester.takeException(), isNull);
     },
@@ -193,9 +194,8 @@ void main() {
                 NavigationItem(
                   icon: const Icon(Icons.space_dashboard),
                   label: PageLabel.home,
-                  builder: (_) => const ToolsView(
-                    key: GlobalObjectKey(PageLabel.home),
-                  ),
+                  builder: (_) =>
+                      const ToolsView(key: GlobalObjectKey(PageLabel.home)),
                 ),
                 NavigationItem(
                   icon: const Icon(Icons.construction),
@@ -368,11 +368,11 @@ void main() {
         ),
       );
       await tester.pump();
-      expect(find.byType(NavigationRail), findsOneWidget);
+      expect(find.byType(TianjiSidebar), findsOneWidget);
 
       bool focusInRail() {
         final context = FocusManager.instance.primaryFocus?.context;
-        return context?.findAncestorWidgetOfExactType<NavigationRail>() != null;
+        return context?.findAncestorWidgetOfExactType<TianjiSidebar>() != null;
       }
 
       IconData? focusedRailIcon() {
@@ -407,8 +407,8 @@ void main() {
       await tester.pump();
 
       expect(container.read(currentPageLabelProvider), PageLabel.proxies);
-      final rail = tester.widget<NavigationRail>(find.byType(NavigationRail));
-      expect(rail.selectedIndex, 1);
+      final rail = tester.widget<TianjiSidebar>(find.byType(TianjiSidebar));
+      expect(rail.currentIndex, 1);
       expect(focusedRailIcon(), Icons.article);
 
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
@@ -664,7 +664,7 @@ void main() {
     await tester.enterText(find.byType(TextField), 'needle');
     expect(query, 'needle');
 
-    final navigationRail = find.byType(NavigationRail);
+    final navigationRail = find.byType(TianjiSidebar);
     await tester.tap(
       find.descendant(
         of: navigationRail,
@@ -738,10 +738,10 @@ void main() {
         ),
       );
       await tester.pump();
-      expect(find.byType(NavigationRail), findsOneWidget);
+      expect(find.byType(TianjiSidebar), findsOneWidget);
 
       Finder railIcon(IconData icon) => find.descendant(
-        of: find.byType(NavigationRail),
+        of: find.byType(TianjiSidebar),
         matching: find.byIcon(icon),
       );
 
@@ -755,7 +755,7 @@ void main() {
 
       bool focusInRail() {
         final context = FocusManager.instance.primaryFocus?.context;
-        return context?.findAncestorWidgetOfExactType<NavigationRail>() != null;
+        return context?.findAncestorWidgetOfExactType<TianjiSidebar>() != null;
       }
 
       for (var i = 0; i < 40 && !focusInRail(); i++) {
@@ -798,6 +798,27 @@ class _TestApp extends StatelessWidget {
         globalState.theme = CommonTheme.of(context, 1);
         return child!;
       },
+      home: child,
+    );
+  }
+}
+
+/// 侧栏（品牌标语、连接状态）读的是本地化文案，所以测试里的 MaterialApp
+/// 必须挂上 delegate —— 否则 `AppLocalizations.of` 直接抛，看起来像布局坏了。
+class _LocalizedTestApp extends StatelessWidget {
+  final Widget child;
+  const _LocalizedTestApp({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.delegate.supportedLocales,
       home: child,
     );
   }

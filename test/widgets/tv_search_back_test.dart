@@ -7,6 +7,7 @@ import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/widgets/widgets.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fl_clash/views/tianji/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -138,7 +139,7 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(TianjiSidebar), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.search));
     await tester.pumpAndSettle();

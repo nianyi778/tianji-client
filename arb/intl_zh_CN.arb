@@ -639,5 +639,6 @@
   "tianjiConnectionInfo": "连接信息",
   "tianjiExitIp": "出口 IP",
   "tianjiUptime": "已运行",
-  "tianjiAiOkCount": "{n} 项 AI 服务可用"
+  "tianjiAiOkCount": "{n} 项 AI 服务可用",
+  "tianjiTagline": "连接全球 · 加速未来"
 }

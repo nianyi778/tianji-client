@@ -801,6 +801,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiRegister": MessageLookupByLibrary.simpleMessage("还没有账号？注册"),
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("重新测速"),
     "tianjiSwitchTo": m29,
+    "tianjiTagline": MessageLookupByLibrary.simpleMessage("连接全球 · 加速未来"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage("点击连接"),
     "tianjiTapToDisconnect": MessageLookupByLibrary.simpleMessage(
       "点击断开 · 长按重新测速",

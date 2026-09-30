@@ -3,14 +3,13 @@ import 'dart:async';
 import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/core/controller.dart';
 import 'package:fl_clash/enum/enum.dart';
-import 'package:fl_clash/manager/window_manager.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/widgets/animated_visibility.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fl_clash/views/tianji/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class AppStateManager extends ConsumerStatefulWidget {
   final Widget child;
@@ -140,13 +139,6 @@ class AppSidebarContainer extends ConsumerWidget {
 
   const AppSidebarContainer({super.key, required this.child});
 
-  Widget _buildBackground({
-    required BuildContext context,
-    required Widget child,
-  }) {
-    return Material(color: context.colorScheme.surfaceContainer, child: child);
-  }
-
   void _updateSideBarWidth(WidgetRef ref, double contentWidth) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(sideWidthProvider.notifier).value =
@@ -157,8 +149,11 @@ class AppSidebarContainer extends ConsumerWidget {
 
   void _handleToPage(PageLabel pageLabel) {
     final focusNode = FocusManager.instance.primaryFocus;
+    // 🔴 侧栏从 NavigationRail 换成 TianjiSidebar 之后，这里也必须跟着改 ——
+    //    否则「用方向键在侧栏里切页，焦点留在侧栏」这个功能会**静默失效**：
+    //    没有报错、没有测试红（除非测试也断言了它），只有用键盘的人会发现。
     final preserveNavigationFocus =
-        focusNode?.context?.findAncestorWidgetOfExactType<NavigationRail>() !=
+        focusNode?.context?.findAncestorWidgetOfExactType<TianjiSidebar>() !=
         null;
     globalState.container
         .read(currentPageLabelProvider.notifier)
@@ -179,89 +174,19 @@ class AppSidebarContainer extends ConsumerWidget {
     final navigationItems = navigationState.navigationItems;
     final isMobileView = navigationState.viewMode == ViewMode.mobile;
     final currentIndex = navigationState.currentIndex;
-    final showLabel = ref.watch(appSettingProvider).showLabel;
     return Container(
       color: context.colorScheme.surfaceContainer,
       child: Row(
         children: [
           AnimatedVisibility.sidebar(
             visible: !isMobileView,
-            child: _buildBackground(
-              context: context,
-              child: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (system.isMacOS) const SizedBox(height: 22),
-                    const SizedBox(height: 10),
-                    if (!system.isMacOS) ...[
-                      const ClipRect(child: AppIcon()),
-                      const SizedBox(height: 12),
-                    ],
-                    Expanded(
-                      child: ScrollConfiguration(
-                        behavior: HiddenBarScrollBehavior(),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: NavigationRail(
-                                scrollable: true,
-                                minExtendedWidth: 200,
-                                backgroundColor: Colors.transparent,
-                                selectedLabelTextStyle: context
-                                    .textTheme
-                                    .labelLarge!
-                                    .copyWith(
-                                      color: context.colorScheme.onSurface,
-                                    ),
-                                unselectedLabelTextStyle: context
-                                    .textTheme
-                                    .labelLarge!
-                                    .copyWith(
-                                      color: context.colorScheme.onSurface,
-                                    ),
-                                destinations: navigationItems
-                                    .map(
-                                      (e) => NavigationRailDestination(
-                                        icon: e.icon,
-                                        label: Text(Intl.message(e.label.name)),
-                                      ),
-                                    )
-                                    .toList(),
-                                onDestinationSelected: (index) {
-                                  _handleToPage(navigationItems[index].label);
-                                },
-                                extended: false,
-                                selectedIndex: currentIndex,
-                                labelType: showLabel
-                                    ? NavigationRailLabelType.all
-                                    : NavigationRailLabelType.none,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    IconButton(
-                      onPressed: () {
-                        ref
-                            .read(appSettingProvider.notifier)
-                            .update(
-                              (state) =>
-                                  state.copyWith(showLabel: !state.showLabel),
-                            );
-                      },
-                      icon: Icon(
-                        Icons.menu,
-                        color: context.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                  ],
-                ),
-              ),
+            // 天机自己的侧栏：深色渐变、品牌标在顶、连接状态在底。
+            // 替换掉上游的 NavigationRail —— 那一套是 Material 默认样式，
+            // 和设计稿差得最远的就是这一块。
+            child: TianjiSidebar(
+              items: navigationItems,
+              currentIndex: currentIndex,
+              onSelect: _handleToPage,
             ),
           ),
           Expanded(

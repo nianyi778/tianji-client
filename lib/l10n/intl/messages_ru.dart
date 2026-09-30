@@ -1189,6 +1189,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "tianjiRetest": MessageLookupByLibrary.simpleMessage("Re-test"),
     "tianjiSwitchTo": m29,
+    "tianjiTagline": MessageLookupByLibrary.simpleMessage("Connect the world"),
     "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
       "Tap to connect",
     ),
