@@ -4713,6 +4713,176 @@ class AppLocalizations {
   String get tianjiLogout {
     return Intl.message('Sign out', name: 'tianjiLogout', desc: '', args: []);
   }
+
+  /// `Home`
+  String get home {
+    return Intl.message('Home', name: 'home', desc: '', args: []);
+  }
+
+  /// `Connected`
+  String get tianjiConnected {
+    return Intl.message(
+      'Connected',
+      name: 'tianjiConnected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Not connected`
+  String get tianjiDisconnected {
+    return Intl.message(
+      'Not connected',
+      name: 'tianjiDisconnected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sign in first`
+  String get tianjiNoProfile {
+    return Intl.message(
+      'Sign in first',
+      name: 'tianjiNoProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap to connect`
+  String get tianjiTapToConnect {
+    return Intl.message(
+      'Tap to connect',
+      name: 'tianjiTapToConnect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tap to disconnect · hold to re-test`
+  String get tianjiTapToDisconnect {
+    return Intl.message(
+      'Tap to disconnect · hold to re-test',
+      name: 'tianjiTapToDisconnect',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Line`
+  String get tianjiLine {
+    return Intl.message('Line', name: 'tianjiLine', desc: '', args: []);
+  }
+
+  /// `No line yet`
+  String get tianjiNoLine {
+    return Intl.message(
+      'No line yet',
+      name: 'tianjiNoLine',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Timeout`
+  String get tianjiTimeout {
+    return Intl.message('Timeout', name: 'tianjiTimeout', desc: '', args: []);
+  }
+
+  /// `AI services`
+  String get tianjiAiServices {
+    return Intl.message(
+      'AI services',
+      name: 'tianjiAiServices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `All results`
+  String get tianjiAiAll {
+    return Intl.message('All results', name: 'tianjiAiAll', desc: '', args: []);
+  }
+
+  /// `Available`
+  String get tianjiAiAvailable {
+    return Intl.message(
+      'Available',
+      name: 'tianjiAiAvailable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Untested`
+  String get tianjiAiUnknown {
+    return Intl.message(
+      'Untested',
+      name: 'tianjiAiUnknown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unavailable`
+  String get tianjiAiOffline {
+    return Intl.message(
+      'Unavailable',
+      name: 'tianjiAiOffline',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Unavailable right now`
+  String get tianjiAiNoData {
+    return Intl.message(
+      'Unavailable right now',
+      name: 'tianjiAiNoData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `This line is not in the public probe set`
+  String get tianjiAiNotProbed {
+    return Intl.message(
+      'This line is not in the public probe set',
+      name: 'tianjiAiNotProbed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `just now`
+  String get tianjiJustNow {
+    return Intl.message('just now', name: 'tianjiJustNow', desc: '', args: []);
+  }
+
+  /// `{n} min ago`
+  String tianjiAgoMinutes(Object n) {
+    return Intl.message(
+      '$n min ago',
+      name: 'tianjiAgoMinutes',
+      desc: '',
+      args: [n],
+    );
+  }
+
+  /// `{n} h ago`
+  String tianjiAgoHours(Object n) {
+    return Intl.message(
+      '$n h ago',
+      name: 'tianjiAgoHours',
+      desc: '',
+      args: [n],
+    );
+  }
+
+  /// `{n} d ago`
+  String tianjiAgoDays(Object n) {
+    return Intl.message('$n d ago', name: 'tianjiAgoDays', desc: '', args: [n]);
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {

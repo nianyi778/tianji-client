@@ -69,12 +69,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m23(count) => "${count} 項目が選択されています";
 
-  static String m24(name, delay) =>
+  static String m24(n) => "${n} d ago";
+
+  static String m25(n) => "${n} h ago";
+
+  static String m26(n) => "${n} min ago";
+
+  static String m27(name, delay) =>
       "Network changed, switched to ${name} · ${delay} ms";
 
-  static String m25(label) => "${label}はURLである必要があります";
+  static String m28(label) => "${label}はURLである必要があります";
 
-  static String m26(count) => "${count}年前";
+  static String m29(count) => "${count}年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -354,6 +360,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Helper サービスが利用できないため、TUN モードを有効にできません。再インストールしてください。",
     ),
     "hideFromList": MessageLookupByLibrary.simpleMessage("リストから隠す"),
+    "home": MessageLookupByLibrary.simpleMessage("Home"),
     "host": MessageLookupByLibrary.simpleMessage("ホスト"),
     "hostsDesc": MessageLookupByLibrary.simpleMessage("ホストを追加"),
     "hotkeyConflict": MessageLookupByLibrary.simpleMessage("ホットキー競合"),
@@ -821,6 +828,20 @@ class MessageLookup extends MessageLookupByLibrary {
     "themeDesc": MessageLookupByLibrary.simpleMessage("ダークモードの設定、色の調整"),
     "themeMode": MessageLookupByLibrary.simpleMessage("テーマモード"),
     "tianjiAccount": MessageLookupByLibrary.simpleMessage("TIANJI account"),
+    "tianjiAgoDays": m24,
+    "tianjiAgoHours": m25,
+    "tianjiAgoMinutes": m26,
+    "tianjiAiAll": MessageLookupByLibrary.simpleMessage("All results"),
+    "tianjiAiAvailable": MessageLookupByLibrary.simpleMessage("Available"),
+    "tianjiAiNoData": MessageLookupByLibrary.simpleMessage(
+      "Unavailable right now",
+    ),
+    "tianjiAiNotProbed": MessageLookupByLibrary.simpleMessage(
+      "This line is not in the public probe set",
+    ),
+    "tianjiAiOffline": MessageLookupByLibrary.simpleMessage("Unavailable"),
+    "tianjiAiServices": MessageLookupByLibrary.simpleMessage("AI services"),
+    "tianjiAiUnknown": MessageLookupByLibrary.simpleMessage("Untested"),
     "tianjiApiBase": MessageLookupByLibrary.simpleMessage("Endpoint"),
     "tianjiAutoOptimize": MessageLookupByLibrary.simpleMessage(
       "Auto-optimize on network change",
@@ -831,7 +852,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiChangeApiBase": MessageLookupByLibrary.simpleMessage(
       "Can\'t connect? Change endpoint",
     ),
+    "tianjiConnected": MessageLookupByLibrary.simpleMessage("Connected"),
+    "tianjiDisconnected": MessageLookupByLibrary.simpleMessage("Not connected"),
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("Email"),
+    "tianjiJustNow": MessageLookupByLibrary.simpleMessage("just now"),
+    "tianjiLine": MessageLookupByLibrary.simpleMessage("Line"),
     "tianjiLoginAndConnect": MessageLookupByLibrary.simpleMessage(
       "Sign in and connect",
     ),
@@ -855,10 +880,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiNetChangedOk": MessageLookupByLibrary.simpleMessage(
       "Network changed, current line is fine",
     ),
-    "tianjiNetChangedSwitched": m24,
+    "tianjiNetChangedSwitched": m27,
     "tianjiNetworkError": MessageLookupByLibrary.simpleMessage(
       "Cannot reach the server. The main domain may be blocked: get a backup address from the status page, then tap \"Change endpoint\".",
     ),
+    "tianjiNoLine": MessageLookupByLibrary.simpleMessage("No line yet"),
+    "tianjiNoProfile": MessageLookupByLibrary.simpleMessage("Sign in first"),
     "tianjiNoSubscription": MessageLookupByLibrary.simpleMessage(
       "This account has no active plan yet. Claim or buy one on the website first.",
     ),
@@ -867,6 +894,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiRegister": MessageLookupByLibrary.simpleMessage(
       "No account yet? Register",
     ),
+    "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
+      "Tap to connect",
+    ),
+    "tianjiTapToDisconnect": MessageLookupByLibrary.simpleMessage(
+      "Tap to disconnect · hold to re-test",
+    ),
+    "tianjiTimeout": MessageLookupByLibrary.simpleMessage("Timeout"),
     "tight": MessageLookupByLibrary.simpleMessage("密"),
     "time": MessageLookupByLibrary.simpleMessage("時間"),
     "timeout": MessageLookupByLibrary.simpleMessage("タイムアウト"),
@@ -892,7 +926,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("アップロード"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("URL経由でプロファイルを取得"),
-    "urlTip": m25,
+    "urlTip": m28,
     "useHosts": MessageLookupByLibrary.simpleMessage("ホストを使用"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("システムホストを使用"),
     "userAgent": MessageLookupByLibrary.simpleMessage("ユーザーエージェント"),
@@ -908,7 +942,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnTip": MessageLookupByLibrary.simpleMessage("変更はVPN再起動後に有効"),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage("WebDAV設定"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("ホワイトリストモード"),
-    "yearsAgo": m26,
+    "yearsAgo": m29,
     "zh_CN": MessageLookupByLibrary.simpleMessage("簡体字中国語"),
   };
 }

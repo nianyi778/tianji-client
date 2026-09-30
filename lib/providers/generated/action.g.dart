@@ -566,7 +566,7 @@ final class TianjiActionProvider extends $NotifierProvider<TianjiAction, void> {
   }
 }
 
-String _$tianjiActionHash() => r'7777c7d46b4d05cf34f5c7d776ecac075263d1c7';
+String _$tianjiActionHash() => r'b7f111798d977fa94aad6a460e981756c5b46b7e';
 
 /// 天机账号：登录即用 + 网络变化后自动优化。
 ///

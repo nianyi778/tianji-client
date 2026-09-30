@@ -12,6 +12,13 @@ class Navigation {
   }) {
     return [
       NavigationItem(
+        icon: const Icon(Icons.home_outlined),
+        label: PageLabel.home,
+        builder: (_) =>
+            const TianjiHomeView(key: GlobalObjectKey(PageLabel.home)),
+        modes: [NavigationItemMode.desktop, NavigationItemMode.mobile],
+      ),
+      NavigationItem(
         keep: false,
         icon: const Icon(Icons.space_dashboard),
         label: PageLabel.dashboard,

@@ -75,12 +75,18 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m23(count) => "Выбрано ${count} элементов";
 
-  static String m24(name, delay) =>
+  static String m24(n) => "${n} d ago";
+
+  static String m25(n) => "${n} h ago";
+
+  static String m26(n) => "${n} min ago";
+
+  static String m27(name, delay) =>
       "Network changed, switched to ${name} · ${delay} ms";
 
-  static String m25(label) => "${label} должен быть URL";
+  static String m28(label) => "${label} должен быть URL";
 
-  static String m26(count) =>
+  static String m29(count) =>
       "${Intl.plural(count, one: '${count} год назад', few: '${count} года назад', many: '${count} лет назад', other: '${count} года назад')}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -461,6 +467,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Служба Helper недоступна, поэтому TUN-режим включить нельзя. Переустановите FlClash.",
     ),
     "hideFromList": MessageLookupByLibrary.simpleMessage("Скрыть из списка"),
+    "home": MessageLookupByLibrary.simpleMessage("Home"),
     "host": MessageLookupByLibrary.simpleMessage("Хост"),
     "hostsDesc": MessageLookupByLibrary.simpleMessage("Добавить Hosts"),
     "hotkeyConflict": MessageLookupByLibrary.simpleMessage(
@@ -1068,6 +1075,20 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "themeMode": MessageLookupByLibrary.simpleMessage("Режим темы"),
     "tianjiAccount": MessageLookupByLibrary.simpleMessage("TIANJI account"),
+    "tianjiAgoDays": m24,
+    "tianjiAgoHours": m25,
+    "tianjiAgoMinutes": m26,
+    "tianjiAiAll": MessageLookupByLibrary.simpleMessage("All results"),
+    "tianjiAiAvailable": MessageLookupByLibrary.simpleMessage("Available"),
+    "tianjiAiNoData": MessageLookupByLibrary.simpleMessage(
+      "Unavailable right now",
+    ),
+    "tianjiAiNotProbed": MessageLookupByLibrary.simpleMessage(
+      "This line is not in the public probe set",
+    ),
+    "tianjiAiOffline": MessageLookupByLibrary.simpleMessage("Unavailable"),
+    "tianjiAiServices": MessageLookupByLibrary.simpleMessage("AI services"),
+    "tianjiAiUnknown": MessageLookupByLibrary.simpleMessage("Untested"),
     "tianjiApiBase": MessageLookupByLibrary.simpleMessage("Endpoint"),
     "tianjiAutoOptimize": MessageLookupByLibrary.simpleMessage(
       "Auto-optimize on network change",
@@ -1078,7 +1099,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiChangeApiBase": MessageLookupByLibrary.simpleMessage(
       "Can\'t connect? Change endpoint",
     ),
+    "tianjiConnected": MessageLookupByLibrary.simpleMessage("Connected"),
+    "tianjiDisconnected": MessageLookupByLibrary.simpleMessage("Not connected"),
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("Email"),
+    "tianjiJustNow": MessageLookupByLibrary.simpleMessage("just now"),
+    "tianjiLine": MessageLookupByLibrary.simpleMessage("Line"),
     "tianjiLoginAndConnect": MessageLookupByLibrary.simpleMessage(
       "Sign in and connect",
     ),
@@ -1102,10 +1127,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiNetChangedOk": MessageLookupByLibrary.simpleMessage(
       "Network changed, current line is fine",
     ),
-    "tianjiNetChangedSwitched": m24,
+    "tianjiNetChangedSwitched": m27,
     "tianjiNetworkError": MessageLookupByLibrary.simpleMessage(
       "Cannot reach the server. The main domain may be blocked: get a backup address from the status page, then tap \"Change endpoint\".",
     ),
+    "tianjiNoLine": MessageLookupByLibrary.simpleMessage("No line yet"),
+    "tianjiNoProfile": MessageLookupByLibrary.simpleMessage("Sign in first"),
     "tianjiNoSubscription": MessageLookupByLibrary.simpleMessage(
       "This account has no active plan yet. Claim or buy one on the website first.",
     ),
@@ -1114,6 +1141,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiRegister": MessageLookupByLibrary.simpleMessage(
       "No account yet? Register",
     ),
+    "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage(
+      "Tap to connect",
+    ),
+    "tianjiTapToDisconnect": MessageLookupByLibrary.simpleMessage(
+      "Tap to disconnect · hold to re-test",
+    ),
+    "tianjiTimeout": MessageLookupByLibrary.simpleMessage("Timeout"),
     "tight": MessageLookupByLibrary.simpleMessage("Плотный"),
     "time": MessageLookupByLibrary.simpleMessage("Время"),
     "timeout": MessageLookupByLibrary.simpleMessage("Таймаут"),
@@ -1149,7 +1183,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "urlDesc": MessageLookupByLibrary.simpleMessage(
       "Получить профиль через URL",
     ),
-    "urlTip": m25,
+    "urlTip": m28,
     "useHosts": MessageLookupByLibrary.simpleMessage("Использовать hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage(
       "Использовать системные hosts",
@@ -1173,7 +1207,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "whitelistMode": MessageLookupByLibrary.simpleMessage(
       "Режим белого списка",
     ),
-    "yearsAgo": m26,
+    "yearsAgo": m29,
     "zh_CN": MessageLookupByLibrary.simpleMessage("Упрощенный китайский"),
   };
 }

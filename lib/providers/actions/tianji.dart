@@ -14,30 +14,7 @@ class TianjiAction extends _$TianjiAction {
   @override
   void build() {}
 
-  /// 专用 HTTP 客户端：
-  /// - 走上游同一套 findProxy（内核在跑就经本地代理，没跑就直连），主域名被墙时开着代理也能登录；
-  /// - 🔴 不接受坏证书。上游的 HttpOverrides 对所有请求都 `badCertificateCallback = true`，
-  ///   给账号密码这条路必须关掉。
-  Dio _dio() {
-    final dio = Dio(
-      BaseOptions(
-        connectTimeout: const Duration(seconds: 15),
-        receiveTimeout: const Duration(seconds: 20),
-        responseType: ResponseType.json,
-        validateStatus: (_) => true,
-        headers: {'User-Agent': globalState.ua},
-      ),
-    );
-    dio.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () {
-        final client = HttpClient();
-        client.badCertificateCallback = (_, _, _) => false;
-        client.findProxy = FlClashHttpOverrides.handleFindProxy;
-        return client;
-      },
-    );
-    return dio;
-  }
+  Dio _dio() => tianjiDio();
 
   String get _apiBase => ref
       .read(tianjiSettingProvider)

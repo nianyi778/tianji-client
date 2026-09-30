@@ -317,6 +317,7 @@ extension GeoResourceExt on GeoResource {
 }
 
 enum PageLabel {
+  home,
   dashboard,
   proxies,
   profiles,

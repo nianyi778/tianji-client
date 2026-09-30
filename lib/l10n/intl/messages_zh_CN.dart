@@ -69,11 +69,17 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m23(count) => "已选择 ${count} 项";
 
-  static String m24(name, delay) => "网络已变化，已切到 ${name} · ${delay} ms";
+  static String m24(n) => "${n} 天前";
 
-  static String m25(label) => "${label}必须为URL";
+  static String m25(n) => "${n} 小时前";
 
-  static String m26(count) => "${count} 年前";
+  static String m26(n) => "${n} 分钟前";
+
+  static String m27(name, delay) => "网络已变化，已切到 ${name} · ${delay} ms";
+
+  static String m28(label) => "${label}必须为URL";
+
+  static String m29(count) => "${count} 年前";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -315,6 +321,7 @@ class MessageLookup extends MessageLookupByLibrary {
       "Helper 服务不可用，无法启用 TUN 模式，请重新安装 FlClash。",
     ),
     "hideFromList": MessageLookupByLibrary.simpleMessage("从列表中隐藏"),
+    "home": MessageLookupByLibrary.simpleMessage("首页"),
     "host": MessageLookupByLibrary.simpleMessage("主机"),
     "hostsDesc": MessageLookupByLibrary.simpleMessage("追加Hosts"),
     "hotkeyConflict": MessageLookupByLibrary.simpleMessage("快捷键冲突"),
@@ -710,13 +717,27 @@ class MessageLookup extends MessageLookupByLibrary {
     "themeDesc": MessageLookupByLibrary.simpleMessage("设置深色模式，调整色彩"),
     "themeMode": MessageLookupByLibrary.simpleMessage("主题模式"),
     "tianjiAccount": MessageLookupByLibrary.simpleMessage("天机账号"),
+    "tianjiAgoDays": m24,
+    "tianjiAgoHours": m25,
+    "tianjiAgoMinutes": m26,
+    "tianjiAiAll": MessageLookupByLibrary.simpleMessage("全部实测"),
+    "tianjiAiAvailable": MessageLookupByLibrary.simpleMessage("可用"),
+    "tianjiAiNoData": MessageLookupByLibrary.simpleMessage("暂时无法获取"),
+    "tianjiAiNotProbed": MessageLookupByLibrary.simpleMessage("这条线路不在公开实测范围内"),
+    "tianjiAiOffline": MessageLookupByLibrary.simpleMessage("不可用"),
+    "tianjiAiServices": MessageLookupByLibrary.simpleMessage("AI 服务"),
+    "tianjiAiUnknown": MessageLookupByLibrary.simpleMessage("待测"),
     "tianjiApiBase": MessageLookupByLibrary.simpleMessage("接入地址"),
     "tianjiAutoOptimize": MessageLookupByLibrary.simpleMessage("网络变化时自动优化"),
     "tianjiAutoOptimizeDesc": MessageLookupByLibrary.simpleMessage(
       "换 WiFi 后自动重测，线路断了才切换",
     ),
     "tianjiChangeApiBase": MessageLookupByLibrary.simpleMessage("连不上？换接入地址"),
+    "tianjiConnected": MessageLookupByLibrary.simpleMessage("已连接"),
+    "tianjiDisconnected": MessageLookupByLibrary.simpleMessage("未连接"),
     "tianjiEmail": MessageLookupByLibrary.simpleMessage("邮箱"),
+    "tianjiJustNow": MessageLookupByLibrary.simpleMessage("刚刚"),
+    "tianjiLine": MessageLookupByLibrary.simpleMessage("线路"),
     "tianjiLoginAndConnect": MessageLookupByLibrary.simpleMessage("登录并连接"),
     "tianjiLoginFailed": MessageLookupByLibrary.simpleMessage("登录失败"),
     "tianjiLoginFoot": MessageLookupByLibrary.simpleMessage(
@@ -732,16 +753,23 @@ class MessageLookup extends MessageLookupByLibrary {
       "网络已变化，所有线路暂时不可用",
     ),
     "tianjiNetChangedOk": MessageLookupByLibrary.simpleMessage("网络已变化，当前线路正常"),
-    "tianjiNetChangedSwitched": m24,
+    "tianjiNetChangedSwitched": m27,
     "tianjiNetworkError": MessageLookupByLibrary.simpleMessage(
       "连不上服务器。主域名可能被屏蔽：到状态页拿备用地址，然后点「换接入地址」。",
     ),
+    "tianjiNoLine": MessageLookupByLibrary.simpleMessage("还没有线路"),
+    "tianjiNoProfile": MessageLookupByLibrary.simpleMessage("先登录"),
     "tianjiNoSubscription": MessageLookupByLibrary.simpleMessage(
       "这个账号还没有可用套餐，请先在网页领取或购买。",
     ),
     "tianjiPassword": MessageLookupByLibrary.simpleMessage("密码"),
     "tianjiProfileLabel": MessageLookupByLibrary.simpleMessage("天机 TIANJI"),
     "tianjiRegister": MessageLookupByLibrary.simpleMessage("还没有账号？注册"),
+    "tianjiTapToConnect": MessageLookupByLibrary.simpleMessage("点击连接"),
+    "tianjiTapToDisconnect": MessageLookupByLibrary.simpleMessage(
+      "点击断开 · 长按重新测速",
+    ),
+    "tianjiTimeout": MessageLookupByLibrary.simpleMessage("超时"),
     "tight": MessageLookupByLibrary.simpleMessage("紧凑"),
     "time": MessageLookupByLibrary.simpleMessage("时间"),
     "timeout": MessageLookupByLibrary.simpleMessage("超时"),
@@ -765,7 +793,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "upload": MessageLookupByLibrary.simpleMessage("上传"),
     "url": MessageLookupByLibrary.simpleMessage("URL"),
     "urlDesc": MessageLookupByLibrary.simpleMessage("通过URL获取配置文件"),
-    "urlTip": m25,
+    "urlTip": m28,
     "useHosts": MessageLookupByLibrary.simpleMessage("使用Hosts"),
     "useSystemHosts": MessageLookupByLibrary.simpleMessage("使用系统Hosts"),
     "userAgent": MessageLookupByLibrary.simpleMessage("用户代理"),
@@ -781,7 +809,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "vpnTip": MessageLookupByLibrary.simpleMessage("重启VPN后改变生效"),
     "webDAVConfiguration": MessageLookupByLibrary.simpleMessage("WebDAV配置"),
     "whitelistMode": MessageLookupByLibrary.simpleMessage("白名单模式"),
-    "yearsAgo": m26,
+    "yearsAgo": m29,
     "zh_CN": MessageLookupByLibrary.simpleMessage("中文简体"),
   };
 }
