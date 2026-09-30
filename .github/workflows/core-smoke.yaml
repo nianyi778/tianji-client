@@ -1,10 +1,14 @@
-# 引擎编译验证 —— 只编 Go 内核，不打包、不发布、不动 release。
+# 引擎编译验证 —— 跑一次真实的 Linux 构建，不上传、不发布、不动 release。
 #
 # 用途：升 `core/Clash.Meta` 子模块（mihomo 分支）之后，先确认我们这一层 Go 包装
-# 还能对着新引擎编译。上游经常把引擎升级和包装层重写一起发，只挪子模块指针未必编得过。
+# 与 Dart 侧还能对着新引擎编译。上游经常把引擎升级和包装层重写一起发，
+# 只挪子模块指针未必编得过。
 #
 # 🔴 判断引擎能不能升，必须**先在 main 上跑一次做对照**。没有对照时，失败分不清是
 #    「新引擎不兼容」还是「这条流水线本身就不通」——那会导致照着错误结论做决定。
+#    2026-09-30 第一版就是这么废掉的：它用 `go build ./...`，而 core/tun 与 bride.go
+#    是 `//go:build android && cgo`，纯 linux 下本来就被排除，main 上照样红。
+#    所以这里改成照抄发布流水线的 Linux 构建路径 —— 那条在 main 上是已知能过的。
 name: 引擎编译验证
 
 on:
@@ -14,9 +18,12 @@ on:
       - 'core/**'
       - '.github/workflows/core-smoke.yaml'
 
+env:
+  FLUTTER_VERSION: '3.44.4'
+
 jobs:
   build-core:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
         with: { submodules: recursive }
@@ -27,17 +34,22 @@ jobs:
           git -C core/Clash.Meta log -1 --format='%ad %s' --date=short
 
       - uses: actions/setup-go@v5
+        with: { go-version: '1.26.4' }
+
+      - uses: subosito/flutter-action@v2
         with:
-          go-version: '1.26.4'
-          cache-dependency-path: core/go.sum
+          channel: master
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
 
-      - name: 编译内核
-        working-directory: core
+      - name: Linux 构建依赖
         run: |
-          go mod download
-          go build ./...
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libgtk-3-dev libayatana-appindicator3-dev locate
 
-      - name: 内核自带测试
-        working-directory: core
-        continue-on-error: true
-        run: go test ./... 2>&1 | tail -40
+      # 与发布流水线逐字相同：先 flutter pub get，再不带多余参数地调 setup.dart
+      - run: flutter pub get
+      - run: dart setup.dart linux -v
+
+      - name: 产物清单（不上传）
+        run: ls -la dist/ || true
