@@ -767,6 +767,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiIpv4Exit": MessageLookupByLibrary.simpleMessage("IPv4 出口"),
     "tianjiIpv6Exit": MessageLookupByLibrary.simpleMessage("走了 IPv6 出口"),
     "tianjiJustNow": MessageLookupByLibrary.simpleMessage("刚刚"),
+    "tianjiLevelOk": MessageLookupByLibrary.simpleMessage("正常"),
+    "tianjiLevelWarn": MessageLookupByLibrary.simpleMessage("需注意"),
     "tianjiLine": MessageLookupByLibrary.simpleMessage("线路"),
     "tianjiLines": MessageLookupByLibrary.simpleMessage("线路"),
     "tianjiLocked": MessageLookupByLibrary.simpleMessage("需升级套餐"),

@@ -4944,6 +4944,16 @@ class AppLocalizations {
     );
   }
 
+  /// `OK`
+  String get tianjiLevelOk {
+    return Intl.message('OK', name: 'tianjiLevelOk', desc: '', args: []);
+  }
+
+  /// `Check`
+  String get tianjiLevelWarn {
+    return Intl.message('Check', name: 'tianjiLevelWarn', desc: '', args: []);
+  }
+
   /// `Exit region`
   String get tianjiExitRegion {
     return Intl.message(

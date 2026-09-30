@@ -602,6 +602,8 @@
   "tianjiChecking": "Checking…",
   "tianjiRecheck": "Check again",
   "tianjiUnmeasured": "No result",
+  "tianjiLevelOk": "正常",
+  "tianjiLevelWarn": "要確認",
   "tianjiExitRegion": "Exit region",
   "tianjiIpVersion": "IPv4 / IPv6",
   "tianjiIpv4Exit": "IPv4 exit",

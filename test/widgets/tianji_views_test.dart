@@ -1,0 +1,160 @@
+/// 线路页与诊断页的布局兜底。
+///
+/// 🔴 这两页的行都是「徽章 + 两行字 + 右侧判语」，中文之外的语言判语更长，
+///    手机宽度下极容易溢出。溢出在 widget 测试里是会抛异常的，所以这里把两页
+///    在最窄和最宽两种尺寸下都渲染一遍 —— 之前仪表盘的六处溢出全是这么逮到的。
+library;
+
+import 'package:fl_clash/enum/enum.dart';
+import 'package:fl_clash/l10n/l10n.dart';
+import 'package:fl_clash/models/models.dart';
+import 'package:fl_clash/providers/providers.dart';
+import 'package:fl_clash/state.dart';
+import 'package:fl_clash/views/tianji/diagnosis.dart';
+import 'package:fl_clash/views/tianji/lines.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+const _testUrl = 'https://example.invalid/generate_204';
+
+/// 一个像真订阅那样的主分组：选中项、测通的、超时的、没测过的、买不起的各一条。
+List<Group> _groups() => const [
+  Group(
+    type: GroupType.Selector,
+    name: '天机 TIANJI',
+    testUrl: _testUrl,
+    now: '🇭🇰 香港 · 01',
+    all: [
+      Proxy(name: '🇭🇰 香港 · 01', type: 'Shadowsocks'),
+      Proxy(name: '🇭🇰 香港 · 02', type: 'Shadowsocks'),
+      Proxy(name: '🇯🇵 东京 · 中转 B · 香港入口', type: 'Vless'),
+      Proxy(name: '🇺🇸 洛杉矶 · 03', type: 'Hysteria2'),
+      Proxy(name: '🔒 日本住宅', type: 'Shadowsocks'),
+    ],
+  ),
+];
+
+Map<String, Map<String, int>> _delays() => {
+  _testUrl: {
+    '🇭🇰 香港 · 01': 48,
+    '🇭🇰 香港 · 02': 62,
+    '🇯🇵 东京 · 中转 B · 香港入口': 112,
+    '🇺🇸 洛杉矶 · 03': -1,
+  },
+};
+
+ProviderContainer _container() => ProviderContainer(
+  overrides: [
+    groupsProvider.overrideWithBuild((_, _) => _groups()),
+    delayDataSourceProvider.overrideWithBuild((_, _) => _delays()),
+  ],
+);
+
+class _App extends StatelessWidget {
+  final Widget child;
+
+  /// 不指定就是 en —— 英文的判语比中文长，正好是布局最紧的一档。
+  final Locale? locale;
+  const _App({required this.child, this.locale});
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    navigatorKey: globalState.navigatorKey,
+    locale: locale,
+    localizationsDelegates: const [
+      AppLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+    ],
+    supportedLocales: AppLocalizations.delegate.supportedLocales,
+    home: child,
+  );
+}
+
+void main() {
+  final sizes = <String, Size>{
+    // 还在卖的最窄的一批安卓机
+    'phone': const Size(360, 740),
+    'desktop': const Size(1280, 860),
+  };
+
+  for (final size in sizes.entries) {
+    testWidgets('lines page lays out on ${size.key}', (tester) async {
+      tester.view.physicalSize = size.value;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final container = _container();
+      addTearDown(container.dispose);
+      globalState.container = container;
+      container.read(viewSizeProvider.notifier).value = size.value;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const _App(child: TianjiLinesView()),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text('🇭🇰 香港 · 01'), findsWidgets);
+      expect(tester.takeException(), null);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+
+    testWidgets('diagnosis page lays out on ${size.key}', (tester) async {
+      tester.view.physicalSize = size.value;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final container = _container();
+      addTearDown(container.dispose);
+      globalState.container = container;
+      container.read(viewSizeProvider.notifier).value = size.value;
+
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: const _App(child: TianjiDiagnosisView()),
+        ),
+      );
+      await tester.pump();
+
+      expect(find.text('DNS'), findsOneWidget);
+      expect(tester.takeException(), null);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    });
+  }
+
+  testWidgets('🔴 买不起的那条线标成需升级，而不是标成故障', (tester) async {
+    tester.view.physicalSize = const Size(360, 740);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final container = _container();
+    addTearDown(container.dispose);
+    globalState.container = container;
+    container.read(viewSizeProvider.notifier).value = const Size(360, 740);
+
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const _App(locale: Locale('zh', 'CN'), child: TianjiLinesView()),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.text('需升级套餐'), findsOneWidget);
+    // 超时的那条写「超时」，不写成 0 ms
+    expect(find.textContaining('超时'), findsOneWidget);
+    expect(tester.takeException(), null);
+  });
+}

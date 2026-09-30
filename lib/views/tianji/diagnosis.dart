@@ -144,79 +144,85 @@ class _TianjiDiagnosisViewState extends ConsumerState<TianjiDiagnosisView> {
     return CommonScaffold(
       title: appLocalizations.tianjiDiagnosis,
       body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.fromLTRB(tjGap4, tjGap3, tjGap4, tjGap5),
         children: [
           _VerdictCard(verdict: verdict, busy: _running, onAction: _switchTo),
-          const SizedBox(height: 16),
-          _CheckRow(
-            title: appLocalizations.tianjiExitRegion,
-            detail: _exitProbed
-                ? (_region?.isNotEmpty == true
-                      ? _region!
-                      : appLocalizations.tianjiUnmeasured)
-                : '',
-            level: !_exitProbed
-                ? TianjiCheckLevel.unknown
-                : (_region?.isNotEmpty == true
-                      ? TianjiCheckLevel.ok
-                      : TianjiCheckLevel.unknown),
-            busy: _running && !_exitProbed,
+          const SizedBox(height: tjGap4),
+          // 逐项结论放在同一张卡里：它们回答的是同一个问题「这条线路现在怎么样」，
+          // 拆成一堆独立卡片反而看不出这是一份检测报告。
+          _CheckCard(
+            rows: [
+              _CheckRow(
+                title: appLocalizations.tianjiExitRegion,
+                detail: _exitProbed
+                    ? (_region?.isNotEmpty == true
+                          ? _region!
+                          : appLocalizations.tianjiUnmeasured)
+                    : '',
+                level: !_exitProbed
+                    ? TianjiCheckLevel.unknown
+                    : (_region?.isNotEmpty == true
+                          ? TianjiCheckLevel.ok
+                          : TianjiCheckLevel.unknown),
+                busy: _running && !_exitProbed,
+              ),
+              _CheckRow(
+                title: appLocalizations.tianjiIpVersion,
+                detail: !_exitProbed || _exitIp == null
+                    ? ''
+                    : (tianjiIsIpv6(_exitIp!)
+                          ? appLocalizations.tianjiIpv6Exit
+                          : appLocalizations.tianjiIpv4Exit),
+                level: !_exitProbed || _exitIp == null
+                    ? TianjiCheckLevel.unknown
+                    : (tianjiIsIpv6(_exitIp!)
+                          ? TianjiCheckLevel.warn
+                          : TianjiCheckLevel.ok),
+                busy: _running && !_exitProbed,
+              ),
+              _CheckRow(
+                title: 'DNS',
+                detail: dns.enable
+                    ? appLocalizations.tianjiDnsRemote
+                    : appLocalizations.tianjiDnsSystem,
+                level: dns.enable ? TianjiCheckLevel.ok : TianjiCheckLevel.warn,
+              ),
+              for (final t in tianjiAiTargets)
+                _CheckRow(
+                  title: t.service,
+                  detail: switch (_ai[t.service]) {
+                    TianjiProbeState.available =>
+                      appLocalizations.tianjiAiAvailable,
+                    TianjiProbeState.unavailable =>
+                      appLocalizations.tianjiAiOffline,
+                    TianjiProbeState.unknown =>
+                      appLocalizations.tianjiUnmeasured,
+                    null => '',
+                  },
+                  level: switch (_ai[t.service]) {
+                    TianjiProbeState.available => TianjiCheckLevel.ok,
+                    TianjiProbeState.unavailable => TianjiCheckLevel.bad,
+                    _ => TianjiCheckLevel.unknown,
+                  },
+                  busy: _running && !_ai.containsKey(t.service),
+                ),
+            ],
           ),
-          _CheckRow(
-            title: appLocalizations.tianjiIpVersion,
-            detail: !_exitProbed || _exitIp == null
-                ? ''
-                : (tianjiIsIpv6(_exitIp!)
-                      ? appLocalizations.tianjiIpv6Exit
-                      : appLocalizations.tianjiIpv4Exit),
-            level: !_exitProbed || _exitIp == null
-                ? TianjiCheckLevel.unknown
-                : (tianjiIsIpv6(_exitIp!)
-                      ? TianjiCheckLevel.warn
-                      : TianjiCheckLevel.ok),
-            busy: _running && !_exitProbed,
-          ),
-          _CheckRow(
-            title: 'DNS',
-            detail: dns.enable
-                ? appLocalizations.tianjiDnsRemote
-                : appLocalizations.tianjiDnsSystem,
-            level: dns.enable ? TianjiCheckLevel.ok : TianjiCheckLevel.warn,
-          ),
-          const Divider(height: 24),
-          for (final t in tianjiAiTargets)
-            _CheckRow(
-              title: t.service,
-              detail: switch (_ai[t.service]) {
-                TianjiProbeState.available =>
-                  appLocalizations.tianjiAiAvailable,
-                TianjiProbeState.unavailable =>
-                  appLocalizations.tianjiAiOffline,
-                TianjiProbeState.unknown => appLocalizations.tianjiUnmeasured,
-                null => '',
-              },
-              level: switch (_ai[t.service]) {
-                TianjiProbeState.available => TianjiCheckLevel.ok,
-                TianjiProbeState.unavailable => TianjiCheckLevel.bad,
-                _ => TianjiCheckLevel.unknown,
-              },
-              busy: _running && !_ai.containsKey(t.service),
-            ),
-          const SizedBox(height: 20),
+          const SizedBox(height: tjGap5),
           FilledButton.icon(
             onPressed: _running || !(isStart && !suspend) ? null : _run,
             icon: const Icon(Icons.refresh, size: 18),
             label: Text(appLocalizations.tianjiRecheck),
             style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.symmetric(vertical: 15),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: tjGap3),
           Text(
             appLocalizations.tianjiDiagnosisFoot,
             textAlign: TextAlign.center,
             style: context.textTheme.bodySmall?.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
+              color: context.tj.ink3,
             ),
           ),
         ],
@@ -227,11 +233,31 @@ class _TianjiDiagnosisViewState extends ConsumerState<TianjiDiagnosisView> {
 
 Color _levelColor(BuildContext context, TianjiCheckLevel level) =>
     switch (level) {
-      TianjiCheckLevel.ok => const Color(0xFF34C759),
-      TianjiCheckLevel.warn => const Color(0xFFFF9F0A),
-      TianjiCheckLevel.bad => context.colorScheme.error,
-      TianjiCheckLevel.unknown => context.colorScheme.outlineVariant,
+      TianjiCheckLevel.ok => context.tj.good,
+      TianjiCheckLevel.warn => context.tj.warn,
+      TianjiCheckLevel.bad => context.tj.bad,
+      // 🔴 「没测出来」不能画成红色 —— 那是把自己的探测失败报成线路故障（红线 4/5）
+      TianjiCheckLevel.unknown => context.tj.unknown,
     };
+
+IconData _levelIcon(TianjiCheckLevel level) => switch (level) {
+  TianjiCheckLevel.ok => Icons.check,
+  TianjiCheckLevel.warn => Icons.priority_high,
+  TianjiCheckLevel.bad => Icons.close,
+  TianjiCheckLevel.unknown => Icons.question_mark,
+};
+
+/// 右侧那个一眼可扫的判语。和 detail 不同：detail 说的是「测到了什么」，
+/// 这里说的是「算不算好」。
+String _levelWord(BuildContext context, TianjiCheckLevel level) {
+  final l = context.appLocalizations;
+  return switch (level) {
+    TianjiCheckLevel.ok => l.tianjiLevelOk,
+    TianjiCheckLevel.warn => l.tianjiLevelWarn,
+    TianjiCheckLevel.bad => l.tianjiAiOffline,
+    TianjiCheckLevel.unknown => l.tianjiUnmeasured,
+  };
+}
 
 class _VerdictCard extends StatelessWidget {
   final TianjiVerdict verdict;
@@ -247,7 +273,7 @@ class _VerdictCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = context.appLocalizations;
-    final colorScheme = context.colorScheme;
+    final tj = context.tj;
     final color = _levelColor(context, verdict.level);
     final names = verdict.services.join(' / ');
     final (String title, String detail) = switch (verdict.code) {
@@ -267,57 +293,101 @@ class _VerdictCard extends StatelessWidget {
     };
     final line = verdict.suggestedLine;
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(tjGap4),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withValues(alpha: 0.35)),
+        // 整张卡染成结论的颜色 —— 设计稿里这一块就是「一眼看结论」的位置
+        color: color.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(tjRadiusCard),
+        border: Border.all(color: color.withValues(alpha: 0.30)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              busy
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : Container(
-                      width: 12,
-                      height: 12,
-                      decoration: BoxDecoration(
+              SizedBox(
+                width: 36,
+                height: 36,
+                child: busy
+                    ? const Padding(
+                        padding: EdgeInsets.all(9),
+                        child: CircularProgressIndicator(strokeWidth: 2.2),
+                      )
+                    : DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: color,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          _levelIcon(verdict.level),
+                          size: 21,
+                          color: Colors.white,
+                        ),
+                      ),
+              ),
+              const SizedBox(width: tjGap3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      busy ? l.tianjiChecking : title,
+                      style: context.textTheme.titleMedium?.copyWith(
                         color: color,
-                        shape: BoxShape.circle,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  busy ? l.tianjiChecking : title,
-                  style: context.textTheme.titleMedium,
+                    if (!busy) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        detail,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: tj.ink2,
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
             ],
           ),
-          if (!busy) ...[
-            const SizedBox(height: 6),
-            Text(
-              detail,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+          if (!busy &&
+              line != null &&
+              (verdict.level == TianjiCheckLevel.bad ||
+                  verdict.level == TianjiCheckLevel.warn)) ...[
+            const SizedBox(height: tjGap3),
+            FilledButton(
+              onPressed: () => onAction(line),
+              child: Text(l.tianjiSwitchTo(tianjiBaseAlias(line))),
             ),
-            if (line != null &&
-                (verdict.level == TianjiCheckLevel.bad ||
-                    verdict.level == TianjiCheckLevel.warn)) ...[
-              const SizedBox(height: 12),
-              FilledButton(
-                onPressed: () => onAction(line),
-                child: Text(l.tianjiSwitchTo(tianjiBaseAlias(line))),
-              ),
-            ],
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 一张卡装下全部逐项结论，行与行之间只用发丝线分隔。
+class _CheckCard extends StatelessWidget {
+  final List<Widget> rows;
+  const _CheckCard({required this.rows});
+
+  @override
+  Widget build(BuildContext context) {
+    final tj = context.tj;
+    return Container(
+      decoration: BoxDecoration(
+        color: tj.card,
+        borderRadius: BorderRadius.circular(tjRadiusCard),
+        border: Border.all(color: tj.line),
+      ),
+      child: Column(
+        children: [
+          for (var i = 0; i < rows.length; i++) ...[
+            if (i > 0) Divider(height: 1, thickness: 1, color: tj.line),
+            rows[i],
           ],
         ],
       ),
@@ -340,31 +410,83 @@ class _CheckRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
+    final tj = context.tj;
+    final color = _levelColor(context, level);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: tjGap3, vertical: tjGap3),
       child: Row(
         children: [
-          busy
-              ? const SizedBox(
-                  width: 10,
-                  height: 10,
-                  child: CircularProgressIndicator(strokeWidth: 1.6),
-                )
-              : Container(
-                  width: 10,
-                  height: 10,
+          SizedBox(
+            width: 24,
+            height: 24,
+            child: busy
+                ? const Padding(
+                    padding: EdgeInsets.all(5),
+                    child: CircularProgressIndicator(strokeWidth: 1.8),
+                  )
+                : DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: color.withValues(alpha: 0.16),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(_levelIcon(level), size: 14, color: color),
+                  ),
+          ),
+          const SizedBox(width: tjGap3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (detail.isNotEmpty) ...[
+                  const SizedBox(height: 1),
+                  Text(
+                    detail,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: tj.ink3,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(width: tjGap2),
+          // 🔴 这一行很窄，判语在别的语言下会更长，必须能收窄
+          Flexible(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
                   decoration: BoxDecoration(
-                    color: _levelColor(context, level),
+                    color: color,
                     shape: BoxShape.circle,
                   ),
                 ),
-          const SizedBox(width: 14),
-          Expanded(child: Text(title, style: context.textTheme.bodyMedium)),
-          Text(
-            detail,
-            style: context.textTheme.bodySmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+                const SizedBox(width: tjGap2),
+                Flexible(
+                  child: Text(
+                    busy ? '' : _levelWord(context, level),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

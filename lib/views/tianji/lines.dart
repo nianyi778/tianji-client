@@ -57,7 +57,7 @@ class _TianjiLinesViewState extends ConsumerState<TianjiLinesView> {
               child: Text(
                 appLocalizations.tianjiNoLine,
                 style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.onSurfaceVariant,
+                  color: context.tj.ink3,
                 ),
               ),
             )
@@ -89,13 +89,32 @@ class _LineList extends ConsumerWidget {
           ref.read(realSelectedProxyStateProvider(name)).proxyName,
     );
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.fromLTRB(tjGap4, tjGap3, tjGap4, tjGap5),
       itemCount: rows.length,
-      separatorBuilder: (_, _) => const SizedBox(height: 6),
+      separatorBuilder: (_, _) => const SizedBox(height: tjGap2),
       itemBuilder: (_, i) =>
           _LineTile(row: rows[i], groupName: groupName, testUrl: testUrl),
     );
   }
+}
+
+/// 行首的圆形徽章。
+///
+/// 🔴 徽章的绿勾表示「这条线路这一轮测通了」，**不能**给没测过的线路也画绿勾 ——
+///    那是把「不知道」说成「可用」（红线 5）。没结论的画成中性圈。
+class _Badge extends StatelessWidget {
+  final IconData icon;
+  final Color fg;
+  final Color bg;
+  const _Badge({required this.icon, required this.fg, required this.bg});
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 26,
+    height: 26,
+    decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
+    child: Icon(icon, size: 16, color: fg),
+  );
 }
 
 class _LineTile extends ConsumerWidget {
@@ -128,92 +147,115 @@ class _LineTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appLocalizations = context.appLocalizations;
-    final colorScheme = context.colorScheme;
+    final l = context.appLocalizations;
+    final tj = context.tj;
+    final accent = context.colorScheme.primary;
     final delay = row.locked
         ? null
         : ref.watch(delayProvider(proxyName: row.name, testUrl: testUrl));
-    final dot = row.locked
-        ? colorScheme.outlineVariant
-        : utils.getDelayColor(delay);
-    final text = _delayText(context, delay);
+    final dot = row.locked ? tj.unknown : utils.getDelayColor(delay);
+    final delayText = _delayText(context, delay);
+    final measured = delay != null && delay > 0;
+
+    // 副标题就是设计稿那一行「香港 · 01 · 48 ms」：落地名与延迟拼在一起。
+    final parts = <String>[
+      if (row.locked)
+        l.tianjiLocked
+      else if (row.showsReal)
+        tianjiBaseAlias(row.realName),
+      if (delayText.isNotEmpty) delayText,
+    ];
+
+    final Widget badge;
+    if (row.locked) {
+      badge = _Badge(
+        icon: Icons.lock_outline,
+        fg: tj.ink3,
+        bg: tj.unknown.withValues(alpha: 0.14),
+      );
+    } else if (row.selected) {
+      badge = _Badge(icon: Icons.check, fg: Colors.white, bg: accent);
+    } else if (measured) {
+      badge = _Badge(
+        icon: Icons.check,
+        fg: tj.good,
+        bg: tj.good.withValues(alpha: 0.14),
+      );
+    } else {
+      badge = _Badge(
+        icon: Icons.circle_outlined,
+        fg: tj.ink3,
+        bg: tj.unknown.withValues(alpha: 0.12),
+      );
+    }
+
     return Material(
-      color: row.selected
-          ? colorScheme.primaryContainer
-          : colorScheme.surfaceContainerLow,
-      borderRadius: BorderRadius.circular(14),
+      color: row.selected ? accent.withValues(alpha: 0.08) : tj.card,
+      borderRadius: BorderRadius.circular(tjRadiusCard),
       child: InkWell(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(tjRadiusCard),
         onTap: row.locked
             ? () => globalState.openUrl(
                 '${ref.read(tianjiSettingProvider).apiBase}/#/plan',
               )
             : () => _select(ref),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          child: Row(
-            children: [
-              Icon(
-                row.locked
-                    ? Icons.lock_outline
-                    : row.selected
-                    ? Icons.check_circle
-                    : Icons.circle_outlined,
-                size: 20,
-                color: row.locked
-                    ? colorScheme.onSurfaceVariant
-                    : row.selected
-                    ? colorScheme.primary
-                    : colorScheme.outlineVariant,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      tianjiBaseAlias(row.name),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        color: row.locked ? colorScheme.onSurfaceVariant : null,
-                      ),
-                    ),
-                    if (row.locked || row.showsReal) ...[
-                      const SizedBox(height: 2),
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(tjRadiusCard),
+            border: Border.all(
+              color: row.selected ? accent.withValues(alpha: 0.55) : tj.line,
+              width: row.selected ? 1.4 : 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: tjGap3,
+              vertical: tjGap3,
+            ),
+            child: Row(
+              children: [
+                badge,
+                const SizedBox(width: tjGap3),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       Text(
-                        row.locked
-                            ? appLocalizations.tianjiLocked
-                            : tianjiBaseAlias(row.realName),
+                        tianjiBaseAlias(row.name),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: row.locked ? tj.ink2 : null,
                         ),
                       ),
+                      if (parts.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          parts.join(' · '),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: tj.ink3,
+                            fontFeatures: const [FontFeature.tabularFigures()],
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-              ),
-              if (text.isNotEmpty) ...[
-                Text(
-                  text,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                    fontFeatures: const [FontFeature.tabularFigures()],
                   ),
                 ),
-                const SizedBox(width: 10),
-              ],
-              Container(
-                width: 9,
-                height: 9,
-                decoration: BoxDecoration(
-                  color: dot ?? colorScheme.outlineVariant,
-                  shape: BoxShape.circle,
+                const SizedBox(width: tjGap2),
+                Container(
+                  width: 9,
+                  height: 9,
+                  decoration: BoxDecoration(
+                    color: dot ?? tj.unknown,
+                    shape: BoxShape.circle,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -1084,6 +1084,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "tianjiIpv4Exit": MessageLookupByLibrary.simpleMessage("IPv4 exit"),
     "tianjiIpv6Exit": MessageLookupByLibrary.simpleMessage("Exiting over IPv6"),
     "tianjiJustNow": MessageLookupByLibrary.simpleMessage("just now"),
+    "tianjiLevelOk": MessageLookupByLibrary.simpleMessage("OK"),
+    "tianjiLevelWarn": MessageLookupByLibrary.simpleMessage("Check"),
     "tianjiLine": MessageLookupByLibrary.simpleMessage("Line"),
     "tianjiLines": MessageLookupByLibrary.simpleMessage("Lines"),
     "tianjiLocked": MessageLookupByLibrary.simpleMessage(
